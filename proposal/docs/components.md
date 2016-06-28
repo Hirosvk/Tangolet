@@ -4,36 +4,36 @@
   * Header
     * Search
 
-  * Main
-    * Content
-      * Navbar
-        * MyCreatedClassesIndex
-        * MyEnrolledClassesIndex
-        * MyStudySetIndex
-        * Footer
-      * SubContent
-        * Index
-        * **NewStudySetForm**
-        * **NewClassForm**
-        * **TestScores**
-          * TestScoreItem
-        * **Class**
-          * AddStudySettoClassForm
-          * ClassStudySetIndex
-            * ClassStudySetIndexItem
-          * **ProgressByStudySet** (only if the user is the Teacher)
-            * ProgressByStudySetItem
-          * **ProgressByStudent** (only if the user is the Teacher)
-            * ProgressByStudentItem
-        * **SearchResults**
-          * SearchResultItem
-        * **StudySet**
-          * List
-          * **Test**
-            * TestForm
 
-      * **LoginForm**
-      * **SignupForm**
+  * Content
+    * Navbar
+      * MyCreatedClassesIndex
+      * MyEnrolledClassesIndex
+      * MyStudySetIndex
+      * Footer
+    * SubContent
+      * Index
+      * **NewStudySetForm**
+      * **NewClassForm**
+      * **TestScores**
+        * TestScoreItem
+      * **Class**
+        * AddStudySettoClassForm
+        * ClassStudySetIndex
+          * ClassStudySetIndexItem
+        * **ProgressByStudySet** (only if the user is the Teacher)
+          * ProgressByStudySetItem
+        * **ProgressByStudent** (only if the user is the Teacher)
+          * ProgressByStudentItem
+      * **SearchResults**
+        * SearchResultItem
+      * **StudySet**
+        * List
+        * **Test**
+          * TestForm
+
+    * **LoginForm**
+    * **SignupForm**
 
 ## Routes
 

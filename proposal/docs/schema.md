@@ -3,8 +3,8 @@ column names    | Data Type | Details
 ----------------|-----------|---------------------
 id              | integer   |    
 username        | string    | null: false, unique: true  
-password_hash   | string    | null: false, unique: true
-email           | string    | null: false  unique: true
+password_digest | string    | null: false
+email           | string    | null: false
 session_token   | string    | null: false, unique: true
 
 - user has many
