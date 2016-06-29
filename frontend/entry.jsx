@@ -6,14 +6,18 @@ const Route = ReactRouter.Route;
 const IndexRoute = ReactRouter.IndexRoute;
 const hashHistory = ReactRouter.hashHistory;
 
-const SessionActions = require('./actions/session_actions');
-const CurrentUserStore = require('./stores/current_user_store');
+const StudySetActions = require('./actions/study_set_actions');
+const StudySetStore = require('./stores/study_set_store');
 
 const LoginForm = require('./components/login_form');
 const SignupForm = require('./components/signup_form');
 const Header = require('./components/header');
 const Main = require('./components/main');
 const Content = require('./components/content');
+const StudySet = require('./components/study_set');
+const StudySetList = require('./components/study_set_list');
+const Index = require('./components/index.jsx');
+
 
 const App = React.createClass({
   render(){
@@ -28,10 +32,17 @@ const App = React.createClass({
   }
 });
 
+
+// Content doesn't render unless any of its children Routes match.
 const appRouter = (
   <Router history={hashHistory}>
     <Route path="/" component={App}>
-      <IndexRoute component={Content} />
+      <Route component={Content}>
+        <IndexRoute component={Index} />
+        <Route path="study_set/:id" component={StudySet}>
+          <IndexRoute component={StudySetList} />
+        </Route>
+      </Route>
       <Route path="login" component={LoginForm} />
       <Route path="signup" component={SignupForm} />
     </Route>

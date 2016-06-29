@@ -16,9 +16,13 @@ $.ajax({
   error: log
 });
 
+function log(a){
+  console.log(a);
+}
+
 $.ajax({
-  url: "api/session",
-  type: "DELETE",
+  url: "api/study_sets/1",
+  type: "GET",
   success: log,
   error: log
 });

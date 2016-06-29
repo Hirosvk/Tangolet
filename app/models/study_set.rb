@@ -1,6 +1,5 @@
 class StudySet < ActiveRecord::Base
   validates :name, :creator, :words, presence: true
-  validate :words?
 
   has_many :words,
     primary_key: :id,

@@ -10,10 +10,6 @@ const LoginForm = React.createClass({
     return ({error: ErrorStore.full_errors()});
   },
 
-  componentWillMount(){
-    ErrorStore.resetErrors();
-  },
-
   componentDidMount(){
     this.currentUserStoreListener = CurrentUserStore.addListener(this.redirectToIndex);
     this.errorStoreListener = ErrorStore.addListener(this.receiveErrors);
@@ -22,6 +18,7 @@ const LoginForm = React.createClass({
   componentWillUnmount(){
     this.currentUserStoreListener.remove();
     this.errorStoreListener.remove();
+    ErrorStore.resetErrors();
   },
 
   redirectToIndex(){

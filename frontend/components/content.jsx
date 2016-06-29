@@ -5,6 +5,7 @@ const Content = React.createClass({
     return (
       <div id="content">
         <h1>This is Content</h1>
+        {this.props.children}
       </div>
     );
   }
