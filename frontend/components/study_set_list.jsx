@@ -3,19 +3,30 @@ const React = require('react');
 const StudySetList = React.createClass({
 
   render(){
-    console.log(this.props.words);
     return (
-      <div className="study_set">
+      <div className="study_set_list">
         <table>
+          <thead>
+            <tr>
+              <th>English</th>
+              <th>Foreign Language</th>
+            </tr>
+          </thead>
           <tbody>
-          <tr>
-            <td>English</td>
-            <td>Foreign Language</td>
-          </tr>
+          {
+            this.props.words.map( function(word){
+              return (
+                <tr key={word.word_english}>
+                  <td>{word.word_english}</td>
+                  <td>{word.word_foreign}</td>
+                </tr>
+              );
+            })
+          }
           </tbody>
         </table>
       </div>
-    )
+    );
   }
 });
 

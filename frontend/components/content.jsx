@@ -4,7 +4,7 @@ const Content = React.createClass({
   render(){
     return (
       <div id="content">
-        <h1>This is Content</h1>
+        <p>This is Content</p>
         {this.props.children}
       </div>
     );

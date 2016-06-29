@@ -56,6 +56,7 @@
 	
 	var StudySetActions = __webpack_require__(230);
 	var StudySetStore = __webpack_require__(237);
+	var SessionActions = __webpack_require__(256);
 	
 	var LoginForm = __webpack_require__(255);
 	var SignupForm = __webpack_require__(261);
@@ -65,6 +66,7 @@
 	var StudySet = __webpack_require__(265);
 	var StudySetList = __webpack_require__(266);
 	var Index = __webpack_require__(267);
+	var StudySetForm = __webpack_require__(269);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -97,7 +99,8 @@
 	        Route,
 	        { path: 'study_set/:id', component: StudySet },
 	        React.createElement(IndexRoute, { component: StudySetList })
-	      )
+	      ),
+	      React.createElement(Route, { path: 'study_set_form(/:action)', component: StudySetForm })
 	    ),
 	    React.createElement(Route, { path: 'login', component: LoginForm }),
 	    React.createElement(Route, { path: 'signup', component: SignupForm })
@@ -25989,6 +25992,7 @@
 	var AppDispatcher = __webpack_require__(231);
 	var StudySetConstants = __webpack_require__(235);
 	var StudySetUtils = __webpack_require__(236);
+	var ErrorActions = __webpack_require__(268);
 	
 	var StudySetActions = {
 	  fetchStudySet: function fetchStudySet(id, errorCallback) {
@@ -25999,6 +26003,16 @@
 	      actionType: StudySetConstants.RECEIVE_STUDY_SET,
 	      studySet: studySet
 	    });
+	  },
+	  createStudySet: function createStudySet(studySetData) {
+	    StudySetUtils.createStudySet(studySetData, this.receiveStudySet, ErrorActions.updateError);
+	  },
+	  editStudySet: function editStudySet(studySetData) {
+	    StudySetUtils.editStudySet(studySetData, this.receiveStudySet, ErrorActions.updateError);
+	  },
+	  deleteStudySet: function deleteStudySet(id, successCallback) {
+	    console.log("action");
+	    StudySetUtils.deleteStudySet(id, successCallback, ErrorActions.updateError);
 	  }
 	};
 	
@@ -26344,6 +26358,38 @@
 	    $.ajax({
 	      url: "api/study_sets/" + id,
 	      type: "GET",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  createStudySet: function createStudySet(data, successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/study_sets/",
+	      type: "POST",
+	      data: {
+	        study_set: data.studySet,
+	        words: data.words
+	      },
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  editStudySet: function editStudySet(data, successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/study_sets/" + data.studySet.id,
+	      type: "PATCH",
+	      data: {
+	        study_set: data.studySet,
+	        words: data.words
+	      },
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  deleteStudySet: function deleteStudySet(id, successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/study_sets/" + id,
+	      type: "DELETE",
 	      success: successCallback,
 	      error: errorCallback
 	    });
@@ -32919,27 +32965,22 @@
 	var AppDispatcher = __webpack_require__(231);
 	var SessionUtils = __webpack_require__(257);
 	var SessionConstants = __webpack_require__(258);
+	var ErrorActions = __webpack_require__(268);
 	
 	module.exports = {
 	  login: function login(credentials) {
-	    SessionUtils.login(credentials, this.receiveUser, this.updateError);
+	    SessionUtils.login(credentials, this.receiveUser, ErrorActions.updateError);
 	  },
 	  logout: function logout() {
-	    SessionUtils.logout(this.receiveUser, this.updateError);
+	    SessionUtils.logout(this.receiveUser, ErrorActions.updateError);
 	  },
 	  signup: function signup(userInfo) {
-	    SessionUtils.signup(userInfo, this.receiveUser, this.updateError);
+	    SessionUtils.signup(userInfo, this.receiveUser, ErrorActions.updateError);
 	  },
 	  receiveUser: function receiveUser(currentUser) {
 	    AppDispatcher.dispatch({
 	      actionType: SessionConstants.LOGIN_USER,
 	      user: currentUser
-	    });
-	  },
-	  updateError: function updateError(error) {
-	    AppDispatcher.dispatch({
-	      actionType: SessionConstants.RECEIVE_ERROR,
-	      error: error
 	    });
 	  }
 	};
@@ -32991,8 +33032,7 @@
 	
 	module.exports = {
 	  LOGIN_USER: "LOGIN_USER",
-	  LOGOUT_USER: "LOGOUT_USER",
-	  RECEIVE_ERROR: "RECEIVE_ERROR"
+	  LOGOUT_USER: "LOGOUT_USER"
 	};
 
 /***/ },
@@ -33074,9 +33114,6 @@
 	  getInitialState: function getInitialState() {
 	    return { error: ErrorStore.full_errors() };
 	  },
-	  componentWillMount: function componentWillMount() {
-	    ErrorStore.resetErrors();
-	  },
 	  componentDidMount: function componentDidMount() {
 	    this.currentUserStoreListener = CurrentUserStore.addListener(this.redirectToIndex);
 	    this.errorStoreListener = ErrorStore.addListener(this.receiveErrors);
@@ -33084,6 +33121,7 @@
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.currentUserStoreListener.remove();
 	    this.errorStoreListener.remove();
+	    ErrorStore.resetErrors();
 	  },
 	  redirectToIndex: function redirectToIndex() {
 	    if (CurrentUserStore.getCurrentUser()) {
@@ -33277,7 +33315,7 @@
 	      "div",
 	      { id: "content" },
 	      React.createElement(
-	        "h1",
+	        "p",
 	        null,
 	        "This is Content"
 	      ),
@@ -33297,6 +33335,8 @@
 	var React = __webpack_require__(162);
 	var StudySetActions = __webpack_require__(230);
 	var StudySetStore = __webpack_require__(237);
+	var CurrentUserStore = __webpack_require__(259);
+	var hashHistory = __webpack_require__(168).hashHistory;
 	
 	var StudySet = React.createClass({
 	  displayName: 'StudySet',
@@ -33306,7 +33346,10 @@
 	  componentDidMount: function componentDidMount() {
 	    var id = this.props.params.id;
 	    StudySetActions.fetchStudySet(id);
-	    StudySetStore.addListener(this.updateState);
+	    this.listener = StudySetStore.addListener(this.updateState);
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.listener.remove();
 	  },
 	  updateState: function updateState() {
 	    this.setState({ studySet: StudySetStore.getStudySet() });
@@ -33320,37 +33363,71 @@
 	        React.createElement(
 	          'li',
 	          null,
-	          studySet.name
-	        ),
-	        React.createElement(
-	          'li',
-	          null,
+	          'Created by ',
 	          studySet.creator.username
 	        ),
 	        React.createElement(
 	          'li',
 	          null,
-	          studySet.created_at
+	          'Created at ',
+	          new Date(studySet.created_at).toLocaleString()
 	        )
 	      );
 	    }
 	  },
+	  redirectToIndex: function redirectToIndex(resp) {
+	    hashHistory.push("/");
+	  },
+	  deleteStudySet: function deleteStudySet() {
+	    StudySetActions.deleteStudySet(this.props.params.id, this.redirectToIndex);
+	  },
+	  editStudySet: function editStudySet() {
+	    hashHistory.push("/study_set_form/edit");
+	  },
+	  buttons: function buttons() {
+	    if (this.state.studySet) {
+	      if (CurrentUserStore.getCurrentUser().id === this.state.studySet.creator.id) {
+	        return React.createElement(
+	          'div',
+	          null,
+	          React.createElement(
+	            'button',
+	            { onClick: this.deleteStudySet },
+	            'Delete'
+	          ),
+	          React.createElement(
+	            'button',
+	            { onClick: this.editStudySet },
+	            'Edit'
+	          )
+	        );
+	      }
+	    }
+	  },
 	  render: function render() {
-	    // const children = React.Children.map(this.props.children, function(child){
-	    //   return React.cloneElement(child, {
-	    //     words: this.state.words
-	    //   })
-	    // });
+	    var children = "";
+	    var studySet = {};
+	    if (this.state.studySet) {
+	      children = React.cloneElement(this.props.children, {
+	        words: this.state.studySet.words
+	      });
+	      studySet = this.state.studySet;
+	    }
 	    return React.createElement(
 	      'div',
 	      { className: 'study_set' },
 	      React.createElement(
-	        'h1',
-	        null,
-	        'This is StudySet'
+	        'header',
+	        { className: 'study_set_header' },
+	        React.createElement(
+	          'h1',
+	          null,
+	          studySet.name
+	        ),
+	        this.showDetails(),
+	        this.buttons()
 	      ),
-	      this.showDetails(),
-	      this.props.children
+	      children
 	    );
 	  }
 	});
@@ -33368,30 +33445,49 @@
 	var StudySetList = React.createClass({
 	  displayName: "StudySetList",
 	  render: function render() {
-	    console.log(this.props.words);
 	    return React.createElement(
 	      "div",
-	      { className: "study_set" },
+	      { className: "study_set_list" },
 	      React.createElement(
 	        "table",
 	        null,
 	        React.createElement(
-	          "tbody",
+	          "thead",
 	          null,
 	          React.createElement(
 	            "tr",
 	            null,
 	            React.createElement(
-	              "td",
+	              "th",
 	              null,
 	              "English"
 	            ),
 	            React.createElement(
-	              "td",
+	              "th",
 	              null,
 	              "Foreign Language"
 	            )
 	          )
+	        ),
+	        React.createElement(
+	          "tbody",
+	          null,
+	          this.props.words.map(function (word) {
+	            return React.createElement(
+	              "tr",
+	              { key: word.word_english },
+	              React.createElement(
+	                "td",
+	                null,
+	                word.word_english
+	              ),
+	              React.createElement(
+	                "td",
+	                null,
+	                word.word_foreign
+	              )
+	            );
+	          })
 	        )
 	      )
 	    );
@@ -33424,6 +33520,284 @@
 	});
 	
 	module.exports = Index;
+
+/***/ },
+/* 268 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var AppDispatcher = __webpack_require__(231);
+	var ErrorConstants = __webpack_require__(258);
+	
+	module.exports = {
+	  updateError: function updateError(error) {
+	    AppDispatcher.dispatch({
+	      actionType: ErrorConstants.RECEIVE_ERROR,
+	      error: error
+	    });
+	  }
+	};
+
+/***/ },
+/* 269 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(162);
+	var StudySetActions = __webpack_require__(230);
+	var CurrentUserStore = __webpack_require__(259);
+	var ErrorStore = __webpack_require__(260);
+	var hashHistory = __webpack_require__(168).hashHistory;
+	var StudySetStore = __webpack_require__(237);
+	
+	// here I'm using a global variable because...
+	// ## the only way I could find to update array state, you need to
+	//    duplicate and replace with the new data. It's not a good idea
+	//    to mutate the state. This was not an option for us, since
+	//    even we update the array, WordSkeleton will not be duplicated,
+	//    and I would have to deep dup.
+	//
+	// ## I also found it difficult to leave the word input uncontrolled,
+	//    since I had a touble with parsing the data into the correct
+	//    object format by asscessing 'id' of the input elements. It was easy
+	//    organize the words by keeping them in an array.
+	
+	var WordSkeleton = function WordSkeleton(engl, fore) {
+	  this.word_english = engl;
+	  this.word_foreign = fore;
+	};
+	
+	function deleteEmpty(oldWords) {
+	  var newWords = [];
+	  oldWords.forEach(function (word) {
+	    if (word.word_english.length > 0 && word.word_foreign.length > 0) {
+	      newWords.push(word);
+	    }
+	  });
+	  return newWords;
+	}
+	
+	var words = void 0;
+	
+	function resetWords() {
+	  words = [new WordSkeleton("", ""), new WordSkeleton("", ""), new WordSkeleton("", "")];
+	}
+	
+	var StudySetForm = React.createClass({
+	  displayName: 'StudySetForm',
+	  getInitialState: function getInitialState() {
+	    return {
+	      error: ErrorStore.full_errors(),
+	      name: ""
+	    };
+	  },
+	  setupEdit: function setupEdit() {
+	    if (!this.id && this.props.params.action === 'edit') {
+	      var studySet = StudySetStore.getStudySet();
+	
+	      this.setState({ name: studySet.name });
+	      var toEditWords = studySet.words;
+	      words = toEditWords.map(function (word) {
+	        return new WordSkeleton(word.word_english, word.word_foreign);
+	      });
+	
+	      this.edit = true;
+	      this.id = studySet.id;
+	    }
+	  },
+	  componentWillMount: function componentWillMount() {
+	    resetWords();
+	    this.setupEdit();
+	  },
+	  componentDidMount: function componentDidMount() {
+	    console.log("didmount");
+	    this.forceUpdate();
+	    this.errorStoreListener = ErrorStore.addListener(this.receiveErrors);
+	    this.studySetStoreListener = StudySetStore.addListener(this.redirectToShow);
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.errorStoreListener.remove();
+	    this.studySetStoreListener.remove();
+	    resetWords();
+	  },
+	  redirectToShow: function redirectToShow() {
+	    var id = StudySetStore.getStudySet().id;
+	    hashHistory.push('/study_set/' + id);
+	  },
+	  receiveErrors: function receiveErrors() {
+	    this.setState({ error: ErrorStore.full_errors() });
+	  },
+	  showErrors: function showErrors() {
+	    if (this.state.error.responseJSON) {
+	      return React.createElement(
+	        'ul',
+	        { classNam: 'errors' },
+	        this.state.error.responseJSON.map(function (message) {
+	          return React.createElement(
+	            'li',
+	            { key: message },
+	            message
+	          );
+	        })
+	      );
+	    } else if (this.state.error.responseText) {
+	      return React.createElement(
+	        'ul',
+	        { classNam: 'errors' },
+	        React.createElement(
+	          'li',
+	          null,
+	          this.state.error.responseText
+	        )
+	      );
+	    }
+	  },
+	  sendStudySet: function sendStudySet(event) {
+	    event.preventDefault();
+	    var studySetData = {};
+	    studySetData.studySet = {
+	      name: this.refs.studySetName.value
+	    };
+	    studySetData.words = deleteEmpty(words).map(function (word) {
+	      return {
+	        word_english: word.word_english,
+	        word_foreign: word.word_foreign
+	      };
+	    });
+	
+	    if (this.edit) {
+	      studySetData.studySet.id = this.id;
+	      StudySetActions.editStudySet(studySetData);
+	    } else {
+	      StudySetActions.createStudySet(studySetData);
+	    }
+	  },
+	  addMoreWords: function addMoreWords(event) {
+	    event.preventDefault();
+	    words.push(new WordSkeleton("", ""));
+	    this.forceUpdate();
+	  },
+	  updateWord: function updateWord(event) {
+	    var id = event.target.id;
+	    var regex = /(\d+)_(word_english|word_foreign)/;
+	    var idx = id.match(regex)[1];
+	    var key = id.match(regex)[2];
+	
+	    words[idx][key] = event.target.value;
+	    this.forceUpdate();
+	  },
+	  nameChange: function nameChange(event) {
+	    this.setState({ name: event.target.value });
+	  },
+	  newWordInput: function newWordInput() {
+	    var _this = this;
+	
+	    return words.map(function (word, idx) {
+	      return React.createElement(
+	        'tr',
+	        { className: 'word_row', key: idx + 'row' },
+	        React.createElement(
+	          'td',
+	          null,
+	          React.createElement('input', { type: 'text',
+	            key: idx + '_english',
+	            id: idx + '_word_english',
+	            value: words[idx].word_english,
+	            onChange: _this.updateWord
+	          })
+	        ),
+	        React.createElement(
+	          'td',
+	          null,
+	          React.createElement('input', { type: 'text',
+	            key: idx + '_foreign',
+	            id: idx + '_word_foreign',
+	            value: words[idx].word_foreign,
+	            onChange: _this.updateWord
+	          })
+	        )
+	      );
+	    });
+	  },
+	
+	  // <tr key={`${idx}label`}>Item {idx}
+	
+	  submitButton: function submitButton() {
+	    return this.edit ? "Update" : "Create";
+	  },
+	  title: function title() {
+	    return this.edit ? "Edit Study Set" : "Create New Study Set";
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'form',
+	      { className: 'study_set_form' },
+	      React.createElement(
+	        'header',
+	        { className: 'study_set_header' },
+	        React.createElement(
+	          'h1',
+	          null,
+	          this.title()
+	        ),
+	        this.showErrors(),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Study Set Name',
+	          React.createElement('input', { type: 'text', className: 'input_study_set_name',
+	            ref: 'studySetName', value: this.state.name, onChange: this.nameChange })
+	        )
+	      ),
+	      React.createElement(
+	        'table',
+	        null,
+	        React.createElement(
+	          'thead',
+	          null,
+	          React.createElement(
+	            'tr',
+	            null,
+	            React.createElement(
+	              'th',
+	              null,
+	              'English'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Foreign Language'
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          'tbody',
+	          null,
+	          this.newWordInput()
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'buttons' },
+	        React.createElement(
+	          'button',
+	          { onClick: this.addMoreWords },
+	          'Add more words'
+	        ),
+	        React.createElement(
+	          'button',
+	          { onClick: this.sendStudySet },
+	          this.submitButton()
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = StudySetForm;
+	window.StudySetForm = StudySetForm;
 
 /***/ }
 /******/ ]);

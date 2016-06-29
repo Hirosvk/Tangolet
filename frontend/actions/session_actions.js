@@ -1,18 +1,19 @@
 const AppDispatcher = require('../dispatcher/dispatcher');
 const SessionUtils = require('../utils/session_utils');
 const SessionConstants = require('../constants/session_constants');
+const ErrorActions = require('./error_actions');
 
 module.exports = {
   login(credentials){
-    SessionUtils.login(credentials, this.receiveUser, this.updateError);
+    SessionUtils.login(credentials, this.receiveUser, ErrorActions.updateError);
   },
 
   logout(){
-    SessionUtils.logout(this.receiveUser, this.updateError);
+    SessionUtils.logout(this.receiveUser, ErrorActions.updateError);
   },
 
   signup(userInfo){
-    SessionUtils.signup(userInfo, this.receiveUser, this.updateError);
+    SessionUtils.signup(userInfo, this.receiveUser, ErrorActions.updateError);
   },
 
   receiveUser(currentUser){
@@ -22,10 +23,4 @@ module.exports = {
     });
   },
 
-  updateError(error){
-    AppDispatcher.dispatch({
-      actionType: SessionConstants.RECEIVE_ERROR,
-      error: error
-    });
-  }
 };

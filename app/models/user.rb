@@ -4,6 +4,10 @@ class User < ActiveRecord::Base
   validates :password, length: { minimum: 6, allow_nil: true }
 
   after_initialize :ensure_session_token
+  has_many :study_sets,
+    primary_key: :id,
+    foreign_key: :creator_id,
+    class_name: "StudySet"
 
   def ensure_session_token
     self.session_token ||= SecureRandom::urlsafe_base64(16)

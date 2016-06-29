@@ -1,3 +1,70 @@
 // Place all the styles related to the api/study_sets controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.study_set_header {
+  background: lightblue;
+  padding: 10px;
+}
+
+.study_set_header ul{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.study_set_header li {
+  margin: 5px;
+  padding: 5px;
+}
+
+.study_set_header button {
+  margin: 5px;
+}
+
+
+table {
+  margin-left: auto;
+  margin-right:auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: 3px solid black;
+}
+
+tr {
+}
+
+th {
+  background: lightpink;
+}
+
+td {
+  background: lightgrey;
+}
+
+th, td {
+  padding: 0.2rem;
+  text-align: left;
+  border: 1px solid black;
+  min-width: 150px;
+  min-height: 40px;
+}
+
+.study_set_form {
+  padding: 15px;
+  background: lightgreen;
+}
+
+.input_study_set_name {
+  border: 2px solid black;
+  margin: 5px;
+}
+
+.study_set_form .buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.study_set_form button {
+  margin: 5px;
+}

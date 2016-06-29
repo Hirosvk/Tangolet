@@ -3,14 +3,17 @@ function log(a){
 }
 
 $.ajax({
-  url: "api/user",
+  url: "api/study_sets",
   type: "POST",
   data: {
-    user: {
-      username: 'Nasley',
-      password: 'nasnas',
-      email: 'nasley@nasley.com'
-    }
+    study_set: {
+      name: "Japanse 3"
+    },
+    words: [
+      {word_english: "pen", word_foreign: "pen"},
+      {word_english: "pencil", word_foreign: "pencil"},
+      {word_english: "eraser", word_foreign: "keshigomu"},
+    ]
   },
   success: log,
   error: log

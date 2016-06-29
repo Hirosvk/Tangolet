@@ -1,5 +1,6 @@
 class StudySet < ActiveRecord::Base
   validates :name, :creator, :words, presence: true
+  validate :check_unique
 
   has_many :words,
     primary_key: :id,
@@ -13,5 +14,11 @@ class StudySet < ActiveRecord::Base
     foreign_key: :creator_id,
     class_name: "User"
 
+  private
+  def check_unique
+    if self.words.map{|word| word[:word_english]}.uniq.length != self.words.length
+      errors[:base] << "Every word has to be unique"
+    end
+  end
 
 end

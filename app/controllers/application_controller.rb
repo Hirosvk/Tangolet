@@ -19,4 +19,10 @@ class ApplicationController < ActionController::Base
     session[:session_token] = nil
   end
 
+  def require_login
+    if current_user.nil?
+      render json: "Login is required for this action", status: 401
+    end
+  end
+
 end

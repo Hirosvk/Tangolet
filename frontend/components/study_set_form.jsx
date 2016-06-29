@@ -1,0 +1,227 @@
+const React = require('react');
+const StudySetActions = require('../actions/study_set_actions');
+const CurrentUserStore = require('../stores/current_user_store');
+const ErrorStore = require('../stores/error_store');
+const hashHistory = require('react-router').hashHistory;
+const StudySetStore = require('../stores/study_set_store');
+
+// here I'm using a global variable because...
+// ## the only way I could find to update array state, you need to
+//    duplicate and replace with the new data. It's not a good idea
+//    to mutate the state. This was not an option for us, since
+//    even we update the array, WordSkeleton will not be duplicated,
+//    and I would have to deep dup.
+//
+// ## I also found it difficult to leave the word input uncontrolled,
+//    since I had a touble with parsing the data into the correct
+//    object format by asscessing 'id' of the input elements. It was easy
+//    organize the words by keeping them in an array.
+
+const WordSkeleton = function(engl, fore){
+  this.word_english = engl;
+  this.word_foreign = fore;
+};
+
+function deleteEmpty(oldWords){
+  let newWords = [];
+  oldWords.forEach( word => {
+    if (word.word_english.length > 0 &&
+        word.word_foreign.length > 0){
+      newWords.push(word);
+    }
+  });
+  return newWords;
+}
+
+let words;
+
+function resetWords(){
+  words = [ new WordSkeleton("", ""),
+            new WordSkeleton("", ""),
+            new WordSkeleton("", "")];
+}
+
+const StudySetForm = React.createClass({
+
+  getInitialState(){
+    return ({
+      error: ErrorStore.full_errors(),
+      name: "",
+    });
+  },
+
+  setupEdit(){
+    if (!this.id && this.props.params.action === 'edit'){
+      const studySet = StudySetStore.getStudySet();
+
+      this.setState({name: studySet.name});
+      const toEditWords = studySet.words;
+      words = toEditWords.map( word => {
+        return new WordSkeleton(word.word_english, word.word_foreign);
+      });
+
+      this.edit = true;
+      this.id = studySet.id;
+    }
+  },
+
+  componentWillMount(){
+    resetWords();
+    this.setupEdit();
+  },
+
+  componentDidMount(){
+    console.log("didmount");
+    this.forceUpdate();
+    this.errorStoreListener = ErrorStore.addListener(this.receiveErrors);
+    this.studySetStoreListener = StudySetStore.addListener(this.redirectToShow);
+  },
+
+  componentWillUnmount(){
+    this.errorStoreListener.remove();
+    this.studySetStoreListener.remove();
+    resetWords();
+  },
+
+  redirectToShow(){
+    const id = StudySetStore.getStudySet().id;
+    hashHistory.push(`/study_set/${id}`);
+  },
+
+  receiveErrors(){
+    this.setState({error: ErrorStore.full_errors()});
+  },
+
+
+  showErrors(){
+    if (this.state.error.responseJSON){
+      return (
+        <ul classNam="errors">
+          {
+            this.state.error.responseJSON.map( message => {
+              return <li key={message}>{message}</li>;
+            })
+          }
+        </ul>
+      );
+    } else if (this.state.error.responseText) {
+      return (
+        <ul classNam="errors">
+          {
+            <li>{this.state.error.responseText}</li>
+          }
+        </ul>
+      );
+    }
+  },
+
+  sendStudySet(event){
+    event.preventDefault();
+    let studySetData = {};
+    studySetData.studySet = {
+      name: this.refs.studySetName.value
+    };
+    studySetData.words = deleteEmpty(words).map(word => {
+      return {
+        word_english: word.word_english,
+        word_foreign: word.word_foreign
+      };
+    });
+
+    if (this.edit){
+      studySetData.studySet.id = this.id;
+      StudySetActions.editStudySet(studySetData);
+    } else {
+      StudySetActions.createStudySet(studySetData);
+    }
+  },
+
+  addMoreWords(event){
+    event.preventDefault();
+    words.push(new WordSkeleton("", ""));
+    this.forceUpdate();
+  },
+
+  updateWord(event){
+    const id = event.target.id;
+    const regex = /(\d+)_(word_english|word_foreign)/;
+    const idx = id.match(regex)[1];
+    const key = id.match(regex)[2];
+
+    words[idx][key] = event.target.value;
+    this.forceUpdate();
+  },
+
+  nameChange(event){
+    this.setState({name: event.target.value});
+  },
+
+  newWordInput(){
+    return words.map( (word, idx) => {
+      return (
+        <tr className="word_row" key={`${idx}row`}>
+            <td><input type="text"
+                   key={`${idx}_english`}
+                   id={`${idx}_word_english`}
+                   value={words[idx].word_english}
+                   onChange={this.updateWord}
+                   /></td>
+
+            <td><input type="text"
+                   key={`${idx}_foreign`}
+                   id={`${idx}_word_foreign`}
+                   value={words[idx].word_foreign}
+                   onChange={this.updateWord}
+                   /></td>
+        </tr>
+      );
+    });
+  },
+  // <tr key={`${idx}label`}>Item {idx}
+
+
+  submitButton(){
+    return this.edit ? "Update" : "Create";
+  },
+
+  title(){
+    return this.edit ? "Edit Study Set" : "Create New Study Set";
+  },
+
+  render(){
+    return(
+      <form className="study_set_form">
+        <header className="study_set_header">
+          <h1>{this.title()}</h1>
+          {this.showErrors()}
+          <label>Study Set Name
+            <input type="text" className="input_study_set_name"
+                  ref="studySetName" value={this.state.name} onChange={this.nameChange}/>
+          </label>
+        </header>
+
+
+      <table>
+        <thead>
+          <tr>
+            <th>English</th>
+            <th>Foreign Language</th>
+          </tr>
+        </thead>
+        <tbody>
+          {this.newWordInput()}
+        </tbody>
+      </table>
+
+      <div className="buttons">
+        <button onClick={this.addMoreWords}>Add more words</button>
+        <button onClick={this.sendStudySet}>{this.submitButton()}</button>
+      </div>
+      </form>
+    );
+  }
+
+});
+
+module.exports = StudySetForm;
+window.StudySetForm = StudySetForm;
