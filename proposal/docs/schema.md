@@ -17,7 +17,7 @@ session_token   | string    | null: false, unique: true
 column names    | Data Type | Details
 ----------------|-----------|---------------------
 id              | integer   |    
-study_set_name  | string    | null: false
+name            | string    | null: false
 creator_id      | integer   | null: false, indexed
 
 - study_set belongs to

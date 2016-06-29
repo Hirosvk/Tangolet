@@ -11,10 +11,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160628181455) do
+ActiveRecord::Schema.define(version: 20160629003003) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "study_set_words", force: :cascade do |t|
+    t.integer  "study_set_id", null: false
+    t.string   "word_english", null: false
+    t.string   "word_foreign", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  add_index "study_set_words", ["study_set_id", "word_english"], name: "index_study_set_words_on_study_set_id_and_word_english", unique: true, using: :btree
+  add_index "study_set_words", ["study_set_id", "word_foreign"], name: "index_study_set_words_on_study_set_id_and_word_foreign", unique: true, using: :btree
+
+  create_table "study_sets", force: :cascade do |t|
+    t.string   "name",       null: false
+    t.integer  "creator_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "study_sets", ["creator_id"], name: "index_study_sets_on_creator_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "username",        null: false
