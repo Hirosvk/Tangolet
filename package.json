@@ -24,7 +24,7 @@
     "node": "6.2.1",
     "npm": "3.9.3"
   },
-  "script":{
+  "scripts":{
     "postinstall": "./node_modules/.bin/webpack"
   }
 }
