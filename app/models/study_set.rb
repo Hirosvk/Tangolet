@@ -1,5 +1,5 @@
 class StudySet < ActiveRecord::Base
-  validates :name, :creator, :words, presence: true
+  validates :name, :creator, :words, :language, presence: true
   validate :check_unique
 
   has_many :words,
@@ -13,6 +13,8 @@ class StudySet < ActiveRecord::Base
     primary_key: :id,
     foreign_key: :creator_id,
     class_name: "User"
+
+  belongs_to :language
 
   private
   def check_unique

@@ -1,4 +1,4 @@
-json.extract! study_set, :id, :name, :created_at, :updated_at
+json.extract! study_set, :id, :name, :created_at, :updated_at, :language_id
 
 json.creator  do
   json.id study_set.creator.id

@@ -41,6 +41,6 @@ class Api::KlassesController < ApplicationController
 
   private
   def klass_params
-    params.require(:klass).permit(:name, :description)
+    params.require(:klass).permit(:name, :description, :language_id)
   end
 end

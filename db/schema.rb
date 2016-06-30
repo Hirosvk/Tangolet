@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160629231851) do
+ActiveRecord::Schema.define(version: 20160630041451) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,9 +22,18 @@ ActiveRecord::Schema.define(version: 20160629231851) do
     t.integer  "teacher_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.integer  "language_id"
   end
 
   add_index "klasses", ["teacher_id"], name: "index_klasses_on_teacher_id", using: :btree
+
+  create_table "languages", force: :cascade do |t|
+    t.string   "name",       null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "languages", ["name"], name: "index_languages_on_name", unique: true, using: :btree
 
   create_table "study_set_words", force: :cascade do |t|
     t.integer  "study_set_id", null: false
@@ -38,10 +47,11 @@ ActiveRecord::Schema.define(version: 20160629231851) do
   add_index "study_set_words", ["study_set_id", "word_foreign"], name: "index_study_set_words_on_study_set_id_and_word_foreign", unique: true, using: :btree
 
   create_table "study_sets", force: :cascade do |t|
-    t.string   "name",       null: false
-    t.integer  "creator_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "name",        null: false
+    t.integer  "creator_id",  null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "language_id"
   end
 
   add_index "study_sets", ["creator_id"], name: "index_study_sets_on_creator_id", using: :btree

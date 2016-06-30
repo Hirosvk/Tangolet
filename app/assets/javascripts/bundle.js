@@ -55,22 +55,24 @@
 	var hashHistory = ReactRouter.hashHistory;
 	
 	var StudySetActions = __webpack_require__(230);
-	var StudySetStore = __webpack_require__(237);
-	var SessionActions = __webpack_require__(256);
+	var StudySetStore = __webpack_require__(239);
+	var SessionActions = __webpack_require__(257);
+	var LanguageStore = __webpack_require__(259);
+	var LanguageActions = __webpack_require__(261);
 	
-	var LoginForm = __webpack_require__(255);
-	var SignupForm = __webpack_require__(261);
-	var Header = __webpack_require__(262);
-	var Main = __webpack_require__(263);
-	var Content = __webpack_require__(264);
-	var StudySet = __webpack_require__(265);
-	var StudySetList = __webpack_require__(266);
-	var Index = __webpack_require__(267);
-	var StudySetForm = __webpack_require__(269);
-	var KlassStore = __webpack_require__(270);
-	var KlassActions = __webpack_require__(272);
-	var KlassForm = __webpack_require__(274);
-	var Klass = __webpack_require__(275);
+	var LoginForm = __webpack_require__(263);
+	var SignupForm = __webpack_require__(266);
+	var Header = __webpack_require__(267);
+	var Main = __webpack_require__(268);
+	var Content = __webpack_require__(269);
+	var StudySet = __webpack_require__(270);
+	var StudySetList = __webpack_require__(271);
+	var Index = __webpack_require__(272);
+	var StudySetForm = __webpack_require__(273);
+	var KlassStore = __webpack_require__(274);
+	var KlassActions = __webpack_require__(276);
+	var KlassForm = __webpack_require__(278);
+	var Klass = __webpack_require__(279);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -25998,7 +26000,7 @@
 	var AppDispatcher = __webpack_require__(231);
 	var StudySetConstants = __webpack_require__(235);
 	var StudySetUtils = __webpack_require__(236);
-	var ErrorActions = __webpack_require__(268);
+	var ErrorActions = __webpack_require__(237);
 	
 	var StudySetActions = {
 	  fetchStudySet: function fetchStudySet(id, errorCallback) {
@@ -26407,13 +26409,42 @@
 
 	'use strict';
 	
-	var Store = __webpack_require__(238).Store;
+	var AppDispatcher = __webpack_require__(231);
+	var ErrorConstants = __webpack_require__(238);
+	
+	module.exports = {
+	  updateError: function updateError(error) {
+	    AppDispatcher.dispatch({
+	      actionType: ErrorConstants.RECEIVE_ERROR,
+	      error: error
+	    });
+	  }
+	};
+
+/***/ },
+/* 238 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {
+	  LOGIN_USER: "LOGIN_USER",
+	  LOGOUT_USER: "LOGOUT_USER"
+	};
+
+/***/ },
+/* 239 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Store = __webpack_require__(240).Store;
 	var AppDispatcher = __webpack_require__(231);
 	var StudySetConstants = __webpack_require__(235);
 	
 	var StudySetStore = new Store(AppDispatcher);
 	
-	var _studySet = void 0;
+	var _studySet = { creator: {}, words: [] };
 	
 	StudySetStore.getStudySet = function () {
 	  return _studySet;
@@ -26432,7 +26463,7 @@
 	window.StudySetStore = StudySetStore;
 
 /***/ },
-/* 238 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26444,15 +26475,15 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Container = __webpack_require__(239);
-	module.exports.MapStore = __webpack_require__(242);
-	module.exports.Mixin = __webpack_require__(254);
-	module.exports.ReduceStore = __webpack_require__(243);
-	module.exports.Store = __webpack_require__(244);
+	module.exports.Container = __webpack_require__(241);
+	module.exports.MapStore = __webpack_require__(244);
+	module.exports.Mixin = __webpack_require__(256);
+	module.exports.ReduceStore = __webpack_require__(245);
+	module.exports.Store = __webpack_require__(246);
 
 
 /***/ },
-/* 239 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26474,10 +26505,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStoreGroup = __webpack_require__(240);
+	var FluxStoreGroup = __webpack_require__(242);
 	
 	var invariant = __webpack_require__(234);
-	var shallowEqual = __webpack_require__(241);
+	var shallowEqual = __webpack_require__(243);
 	
 	var DEFAULT_OPTIONS = {
 	  pure: true,
@@ -26635,7 +26666,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 240 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26716,7 +26747,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 241 */
+/* 243 */
 /***/ function(module, exports) {
 
 	/**
@@ -26771,7 +26802,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 242 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26792,8 +26823,8 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxReduceStore = __webpack_require__(243);
-	var Immutable = __webpack_require__(253);
+	var FluxReduceStore = __webpack_require__(245);
+	var Immutable = __webpack_require__(255);
 	
 	var invariant = __webpack_require__(234);
 	
@@ -26921,7 +26952,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 243 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26942,9 +26973,9 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStore = __webpack_require__(244);
+	var FluxStore = __webpack_require__(246);
 	
-	var abstractMethod = __webpack_require__(252);
+	var abstractMethod = __webpack_require__(254);
 	var invariant = __webpack_require__(234);
 	
 	var FluxReduceStore = (function (_FluxStore) {
@@ -27028,7 +27059,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 244 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27047,7 +27078,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var _require = __webpack_require__(245);
+	var _require = __webpack_require__(247);
 	
 	var EventEmitter = _require.EventEmitter;
 	
@@ -27211,7 +27242,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 245 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -27224,14 +27255,14 @@
 	 */
 	
 	var fbemitter = {
-	  EventEmitter: __webpack_require__(246)
+	  EventEmitter: __webpack_require__(248)
 	};
 	
 	module.exports = fbemitter;
 
 
 /***/ },
-/* 246 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27250,11 +27281,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var EmitterSubscription = __webpack_require__(247);
-	var EventSubscriptionVendor = __webpack_require__(249);
+	var EmitterSubscription = __webpack_require__(249);
+	var EventSubscriptionVendor = __webpack_require__(251);
 	
-	var emptyFunction = __webpack_require__(251);
-	var invariant = __webpack_require__(250);
+	var emptyFunction = __webpack_require__(253);
+	var invariant = __webpack_require__(252);
 	
 	/**
 	 * @class BaseEventEmitter
@@ -27428,7 +27459,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 247 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -27449,7 +27480,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var EventSubscription = __webpack_require__(248);
+	var EventSubscription = __webpack_require__(250);
 	
 	/**
 	 * EmitterSubscription represents a subscription with listener and context data.
@@ -27481,7 +27512,7 @@
 	module.exports = EmitterSubscription;
 
 /***/ },
-/* 248 */
+/* 250 */
 /***/ function(module, exports) {
 
 	/**
@@ -27535,7 +27566,7 @@
 	module.exports = EventSubscription;
 
 /***/ },
-/* 249 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27554,7 +27585,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(250);
+	var invariant = __webpack_require__(252);
 	
 	/**
 	 * EventSubscriptionVendor stores a set of EventSubscriptions that are
@@ -27644,7 +27675,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 250 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27699,7 +27730,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 251 */
+/* 253 */
 /***/ function(module, exports) {
 
 	/**
@@ -27741,7 +27772,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 252 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27768,7 +27799,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 253 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32752,7 +32783,7 @@
 	}));
 
 /***/ },
-/* 254 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -32769,7 +32800,7 @@
 	
 	'use strict';
 	
-	var FluxStoreGroup = __webpack_require__(240);
+	var FluxStoreGroup = __webpack_require__(242);
 	
 	var invariant = __webpack_require__(234);
 	
@@ -32875,15 +32906,165 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 255 */
+/* 257 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var AppDispatcher = __webpack_require__(231);
+	var SessionUtils = __webpack_require__(258);
+	var SessionConstants = __webpack_require__(238);
+	var ErrorActions = __webpack_require__(237);
+	
+	module.exports = {
+	  login: function login(credentials) {
+	    SessionUtils.login(credentials, this.receiveUser, ErrorActions.updateError);
+	  },
+	  logout: function logout() {
+	    SessionUtils.logout(this.receiveUser, ErrorActions.updateError);
+	  },
+	  signup: function signup(userInfo) {
+	    SessionUtils.signup(userInfo, this.receiveUser, ErrorActions.updateError);
+	  },
+	  receiveUser: function receiveUser(currentUser) {
+	    AppDispatcher.dispatch({
+	      actionType: SessionConstants.LOGIN_USER,
+	      user: currentUser
+	    });
+	  }
+	};
+
+/***/ },
+/* 258 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {
+	  login: function login(credentials, successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/session",
+	      type: "POST",
+	      data: {
+	        user: credentials
+	      },
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  logout: function logout(successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/session",
+	      type: "DELETE",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  signup: function signup(userInfo, successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/user",
+	      type: "POST",
+	      data: {
+	        user: userInfo
+	      },
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  }
+	};
+
+/***/ },
+/* 259 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Store = __webpack_require__(240).Store;
+	var AppDispatcher = __webpack_require__(231);
+	var LanguageConstants = __webpack_require__(260);
+	
+	var LanguageStore = new Store(AppDispatcher);
+	
+	var languages = { languages: [] };
+	
+	LanguageStore.all = function () {
+	  return languages.languages;
+	};
+	
+	LanguageStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case LanguageConstants.RECEIVE_LANGUAGES:
+	      languages = payload.languages;
+	      this.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = LanguageStore;
+	window.LanguageStore = LanguageStore;
+
+/***/ },
+/* 260 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {
+	  RECEIVE_LANGUAGES: "RECEIVE_LANGUAGES"
+	};
+
+/***/ },
+/* 261 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var AppDispatcher = __webpack_require__(231);
+	var LanguageUtils = __webpack_require__(262);
+	var LanguageConstants = __webpack_require__(260);
+	
+	var LanguageActions = {
+	  fetchAllLanguages: function fetchAllLanguages(errorCallback) {
+	    LanguageUtils.fetchAllLanguages(this.receiveAllLanguages, errorCallback);
+	  },
+	  receiveAllLanguages: function receiveAllLanguages(languages) {
+	    AppDispatcher.dispatch({
+	      actionType: LanguageConstants.RECEIVE_LANGUAGES,
+	      languages: languages
+	    });
+	  }
+	};
+	
+	module.exports = LanguageActions;
+	window.LanguageActions = LanguageActions;
+
+/***/ },
+/* 262 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {
+	  fetchAllLanguages: function fetchAllLanguages(successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/languages/",
+	      type: "GET",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  }
+	};
+
+/***/ },
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(162);
-	var SessionActions = __webpack_require__(256);
-	var CurrentUserStore = __webpack_require__(259);
-	var ErrorStore = __webpack_require__(260);
+	var SessionActions = __webpack_require__(257);
+	var CurrentUserStore = __webpack_require__(264);
+	var ErrorStore = __webpack_require__(265);
 	var hashHistory = __webpack_require__(168).hashHistory;
 	
 	var LoginForm = React.createClass({
@@ -32962,93 +33143,14 @@
 	window.LoginForm = LoginForm;
 
 /***/ },
-/* 256 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
+	var Store = __webpack_require__(240).Store;
 	var AppDispatcher = __webpack_require__(231);
-	var SessionUtils = __webpack_require__(257);
-	var SessionConstants = __webpack_require__(258);
-	var ErrorActions = __webpack_require__(268);
-	
-	module.exports = {
-	  login: function login(credentials) {
-	    SessionUtils.login(credentials, this.receiveUser, ErrorActions.updateError);
-	  },
-	  logout: function logout() {
-	    SessionUtils.logout(this.receiveUser, ErrorActions.updateError);
-	  },
-	  signup: function signup(userInfo) {
-	    SessionUtils.signup(userInfo, this.receiveUser, ErrorActions.updateError);
-	  },
-	  receiveUser: function receiveUser(currentUser) {
-	    AppDispatcher.dispatch({
-	      actionType: SessionConstants.LOGIN_USER,
-	      user: currentUser
-	    });
-	  }
-	};
-
-/***/ },
-/* 257 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	module.exports = {
-	  login: function login(credentials, successCallback, errorCallback) {
-	    $.ajax({
-	      url: "api/session",
-	      type: "POST",
-	      data: {
-	        user: credentials
-	      },
-	      success: successCallback,
-	      error: errorCallback
-	    });
-	  },
-	  logout: function logout(successCallback, errorCallback) {
-	    $.ajax({
-	      url: "api/session",
-	      type: "DELETE",
-	      success: successCallback,
-	      error: errorCallback
-	    });
-	  },
-	  signup: function signup(userInfo, successCallback, errorCallback) {
-	    $.ajax({
-	      url: "api/user",
-	      type: "POST",
-	      data: {
-	        user: userInfo
-	      },
-	      success: successCallback,
-	      error: errorCallback
-	    });
-	  }
-	};
-
-/***/ },
-/* 258 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	module.exports = {
-	  LOGIN_USER: "LOGIN_USER",
-	  LOGOUT_USER: "LOGOUT_USER"
-	};
-
-/***/ },
-/* 259 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Store = __webpack_require__(238).Store;
-	var AppDispatcher = __webpack_require__(231);
-	var SessionConstants = __webpack_require__(258);
+	var SessionConstants = __webpack_require__(238);
 	
 	var CurrentUserStore = new Store(AppDispatcher);
 	
@@ -33071,14 +33173,14 @@
 	window.CurrentUserStore = CurrentUserStore;
 
 /***/ },
-/* 260 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Store = __webpack_require__(238).Store;
+	var Store = __webpack_require__(240).Store;
 	var AppDispatcher = __webpack_require__(231);
-	var SessionConstants = __webpack_require__(258);
+	var SessionConstants = __webpack_require__(238);
 	
 	var ErrorStore = new Store(AppDispatcher);
 	
@@ -33103,15 +33205,15 @@
 	window.ErrorStore = ErrorStore;
 
 /***/ },
-/* 261 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(162);
-	var SessionActions = __webpack_require__(256);
-	var CurrentUserStore = __webpack_require__(259);
-	var ErrorStore = __webpack_require__(260);
+	var SessionActions = __webpack_require__(257);
+	var CurrentUserStore = __webpack_require__(264);
+	var ErrorStore = __webpack_require__(265);
 	var hashHistory = __webpack_require__(168).hashHistory;
 	
 	var SignupForm = React.createClass({
@@ -33199,14 +33301,14 @@
 	window.SignupForm = SignupForm;
 
 /***/ },
-/* 262 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(162);
-	var CurrentUserStore = __webpack_require__(259);
-	var SessionActions = __webpack_require__(256);
+	var CurrentUserStore = __webpack_require__(264);
+	var SessionActions = __webpack_require__(257);
 	var hashHistory = __webpack_require__(168).hashHistory;
 	
 	var Header = React.createClass({
@@ -33280,7 +33382,7 @@
 	module.exports = Header;
 
 /***/ },
-/* 263 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33306,7 +33408,7 @@
 	module.exports = Main;
 
 /***/ },
-/* 264 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33332,15 +33434,15 @@
 	module.exports = Content;
 
 /***/ },
-/* 265 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(162);
 	var StudySetActions = __webpack_require__(230);
-	var StudySetStore = __webpack_require__(237);
-	var CurrentUserStore = __webpack_require__(259);
+	var StudySetStore = __webpack_require__(239);
+	var CurrentUserStore = __webpack_require__(264);
 	var hashHistory = __webpack_require__(168).hashHistory;
 	
 	var StudySet = React.createClass({
@@ -33361,24 +33463,22 @@
 	  },
 	  showDetails: function showDetails() {
 	    var studySet = this.state.studySet;
-	    if (studySet) {
-	      return React.createElement(
-	        'ul',
+	    return React.createElement(
+	      'ul',
+	      null,
+	      React.createElement(
+	        'li',
 	        null,
-	        React.createElement(
-	          'li',
-	          null,
-	          'Created by ',
-	          studySet.creator.username
-	        ),
-	        React.createElement(
-	          'li',
-	          null,
-	          'Created at ',
-	          new Date(studySet.created_at).toLocaleString()
-	        )
-	      );
-	    }
+	        'Created by ',
+	        studySet.creator.username
+	      ),
+	      React.createElement(
+	        'li',
+	        null,
+	        'Created at ',
+	        new Date(studySet.created_at).toLocaleString()
+	      )
+	    );
 	  },
 	  redirectToIndex: function redirectToIndex(resp) {
 	    hashHistory.push("/");
@@ -33390,34 +33490,28 @@
 	    hashHistory.push("/study_set_form/edit");
 	  },
 	  buttons: function buttons() {
-	    if (this.state.studySet) {
-	      if (CurrentUserStore.getCurrentUser().id === this.state.studySet.creator.id) {
-	        return React.createElement(
-	          'div',
-	          null,
-	          React.createElement(
-	            'button',
-	            { onClick: this.deleteStudySet },
-	            'Delete'
-	          ),
-	          React.createElement(
-	            'button',
-	            { onClick: this.editStudySet },
-	            'Edit'
-	          )
-	        );
-	      }
+	    if (CurrentUserStore.getCurrentUser().id === this.state.studySet.creator.id) {
+	      return React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'button',
+	          { onClick: this.deleteStudySet },
+	          'Delete'
+	        ),
+	        React.createElement(
+	          'button',
+	          { onClick: this.editStudySet },
+	          'Edit'
+	        )
+	      );
 	    }
 	  },
 	  render: function render() {
 	    var children = "";
-	    var studySet = {};
-	    if (this.state.studySet) {
-	      children = React.cloneElement(this.props.children, {
-	        words: this.state.studySet.words
-	      });
-	      studySet = this.state.studySet;
-	    }
+	    children = React.cloneElement(this.props.children, {
+	      words: this.state.studySet.words
+	    });
 	    return React.createElement(
 	      'div',
 	      { className: 'study_set' },
@@ -33427,7 +33521,7 @@
 	        React.createElement(
 	          'h1',
 	          null,
-	          studySet.name
+	          this.state.studySet.name
 	        ),
 	        this.showDetails(),
 	        this.buttons()
@@ -33440,7 +33534,7 @@
 	module.exports = StudySet;
 
 /***/ },
-/* 266 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33502,7 +33596,7 @@
 	module.exports = StudySetList;
 
 /***/ },
-/* 267 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33527,35 +33621,19 @@
 	module.exports = Index;
 
 /***/ },
-/* 268 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var AppDispatcher = __webpack_require__(231);
-	var ErrorConstants = __webpack_require__(258);
-	
-	module.exports = {
-	  updateError: function updateError(error) {
-	    AppDispatcher.dispatch({
-	      actionType: ErrorConstants.RECEIVE_ERROR,
-	      error: error
-	    });
-	  }
-	};
-
-/***/ },
-/* 269 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(162);
 	var StudySetActions = __webpack_require__(230);
-	var CurrentUserStore = __webpack_require__(259);
-	var ErrorStore = __webpack_require__(260);
+	var CurrentUserStore = __webpack_require__(264);
+	var ErrorStore = __webpack_require__(265);
 	var hashHistory = __webpack_require__(168).hashHistory;
-	var StudySetStore = __webpack_require__(237);
+	var StudySetStore = __webpack_require__(239);
+	var LanguageActions = __webpack_require__(261);
+	var LanguageStore = __webpack_require__(259);
 	
 	// here I'm using a global variable because...
 	// ## the only way I could find to update array state, you need to
@@ -33577,7 +33655,7 @@
 	function deleteEmpty(oldWords) {
 	  var newWords = [];
 	  oldWords.forEach(function (word) {
-	    if (!(word.word_english.length === 0 && word.word_foreign.length > 0)) {
+	    if (!(word.word_english.length === 0 && word.word_foreign.length === 0)) {
 	      newWords.push(word);
 	    }
 	  });
@@ -33595,14 +33673,19 @@
 	  getInitialState: function getInitialState() {
 	    return {
 	      error: ErrorStore.full_errors(),
-	      name: ""
+	      name: "",
+	      languages: LanguageStore.all(),
+	      language_id: undefined
 	    };
 	  },
 	  setupEdit: function setupEdit() {
 	    if (!this.id && this.props.params.action === 'edit') {
 	      var studySet = StudySetStore.getStudySet();
 	
-	      this.setState({ name: studySet.name });
+	      this.setState({
+	        name: studySet.name,
+	        language_id: studySet.language_id
+	      });
 	      var toEditWords = studySet.words;
 	      words = toEditWords.map(function (word) {
 	        return new WordSkeleton(word.word_english, word.word_foreign);
@@ -33615,15 +33698,19 @@
 	  componentWillMount: function componentWillMount() {
 	    resetWords();
 	    this.setupEdit();
+	    LanguageActions.fetchAllLanguages();
 	  },
 	  componentDidMount: function componentDidMount() {
 	    this.errorStoreListener = ErrorStore.addListener(this.receiveErrors);
+	    this.languageStoreListener = LanguageStore.addListener(this.receiveLanguages);
 	    this.studySetStoreListener = StudySetStore.addListener(this.redirectToShow);
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.errorStoreListener.remove();
 	    this.studySetStoreListener.remove();
+	    this.languageStoreListener.remove();
 	    resetWords();
+	    ErrorStore.resetErrors();
 	  },
 	  redirectToShow: function redirectToShow() {
 	    var id = StudySetStore.getStudySet().id;
@@ -33631,6 +33718,9 @@
 	  },
 	  receiveErrors: function receiveErrors() {
 	    this.setState({ error: ErrorStore.full_errors() });
+	  },
+	  receiveLanguages: function receiveLanguages() {
+	    this.setState({ languages: LanguageStore.all() });
 	  },
 	  showErrors: function showErrors() {
 	    if (this.state.error.responseJSON) {
@@ -33661,7 +33751,8 @@
 	    event.preventDefault();
 	    var studySetData = {};
 	    studySetData.studySet = {
-	      name: this.refs.studySetName.value
+	      name: this.refs.studySetName.value,
+	      language_id: this.state.language_id
 	    };
 	    studySetData.words = deleteEmpty(words).map(function (word) {
 	      return {
@@ -33695,6 +33786,9 @@
 	  nameChange: function nameChange(event) {
 	    this.setState({ name: event.target.value });
 	  },
+	  languageChange: function languageChange(event) {
+	    this.setState({ language_id: event.target.value });
+	  },
 	  newWordInput: function newWordInput() {
 	    var _this = this;
 	
@@ -33725,14 +33819,36 @@
 	      );
 	    });
 	  },
-	
-	  // <tr key={`${idx}label`}>Item {idx}
-	
 	  submitButton: function submitButton() {
 	    return this.edit ? "Update" : "Create";
 	  },
 	  title: function title() {
 	    return this.edit ? "Edit Study Set" : "Create New Study Set";
+	  },
+	  languageChoices: function languageChoices() {
+	    return React.createElement(
+	      'label',
+	      null,
+	      'Choose language',
+	      React.createElement(
+	        'select',
+	        {
+	          defaultValue: this.state.language_id,
+	          onChange: this.languageChange },
+	        this.state.languages.map(function (language) {
+	          // let selected = "false";
+	          // if (language.id === this.state.language_id){
+	          //   selected = "true"
+	          // }
+	          return React.createElement(
+	            'option',
+	            { value: language.id,
+	              key: language.id },
+	            language.name
+	          );
+	        })
+	      )
+	    );
 	  },
 	  render: function render() {
 	    return React.createElement(
@@ -33753,7 +33869,8 @@
 	          'Study Set Name',
 	          React.createElement('input', { type: 'text', className: 'input_study_set_name',
 	            ref: 'studySetName', value: this.state.name, onChange: this.nameChange })
-	        )
+	        ),
+	        this.languageChoices()
 	      ),
 	      React.createElement(
 	        'table',
@@ -33804,18 +33921,18 @@
 	window.StudySetForm = StudySetForm;
 
 /***/ },
-/* 270 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Store = __webpack_require__(238).Store;
+	var Store = __webpack_require__(240).Store;
 	var AppDispatcher = __webpack_require__(231);
-	var KlassConstants = __webpack_require__(271);
+	var KlassConstants = __webpack_require__(275);
 	
 	var KlassStore = new Store(AppDispatcher);
 	
-	var _klass = void 0;
+	var _klass = { teacher: {} };
 	
 	KlassStore.getKlass = function () {
 	  return _klass;
@@ -33835,7 +33952,7 @@
 	window.KlassStore = KlassStore;
 
 /***/ },
-/* 271 */
+/* 275 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -33845,15 +33962,15 @@
 	};
 
 /***/ },
-/* 272 */
+/* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var AppDispatcher = __webpack_require__(231);
-	var KlassConstants = __webpack_require__(271);
-	var KlassUtils = __webpack_require__(273);
-	var ErrorActions = __webpack_require__(268);
+	var KlassConstants = __webpack_require__(275);
+	var KlassUtils = __webpack_require__(277);
+	var ErrorActions = __webpack_require__(237);
 	
 	var KlassActions = {
 	  fetchKlass: function fetchKlass(id, errorCallback) {
@@ -33880,7 +33997,7 @@
 	window.KlassActions = KlassActions;
 
 /***/ },
-/* 273 */
+/* 277 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -33930,17 +34047,17 @@
 	};
 
 /***/ },
-/* 274 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(162);
-	var KlassActions = __webpack_require__(272);
-	var CurrentUserStore = __webpack_require__(259);
-	var ErrorStore = __webpack_require__(260);
+	var KlassActions = __webpack_require__(276);
+	var CurrentUserStore = __webpack_require__(264);
+	var ErrorStore = __webpack_require__(265);
 	var hashHistory = __webpack_require__(168).hashHistory;
-	var KlassStore = __webpack_require__(270);
+	var KlassStore = __webpack_require__(274);
 	
 	var KlassForm = React.createClass({
 	  displayName: 'KlassForm',
@@ -34065,15 +34182,15 @@
 	window.KlassForm = KlassForm;
 
 /***/ },
-/* 275 */
+/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(162);
-	var KlassActions = __webpack_require__(272);
-	var KlassStore = __webpack_require__(270);
-	var CurrentUserStore = __webpack_require__(259);
+	var KlassActions = __webpack_require__(276);
+	var KlassStore = __webpack_require__(274);
+	var CurrentUserStore = __webpack_require__(264);
 	var hashHistory = __webpack_require__(168).hashHistory;
 	
 	var Klass = React.createClass({
@@ -34093,14 +34210,22 @@
 	    this.setState({ klass: KlassStore.getKlass() });
 	  },
 	  showDetails: function showDetails() {
-	    var klass = this.state.klass;
-	    if (klass) {
-	      return React.createElement(
+	    return React.createElement(
+	      'div',
+	      { className: 'klass_details' },
+	      React.createElement(
 	        'p',
 	        null,
-	        klass.description
-	      );
-	    }
+	        'Teacher: ',
+	        this.state.klass.teacher.username
+	      ),
+	      React.createElement(
+	        'p',
+	        null,
+	        'Description: ',
+	        this.state.klass.description
+	      )
+	    );
 	  },
 	  redirectToIndex: function redirectToIndex(resp) {
 	    hashHistory.push("/");
@@ -34112,32 +34237,24 @@
 	    hashHistory.push("/class_form/edit");
 	  },
 	  buttons: function buttons() {
-	    if (this.state.klass) {
-	      if (CurrentUserStore.getCurrentUser().id === this.state.klass.teacher.id) {
-	        return React.createElement(
-	          'div',
-	          null,
-	          React.createElement(
-	            'button',
-	            { onClick: this.deleteKlass },
-	            'Delete'
-	          ),
-	          React.createElement(
-	            'button',
-	            { onClick: this.editKlass },
-	            'Edit'
-	          )
-	        );
-	      }
+	    if (CurrentUserStore.getCurrentUser().id === this.state.klass.teacher.id) {
+	      return React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'button',
+	          { onClick: this.deleteKlass },
+	          'Delete'
+	        ),
+	        React.createElement(
+	          'button',
+	          { onClick: this.editKlass },
+	          'Edit'
+	        )
+	      );
 	    }
 	  },
 	  render: function render() {
-	    var klass = void 0;
-	    if (this.state.klass) {
-	      klass = this.state.klass;
-	    } else {
-	      klass = {};
-	    }
 	    return React.createElement(
 	      'div',
 	      { className: 'klass' },
@@ -34147,7 +34264,7 @@
 	        React.createElement(
 	          'h1',
 	          null,
-	          klass.name
+	          this.state.klass.name
 	        ),
 	        this.showDetails(),
 	        this.buttons()

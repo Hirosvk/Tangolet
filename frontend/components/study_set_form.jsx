@@ -4,6 +4,8 @@ const CurrentUserStore = require('../stores/current_user_store');
 const ErrorStore = require('../stores/error_store');
 const hashHistory = require('react-router').hashHistory;
 const StudySetStore = require('../stores/study_set_store');
+const LanguageActions = require('../actions/language_actions');
+const LanguageStore = require('../stores/language_store');
 
 // here I'm using a global variable because...
 // ## the only way I could find to update array state, you need to
@@ -26,7 +28,7 @@ function deleteEmpty(oldWords){
   let newWords = [];
   oldWords.forEach( word => {
     if (!(word.word_english.length === 0 &&
-        word.word_foreign.length > 0)){
+        word.word_foreign.length === 0)){
       newWords.push(word);
     }
   });
@@ -47,6 +49,8 @@ const StudySetForm = React.createClass({
     return ({
       error: ErrorStore.full_errors(),
       name: "",
+      languages: LanguageStore.all(),
+      language_id: undefined
     });
   },
 
@@ -54,7 +58,10 @@ const StudySetForm = React.createClass({
     if (!this.id && this.props.params.action === 'edit'){
       const studySet = StudySetStore.getStudySet();
 
-      this.setState({name: studySet.name});
+      this.setState({
+        name: studySet.name,
+        language_id: studySet.language_id
+      });
       const toEditWords = studySet.words;
       words = toEditWords.map( word => {
         return new WordSkeleton(word.word_english, word.word_foreign);
@@ -68,17 +75,21 @@ const StudySetForm = React.createClass({
   componentWillMount(){
     resetWords();
     this.setupEdit();
+    LanguageActions.fetchAllLanguages();
   },
 
   componentDidMount(){
     this.errorStoreListener = ErrorStore.addListener(this.receiveErrors);
+    this.languageStoreListener = LanguageStore.addListener(this.receiveLanguages);
     this.studySetStoreListener = StudySetStore.addListener(this.redirectToShow);
   },
 
   componentWillUnmount(){
     this.errorStoreListener.remove();
     this.studySetStoreListener.remove();
+    this.languageStoreListener.remove();
     resetWords();
+    ErrorStore.resetErrors();
   },
 
   redirectToShow(){
@@ -90,6 +101,9 @@ const StudySetForm = React.createClass({
     this.setState({error: ErrorStore.full_errors()});
   },
 
+  receiveLanguages(){
+    this.setState({languages: LanguageStore.all()});
+  },
 
   showErrors(){
     if (this.state.error.responseJSON){
@@ -117,7 +131,8 @@ const StudySetForm = React.createClass({
     event.preventDefault();
     let studySetData = {};
     studySetData.studySet = {
-      name: this.refs.studySetName.value
+      name: this.refs.studySetName.value,
+      language_id: this.state.language_id
     };
     studySetData.words = deleteEmpty(words).map(word => {
       return {
@@ -155,6 +170,10 @@ const StudySetForm = React.createClass({
     this.setState({name: event.target.value});
   },
 
+  languageChange(event){
+    this.setState({language_id: event.target.value});
+  },
+
   newWordInput(){
     return words.map( (word, idx) => {
       return (
@@ -176,8 +195,6 @@ const StudySetForm = React.createClass({
       );
     });
   },
-  // <tr key={`${idx}label`}>Item {idx}
-
 
   submitButton(){
     return this.edit ? "Update" : "Create";
@@ -185,6 +202,26 @@ const StudySetForm = React.createClass({
 
   title(){
     return this.edit ? "Edit Study Set" : "Create New Study Set";
+  },
+
+  languageChoices(){
+    return (
+    <label>Choose language<select
+      defaultValue={this.state.language_id}
+      onChange={this.languageChange}>
+      {
+        this.state.languages.map( language => {
+          // let selected = "false";
+          // if (language.id === this.state.language_id){
+          //   selected = "true"
+          // }
+          return <option value={language.id}
+            key={language.id}>{language.name}</option>
+        })
+      }
+    </select></label>
+
+    );
   },
 
   render(){
@@ -197,6 +234,7 @@ const StudySetForm = React.createClass({
             <input type="text" className="input_study_set_name"
                   ref="studySetName" value={this.state.name} onChange={this.nameChange}/>
           </label>
+          {this.languageChoices()}
         </header>
 
 

@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     resource :user, only: [:create, :show]
     resources :study_sets
     resources :klasses
+    resources :languages, only: [:index]
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

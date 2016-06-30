@@ -1,0 +1,3 @@
+module.exports = {
+  RECEIVE_LANGUAGES: "RECEIVE_LANGUAGES"
+}

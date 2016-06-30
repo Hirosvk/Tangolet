@@ -40,6 +40,7 @@ class Api::StudySetsController < ApplicationController
     end
 
     @study_set.name = study_set_params[:name]
+    @study_set.language_id = study_set_params[:language_id]
     @study_set.words.destroy_all
     words_params.each do |_, word|
       @study_set.words.new(word.permit(:word_english, :word_foreign))
@@ -70,7 +71,7 @@ class Api::StudySetsController < ApplicationController
 
 private
   def study_set_params
-    params.require(:study_set).permit(:name)
+    params.require(:study_set).permit(:name, :language_id)
   end
 
   def words_params

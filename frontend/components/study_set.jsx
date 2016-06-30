@@ -25,14 +25,12 @@ const StudySet = React.createClass({
 
   showDetails(){
     const studySet = this.state.studySet;
-    if (studySet){
-      return (
-        <ul>
-          <li>Created by {studySet.creator.username}</li>
-          <li>Created at {new Date(studySet.created_at).toLocaleString()}</li>
-        </ul>
-      );
-    }
+    return (
+      <ul>
+        <li>Created by {studySet.creator.username}</li>
+        <li>Created at {new Date(studySet.created_at).toLocaleString()}</li>
+      </ul>
+    );
   },
 
   redirectToIndex(resp){
@@ -48,31 +46,25 @@ const StudySet = React.createClass({
   },
 
   buttons(){
-    if (this.state.studySet){
-      if (CurrentUserStore.getCurrentUser().id === this.state.studySet.creator.id ){
-        return (
-          <div>
-            <button onClick={this.deleteStudySet}>Delete</button>
-            <button onClick={this.editStudySet}>Edit</button>
-          </div>
-        );
-      }
+    if (CurrentUserStore.getCurrentUser().id === this.state.studySet.creator.id ){
+      return (
+        <div>
+          <button onClick={this.deleteStudySet}>Delete</button>
+          <button onClick={this.editStudySet}>Edit</button>
+        </div>
+      );
     }
   },
 
   render(){
     let children = "";
-    let studySet = {};
-    if (this.state.studySet){
-      children = React.cloneElement(this.props.children, {
-        words: this.state.studySet.words
-      });
-      studySet = this.state.studySet;
-    }
+    children = React.cloneElement(this.props.children, {
+      words: this.state.studySet.words
+    });
     return (
       <div className="study_set">
         <header className="study_set_header">
-          <h1>{studySet.name}</h1>
+          <h1>{this.state.studySet.name}</h1>
           {this.showDetails()}
           {this.buttons()}
         </header>

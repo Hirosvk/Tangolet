@@ -4,7 +4,7 @@ const StudySetConstants = require('../constants/study_set_constants');
 
 const StudySetStore = new Store(AppDispatcher);
 
-let _studySet;
+let _studySet = {creator: {}, words: []};
 
 StudySetStore.getStudySet = function(){
   return _studySet;

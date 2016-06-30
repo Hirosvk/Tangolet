@@ -9,6 +9,8 @@ const hashHistory = ReactRouter.hashHistory;
 const StudySetActions = require('./actions/study_set_actions');
 const StudySetStore = require('./stores/study_set_store');
 const SessionActions = require('./actions/session_actions');
+const LanguageStore = require('./stores/language_store');
+const LanguageActions = require('./actions/language_actions');
 
 const LoginForm = require('./components/login_form');
 const SignupForm = require('./components/signup_form');

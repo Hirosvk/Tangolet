@@ -4,7 +4,7 @@ const KlassConstants = require('../constants/klass_constants');
 
 const KlassStore = new Store(AppDispatcher);
 
-let _klass;
+let _klass = {teacher: {}};
 
 KlassStore.getKlass = function(){
   return _klass;
