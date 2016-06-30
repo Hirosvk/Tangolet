@@ -4,7 +4,13 @@ const KlassConstants = require('../constants/klass_constants');
 
 const KlassStore = new Store(AppDispatcher);
 
-let _klass = {teacher: {}};
+let _klass = {
+          teacher: {},
+          language:{},
+          study_set_ids: []
+        };
+// properties are pre-defined here, so that the view files
+// don't throw errors with undefined objects.
 
 KlassStore.getKlass = function(){
   return _klass;

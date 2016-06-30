@@ -11,10 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160630173446) do
+ActiveRecord::Schema.define(version: 20160630222847) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "enrollments", force: :cascade do |t|
+    t.integer  "klass_id",   null: false
+    t.integer  "student_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "enrollments", ["klass_id", "student_id"], name: "index_enrollments_on_klass_id_and_student_id", unique: true, using: :btree
+  add_index "enrollments", ["klass_id"], name: "index_enrollments_on_klass_id", using: :btree
+  add_index "enrollments", ["student_id"], name: "index_enrollments_on_student_id", using: :btree
 
   create_table "klass_set_joins", force: :cascade do |t|
     t.integer  "klass_id",     null: false

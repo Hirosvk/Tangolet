@@ -165,13 +165,13 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
   - [x] Api endpoint at KlassController using study_set_ids
   - [x] add StudySet to class Form
   - [x] able to filter with study_sets#all with a query
-  - [ ] add-study-sets-to-class form
+  - [x] add-study-sets-to-class form
 
 
-- [ ] enrollment
-  - [ ] model & migration
-  - [ ] API endpoints & server routes
-  - [ ] toggle button on Class page
+- [x] enrollment
+  - [x] model & migration
+  - [x] API endpoints & server routes
+  - [x] toggle button on Class page
 
 
 ## Phase 6: Styling (1day w9d2)
@@ -180,7 +180,7 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 
 ## Phase 7: Navbar (1day w9d1)
 - [ ] backend setup
-  - [ ] user.klasses_created, user.klasses_enrolled, user.study_sets_created
+  - [ ] user.klasses_created, user.klasses, user.study_sets
   - [ ] API endpoints and server router setup
 - [ ] Navbar React Component
 - [ ] UserAction

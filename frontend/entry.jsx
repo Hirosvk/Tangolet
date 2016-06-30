@@ -13,6 +13,9 @@ const LanguageStore = require('./stores/language_store');
 const LanguageActions = require('./actions/language_actions');
 const IndexActions = require('./actions/index_actions');
 const IndexStores = require('./stores/index_store');
+const CurrentUserStore = require('./stores/current_user_store');
+const KlassStore = require('./stores/klass_store');
+const KlassActions = require('./actions/klass_actions');
 
 const LoginForm = require('./components/login_form');
 const SignupForm = require('./components/signup_form');
@@ -23,10 +26,10 @@ const StudySet = require('./components/study_set');
 const StudySetList = require('./components/study_set_list');
 const Index = require('./components/index.jsx');
 const StudySetForm = require('./components/study_set_form');
-const KlassStore = require('./stores/klass_store');
-const KlassActions = require('./actions/klass_actions');
 const KlassForm = require('./components/klass_form');
 const Klass = require('./components/klass');
+const AddStudySetForm = require('./components/add_study_set_form');
+const StudySetIndex = require('./components/study_set_index');
 
 const App = React.createClass({
   render(){
@@ -48,7 +51,10 @@ const appRouter = (
     <Route path="/" component={App}>
       <Route component={Content}>
         <IndexRoute component={Index} />
-        <Route path="class/:id" component={Klass} />
+        <Route path="class/:klassId" component={Klass}>
+          <IndexRoute component={StudySetIndex} />
+          <Route path='add_study_sets' component={AddStudySetForm} />
+        </Route>
         <Route path="study_set/:id" component={StudySet}>
           <IndexRoute component={StudySetList} />
         </Route>

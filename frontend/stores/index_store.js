@@ -21,11 +21,11 @@ IndexStore.getKlasses = function(){
 IndexStore.__onDispatch = function(payload){
   switch(payload.actionType){
     case IndexConstants.RECEIVE_STUDY_SET_INDEX:
-      indices.studySets = payload.studySets.study_sets;
+      indices.studySets = payload.studySets;
       this.__emitChange();
       break;
     case IndexConstants.RECEIVE_KLASS_INDEX:
-      indices.klasses = payload.klasses.klasses;
+      indices.klasses = payload.klasses;
       this.__emitChange();
       break;
 

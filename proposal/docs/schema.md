@@ -11,7 +11,7 @@ session_token   | string    | null: false, unique: true
   - sets_created
   - test_taken
   - klasses_created
-  - klasses_enrolled
+  - klasses(enrolled classes)
 
 ## study_sets
 column names    | Data Type | Details
@@ -21,6 +21,7 @@ name            | string    | null: false
 creator_id      | integer   | null: false, indexed
 
 - study_set belongs to
+  - language
   - creator(user)
 - study_set has many
   - study_set_words: dependency: destroy
@@ -60,6 +61,7 @@ description     | text      |
 teacher_id      | integer   | null: false, indexed
 
 - belongs to
+  - language
   - teacher
 - has many
   - students
@@ -86,3 +88,14 @@ student_id      | integer   | null: false, klass/student unique pair
 - belongs to
   - klass
   - student(user)
+
+
+## languages
+column names    | Data Type | Details
+----------------|-----------|---------------------
+id              | integer   |
+name            | string    | null: false
+
+- has many
+  - klasses
+  - study_sets

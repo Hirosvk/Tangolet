@@ -61,6 +61,9 @@
 	var LanguageActions = __webpack_require__(261);
 	var IndexActions = __webpack_require__(280);
 	var IndexStores = __webpack_require__(283);
+	var CurrentUserStore = __webpack_require__(264);
+	var KlassStore = __webpack_require__(274);
+	var KlassActions = __webpack_require__(276);
 	
 	var LoginForm = __webpack_require__(263);
 	var SignupForm = __webpack_require__(266);
@@ -71,10 +74,10 @@
 	var StudySetList = __webpack_require__(271);
 	var Index = __webpack_require__(272);
 	var StudySetForm = __webpack_require__(273);
-	var KlassStore = __webpack_require__(274);
-	var KlassActions = __webpack_require__(276);
 	var KlassForm = __webpack_require__(278);
 	var Klass = __webpack_require__(279);
+	var AddStudySetForm = __webpack_require__(288);
+	var StudySetIndex = __webpack_require__(284);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -103,7 +106,12 @@
 	      Route,
 	      { component: Content },
 	      React.createElement(IndexRoute, { component: Index }),
-	      React.createElement(Route, { path: 'class/:id', component: Klass }),
+	      React.createElement(
+	        Route,
+	        { path: 'class/:klassId', component: Klass },
+	        React.createElement(IndexRoute, { component: StudySetIndex }),
+	        React.createElement(Route, { path: 'add_study_sets', component: AddStudySetForm })
+	      ),
 	      React.createElement(
 	        Route,
 	        { path: 'study_set/:id', component: StudySet },
@@ -26446,7 +26454,7 @@
 	
 	var StudySetStore = new Store(AppDispatcher);
 	
-	var _studySet = { creator: {}, words: [] };
+	var _studySet = { creator: {}, words: [], language: {} };
 	
 	StudySetStore.getStudySet = function () {
 	  return _studySet;
@@ -33162,6 +33170,13 @@
 	  return _currentUser;
 	};
 	
+	CurrentUserStore.klassIds = function () {
+	  return _currentUser.klass_ids;
+	  // if (_currentUser.klasses){
+	  //   return _currentUser.klasses.map(klass => klass.id);
+	  // }
+	};
+	
 	CurrentUserStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case SessionConstants.LOGIN_USER:
@@ -33520,7 +33535,8 @@
 	  render: function render() {
 	    var children = "";
 	    children = React.cloneElement(this.props.children, {
-	      words: this.state.studySet.words
+	      words: this.state.studySet.words,
+	      language_name: this.state.studySet.language.name
 	    });
 	    return React.createElement(
 	      'div',
@@ -33574,7 +33590,7 @@
 	            React.createElement(
 	              "th",
 	              null,
-	              "Foreign Language"
+	              this.props.language_name
 	            )
 	          )
 	        ),
@@ -33966,7 +33982,13 @@
 	
 	var KlassStore = new Store(AppDispatcher);
 	
-	var _klass = { teacher: {} };
+	var _klass = {
+	  teacher: {},
+	  language: {},
+	  study_set_ids: []
+	};
+	// properties are pre-defined here, so that the view files
+	// don't throw errors with undefined objects.
 	
 	KlassStore.getKlass = function () {
 	  return _klass;
@@ -34005,6 +34027,7 @@
 	var KlassConstants = __webpack_require__(275);
 	var KlassUtils = __webpack_require__(277);
 	var ErrorActions = __webpack_require__(237);
+	var SessionActions = __webpack_require__(257);
 	
 	var KlassActions = {
 	  fetchKlass: function fetchKlass(id, errorCallback) {
@@ -34016,6 +34039,9 @@
 	      klass: klass
 	    });
 	  },
+	  updateStudySets: function updateStudySets(data, errorCallback) {
+	    KlassUtils.updateStudySets(data, this.receiveKlass, ErrorActions.updateError);
+	  },
 	  createKlass: function createKlass(klassData) {
 	    KlassUtils.createKlass(klassData, this.receiveKlass, ErrorActions.updateError);
 	  },
@@ -34024,6 +34050,9 @@
 	  },
 	  deleteKlass: function deleteKlass(id, successCallback) {
 	    KlassUtils.deleteKlass(id, successCallback, ErrorActions.updateError);
+	  },
+	  toggleEnrollment: function toggleEnrollment(klassId, errorCallback) {
+	    KlassUtils.toggleEnrollment(klassId, SessionActions.receiveUser, ErrorActions.updateError);
 	  }
 	};
 	
@@ -34071,10 +34100,36 @@
 	      error: errorCallback
 	    });
 	  },
+	  updateStudySets: function updateStudySets(data, successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/klasses/" + data.id + "/update_study_sets",
+	      type: "PATCH",
+	      data: {
+	        klass: {
+	          study_set_ids: data.studySetIds
+	        }
+	      },
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
 	  deleteKlass: function deleteKlass(id, successCallback, errorCallback) {
 	    $.ajax({
 	      url: "api/klasses/" + id,
 	      type: "DELETE",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  toggleEnrollment: function toggleEnrollment(klassId, successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/user/enroll",
+	      type: "PATCH",
+	      data: {
+	        user: {
+	          klass_id: klassId
+	        }
+	      },
 	      success: successCallback,
 	      error: errorCallback
 	    });
@@ -34116,7 +34171,7 @@
 	      this.setState({
 	        name: klass.name,
 	        description: klass.description,
-	        language_id: klass.language_id
+	        language_id: klass.language.id
 	      });
 	    }
 	  },
@@ -34285,23 +34340,65 @@
 	var CurrentUserStore = __webpack_require__(264);
 	var hashHistory = __webpack_require__(168).hashHistory;
 	var StudySetIndex = __webpack_require__(284);
+	var AddStudySetForm = __webpack_require__(288);
 	
 	var Klass = React.createClass({
 	  displayName: 'Klass',
 	  getInitialState: function getInitialState() {
-	    return { klass: KlassStore.getKlass() };
+	    return {
+	      klass: KlassStore.getKlass(),
+	      enrollmentStatus: this.enrollmentStatus()
+	    };
 	  },
 	  componentDidMount: function componentDidMount() {
-	    var id = this.props.params.id;
+	    var id = this.props.params.klassId;
 	    KlassActions.fetchKlass(id);
 	    this.listener = KlassStore.addListener(this.updateState);
+	    this.userListener = CurrentUserStore.addListener(this.updateEnrollment);
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.listener.remove();
+	    this.userListener.remove();
 	  },
+	  enrollmentStatus: function enrollmentStatus() {
+	    var id = parseInt(this.props.params.klassId);
+	    return CurrentUserStore.klassIds().indexOf(id) >= 0;
+	  },
+	
+	
+	  // store listeners
+	
 	  updateState: function updateState() {
 	    this.setState({ klass: KlassStore.getKlass() });
 	  },
+	  updateEnrollment: function updateEnrollment() {
+	    this.setState({ enrollmentStatus: this.enrollmentStatus() });
+	  },
+	  redirectToIndex: function redirectToIndex(resp) {
+	    hashHistory.push("/");
+	  },
+	
+	
+	  // -------------
+	  // actions and redirections
+	
+	  deleteKlass: function deleteKlass() {
+	    KlassActions.deleteKlass(this.props.params.klassId, this.redirectToIndex);
+	  },
+	  editKlass: function editKlass() {
+	    hashHistory.push("/class_form/edit");
+	  },
+	  addStudySets: function addStudySets() {
+	    hashHistory.push('/class/' + this.props.params.klassId + '/add_study_sets');
+	  },
+	  toggleEnrollment: function toggleEnrollment() {
+	    KlassActions.toggleEnrollment(this.props.params.klassId);
+	  },
+	
+	
+	  // -----------
+	  // render helpers
+	
 	  showDetails: function showDetails() {
 	    return React.createElement(
 	      'div',
@@ -34317,20 +34414,18 @@
 	        null,
 	        'Description: ',
 	        this.state.klass.description
+	      ),
+	      React.createElement(
+	        'p',
+	        null,
+	        'Language: ',
+	        this.state.klass.language.name
 	      )
 	    );
 	  },
-	  redirectToIndex: function redirectToIndex(resp) {
-	    hashHistory.push("/");
-	  },
-	  deleteKlass: function deleteKlass() {
-	    KlassActions.deleteKlass(this.props.params.id, this.redirectToIndex);
-	  },
-	  editKlass: function editKlass() {
-	    hashHistory.push("/class_form/edit");
-	  },
 	  buttons: function buttons() {
-	    if (CurrentUserStore.getCurrentUser().id === this.state.klass.teacher.id) {
+	    var currentUser = CurrentUserStore.getCurrentUser();
+	    if (currentUser.id === this.state.klass.teacher.id) {
 	      return React.createElement(
 	        'div',
 	        null,
@@ -34343,11 +34438,34 @@
 	          'button',
 	          { onClick: this.editKlass },
 	          'Edit'
+	        ),
+	        React.createElement(
+	          'button',
+	          { onClick: this.addStudySets },
+	          'Add Study Sets'
 	        )
 	      );
+	    } else if (currentUser.id) {
+	      if (this.state.enrollmentStatus) {
+	        return React.createElement(
+	          'button',
+	          { onClick: this.toggleEnrollment },
+	          'Unenroll'
+	        );
+	      } else {
+	        return React.createElement(
+	          'button',
+	          { onClick: this.toggleEnrollment },
+	          'Enroll'
+	        );
+	      }
 	    }
 	  },
 	  render: function render() {
+	    var children = React.cloneElement(this.props.children, {
+	      klassId: this.props.params.klassId
+	    });
+	    console.log(this.state.enrollmentStatus);
 	    return React.createElement(
 	      'div',
 	      { className: 'klass' },
@@ -34362,7 +34480,7 @@
 	        this.showDetails(),
 	        this.buttons()
 	      ),
-	      React.createElement(StudySetIndex, { klassId: this.props.params.id })
+	      children
 	    );
 	  }
 	});
@@ -34483,11 +34601,11 @@
 	IndexStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case IndexConstants.RECEIVE_STUDY_SET_INDEX:
-	      indices.studySets = payload.studySets.study_sets;
+	      indices.studySets = payload.studySets;
 	      this.__emitChange();
 	      break;
 	    case IndexConstants.RECEIVE_KLASS_INDEX:
-	      indices.klasses = payload.klasses.klasses;
+	      indices.klasses = payload.klasses;
 	      this.__emitChange();
 	      break;
 	
@@ -34668,6 +34786,119 @@
 	});
 	
 	module.exports = KlassIndexItem;
+
+/***/ },
+/* 288 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(162);
+	var IndexStore = __webpack_require__(283);
+	var IndexActions = __webpack_require__(280);
+	var KlassStore = __webpack_require__(274);
+	var KlassActions = __webpack_require__(276);
+	var hashHistory = __webpack_require__(168).hashHistory;
+	// users are redirected here from the class,
+	// hence have access to KlassStore
+	
+	var AddStudySetForm = React.createClass({
+	  displayName: 'AddStudySetForm',
+	  getInitialState: function getInitialState() {
+	    var klass = KlassStore.getKlass();
+	    return {
+	      klassName: klass.name,
+	      klassId: klass.id,
+	      studySetIds: KlassStore.getKlass().study_set_ids,
+	      studySets: IndexStore.getStudySets()
+	    };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    IndexActions.getStudySetIndex();
+	    this.indexListener = IndexStore.addListener(this.updateStudySets);
+	    this.klassListener = KlassStore.addListener(this.redirectToKlass);
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.indexListener.remove();
+	    this.klassListener.remove();
+	  },
+	  redirectToKlass: function redirectToKlass() {
+	    hashHistory.push('class/' + this.state.klassId);
+	  },
+	  updateStudySets: function updateStudySets() {
+	    this.setState({ studySets: IndexStore.getStudySets() });
+	  },
+	  checked: function checked(id) {
+	    if (this.state.studySetIds.indexOf(id) >= 0) {
+	      return "checked";
+	    } else {
+	      return "";
+	    }
+	  },
+	
+	
+	  // controlled: value = state, change is reflect on the value,
+	  // uncontrolled: input tag doesn't have a value
+	
+	  checkboxes: function checkboxes() {
+	    var _this = this;
+	
+	    return this.state.studySets.map(function (studySet) {
+	      return React.createElement(
+	        'label',
+	        { key: 'label' + studySet.id },
+	        React.createElement('input', { type: 'checkbox',
+	          id: studySet.id,
+	          defaultChecked: _this.checked(studySet.id),
+	          key: studySet.id,
+	          onClick: _this.updateStudySetIds }),
+	        studySet.name,
+	        ': created by ',
+	        studySet.creator.username,
+	        React.createElement('br', null)
+	      );
+	    });
+	  },
+	  updateStudySetIds: function updateStudySetIds(event) {
+	    var id = parseInt(event.target.id);
+	    var idx = this.state.studySetIds.indexOf(id);
+	    var newIds = this.state.studySetIds;
+	    if (idx < 0) {
+	      newIds.push(id);
+	    } else {
+	      newIds.splice(idx, 1);
+	    }
+	    this.setState({ studySetIds: newIds });
+	  },
+	  sendNewIds: function sendNewIds(event) {
+	    event.preventDefault();
+	    var data = {};
+	    data.id = this.state.klassId;
+	    if (this.state.studySetIds.length === 0) {
+	      data.studySetIds = ["dummy"];
+	      // ajax (or javascript) would not send object that contains
+	      // empty array, so we are passing ["dummy"] only if the array is empty.
+	    } else {
+	      data.studySetIds = this.state.studySetIds;
+	    }
+	    KlassActions.updateStudySets(data);
+	  },
+	  render: function render() {
+	    console.log(this.state.studySetIds);
+	    return React.createElement(
+	      'form',
+	      null,
+	      this.checkboxes(),
+	      React.createElement(
+	        'button',
+	        { onClick: this.sendNewIds },
+	        'Update'
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = AddStudySetForm;
 
 /***/ }
 /******/ ]);

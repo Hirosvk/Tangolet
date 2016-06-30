@@ -10,6 +10,13 @@ CurrentUserStore.getCurrentUser = function(){
   return _currentUser;
 };
 
+CurrentUserStore.klassIds = function(){
+  return _currentUser.klass_ids;
+  // if (_currentUser.klasses){
+  //   return _currentUser.klasses.map(klass => klass.id);
+  // }
+};
+
 CurrentUserStore.__onDispatch = function(payload){
   switch(payload.actionType){
     case SessionConstants.LOGIN_USER:

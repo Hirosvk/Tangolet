@@ -59,7 +59,8 @@ const StudySet = React.createClass({
   render(){
     let children = "";
     children = React.cloneElement(this.props.children, {
-      words: this.state.studySet.words
+      words: this.state.studySet.words,
+      language_name: this.state.studySet.language.name
     });
     return (
       <div className="study_set">

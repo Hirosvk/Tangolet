@@ -3,8 +3,10 @@ Rails.application.routes.draw do
   namespace :api, defaults: {format: :json} do
     resource :session, only: [:create, :destroy]
     resource :user, only: [:create, :show]
+      patch 'user/enroll' => 'users#enroll'
     resources :study_sets
     resources :klasses
+      patch 'klasses/:id/update_study_sets' => 'klasses#update_study_sets'
     resources :languages, only: [:index]
   end
 

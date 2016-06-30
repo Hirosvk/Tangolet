@@ -2,6 +2,7 @@ const AppDispatcher = require('../dispatcher/dispatcher');
 const KlassConstants = require('../constants/klass_constants');
 const KlassUtils = require('../utils/klass_utils');
 const ErrorActions = require('./error_actions');
+const SessionActions = require('./session_actions');
 
 const KlassActions = {
   fetchKlass(id, errorCallback){
@@ -15,6 +16,10 @@ const KlassActions = {
     });
   },
 
+  updateStudySets(data, errorCallback){
+    KlassUtils.updateStudySets(data, this.receiveKlass, ErrorActions.updateError);
+  },
+
   createKlass(klassData){
     KlassUtils.createKlass(klassData, this.receiveKlass, ErrorActions.updateError);
   },
@@ -25,6 +30,10 @@ const KlassActions = {
 
   deleteKlass(id, successCallback){
     KlassUtils.deleteKlass(id, successCallback, ErrorActions.updateError);
+  },
+
+  toggleEnrollment(klassId, errorCallback){
+    KlassUtils.toggleEnrollment(klassId, SessionActions.receiveUser, ErrorActions.updateError);
   }
 
 };

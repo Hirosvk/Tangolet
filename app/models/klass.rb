@@ -8,6 +8,8 @@ class Klass < ActiveRecord::Base
   belongs_to :language
 
   has_many :klass_set_joins
+  has_many :enrollments
 
   has_many :study_sets, through: :klass_set_joins
+  has_many :students, through: :enrollments
 end

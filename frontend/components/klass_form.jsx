@@ -29,7 +29,7 @@ const KlassForm = React.createClass({
       this.setState({
         name: klass.name,
         description: klass.description,
-        language_id: klass.language_id
+        language_id: klass.language.id
       });
     }
   },

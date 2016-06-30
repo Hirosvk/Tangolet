@@ -36,10 +36,38 @@ module.exports = {
     });
   },
 
+  updateStudySets(data, successCallback, errorCallback){
+    $.ajax({
+      url: `api/klasses/${data.id}/update_study_sets`,
+      type: "PATCH",
+      data: {
+        klass: {
+          study_set_ids: data.studySetIds
+        }
+      },
+      success: successCallback,
+      error: errorCallback
+    });
+  },
+
   deleteKlass(id, successCallback, errorCallback){
     $.ajax({
       url: `api/klasses/${id}`,
       type: "DELETE",
+      success: successCallback,
+      error: errorCallback
+    });
+  },
+
+  toggleEnrollment(klassId, successCallback, errorCallback){
+    $.ajax({
+      url: `api/user/enroll`,
+      type: "PATCH",
+      data:{
+        user: {
+          klass_id: klassId
+        }
+      },
       success: successCallback,
       error: errorCallback
     });

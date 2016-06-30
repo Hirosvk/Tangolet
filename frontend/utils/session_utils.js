@@ -30,5 +30,5 @@ module.exports = {
       success: successCallback,
       error: errorCallback
     });
-  },
+  }
 };

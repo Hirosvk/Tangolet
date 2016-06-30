@@ -9,7 +9,7 @@ const StudySetList = React.createClass({
           <thead>
             <tr>
               <th>English</th>
-              <th>Foreign Language</th>
+              <th>{this.props.language_name}</th>
             </tr>
           </thead>
           <tbody>

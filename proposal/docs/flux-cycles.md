@@ -1,15 +1,33 @@
 # Stores
-* SearchResultStore
-* NavbarStore
-* ClassStore
-* ClassStudySetStore
-* ProgressByStudySetStore
-* ProgressByStudentStore
-* StudySetStore
-* TestScoreStore
-* CurrentUserStore
+
+* KlassStore (<- klasses#show)
+  * React Comp: Klass
+  * id, name, description, language(id, name), created_at, study_set_ids, updated_at
+
+* StudySetStore (<- StudySets#show)
+  * React Comp: StudySet -> StudySetList
+  * id, name, creator(id, name), words(word_english, word_foreign), created_at, updated_at, klass_ids
+
+* IndexStore
+  * Index -> StudySetIndex & KlassIndex
+  * studySets <- study_sets#index w/query 'class=:id'
+    * id, name, creator, language(id, name)
+  * klasses <- klasses#index
+    * id, name, teacher, language(id, name)
+
+
+* LanguageStore
+
 * ErrorStore
 
+* CurrentUserStore (<- User#show)
+  * id, name
+
+* ProgressByStudySetStore
+* ProgressByStudentStore
+* SearchResultStore
+* NavbarStore
+* TestScoreStore
 
 
 # Actions

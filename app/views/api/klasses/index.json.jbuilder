@@ -1,1 +1,1 @@
-json.klasses @klasses, :id, :name, :teacher
+json.partial! "klass", collection: @klasses, as: :klass, details: false
