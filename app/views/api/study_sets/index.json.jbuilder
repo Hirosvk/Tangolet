@@ -1,1 +1,1 @@
-json.partial! "study_set", collection: @study_sets, as: :study_set
+json.study_sets @study_sets, :id, :name, :creator

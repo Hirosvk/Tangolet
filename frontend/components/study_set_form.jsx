@@ -35,13 +35,15 @@ function deleteEmpty(oldWords){
   return newWords;
 }
 
-let words;
+let _words;
 
 function resetWords(){
-  words = [ new WordSkeleton("", ""),
+  _words = [ new WordSkeleton("", ""),
             new WordSkeleton("", ""),
             new WordSkeleton("", "")];
 }
+
+
 
 const StudySetForm = React.createClass({
 
@@ -50,6 +52,7 @@ const StudySetForm = React.createClass({
       error: ErrorStore.full_errors(),
       name: "",
       languages: LanguageStore.all(),
+      language_name: "",
       language_id: undefined
     });
   },
@@ -60,10 +63,10 @@ const StudySetForm = React.createClass({
 
       this.setState({
         name: studySet.name,
-        language_id: studySet.language_id
+        language_id: studySet.language_id,
       });
       const toEditWords = studySet.words;
-      words = toEditWords.map( word => {
+      _words = toEditWords.map( word => {
         return new WordSkeleton(word.word_english, word.word_foreign);
       });
 
@@ -75,10 +78,10 @@ const StudySetForm = React.createClass({
   componentWillMount(){
     resetWords();
     this.setupEdit();
-    LanguageActions.fetchAllLanguages();
   },
 
   componentDidMount(){
+    LanguageActions.fetchAllLanguages();
     this.errorStoreListener = ErrorStore.addListener(this.receiveErrors);
     this.languageStoreListener = LanguageStore.addListener(this.receiveLanguages);
     this.studySetStoreListener = StudySetStore.addListener(this.redirectToShow);
@@ -92,6 +95,9 @@ const StudySetForm = React.createClass({
     ErrorStore.resetErrors();
   },
 
+// ---------------
+// Store listeners
+
   redirectToShow(){
     const id = StudySetStore.getStudySet().id;
     hashHistory.push(`/study_set/${id}`);
@@ -104,6 +110,40 @@ const StudySetForm = React.createClass({
   receiveLanguages(){
     this.setState({languages: LanguageStore.all()});
   },
+
+
+
+// ----------
+// form event listeners
+
+  addMoreWords(event){
+    event.preventDefault();
+    _words.push(new WordSkeleton("", ""));
+    this.forceUpdate();
+  },
+
+  updateWord(event){
+    const id = event.target.id;
+    const regex = /(\d+)_(word_english|word_foreign)/;
+    const idx = id.match(regex)[1];
+    const key = id.match(regex)[2];
+
+    _words[idx][key] = event.target.value;
+    this.forceUpdate();
+  },
+
+  nameChange(event){
+    this.setState({name: event.target.value});
+  },
+
+  languageChange(event){
+    this.setState({language_id: event.target.value});
+  },
+
+
+
+// ------
+// render helpsers
 
   showErrors(){
     if (this.state.error.responseJSON){
@@ -127,68 +167,21 @@ const StudySetForm = React.createClass({
     }
   },
 
-  sendStudySet(event){
-    event.preventDefault();
-    let studySetData = {};
-    studySetData.studySet = {
-      name: this.refs.studySetName.value,
-      language_id: this.state.language_id
-    };
-    studySetData.words = deleteEmpty(words).map(word => {
-      return {
-        word_english: word.word_english,
-        word_foreign: word.word_foreign
-      };
-    });
-
-    if (this.edit){
-      studySetData.studySet.id = this.id;
-      StudySetActions.editStudySet(studySetData);
-    } else {
-      console.log(studySetData);
-      StudySetActions.createStudySet(studySetData);
-    }
-  },
-
-  addMoreWords(event){
-    event.preventDefault();
-    words.push(new WordSkeleton("", ""));
-    this.forceUpdate();
-  },
-
-  updateWord(event){
-    const id = event.target.id;
-    const regex = /(\d+)_(word_english|word_foreign)/;
-    const idx = id.match(regex)[1];
-    const key = id.match(regex)[2];
-
-    words[idx][key] = event.target.value;
-    this.forceUpdate();
-  },
-
-  nameChange(event){
-    this.setState({name: event.target.value});
-  },
-
-  languageChange(event){
-    this.setState({language_id: event.target.value});
-  },
-
   newWordInput(){
-    return words.map( (word, idx) => {
+    return _words.map( (word, idx) => {
       return (
         <tr className="word_row" key={`${idx}row`}>
             <td><input type="text"
                    key={`${idx}_english`}
                    id={`${idx}_word_english`}
-                   value={words[idx].word_english}
+                   value={_words[idx].word_english}
                    onChange={this.updateWord}
                    /></td>
 
             <td><input type="text"
                    key={`${idx}_foreign`}
                    id={`${idx}_word_foreign`}
-                   value={words[idx].word_foreign}
+                   value={_words[idx].word_foreign}
                    onChange={this.updateWord}
                    /></td>
         </tr>
@@ -204,6 +197,14 @@ const StudySetForm = React.createClass({
     return this.edit ? "Edit Study Set" : "Create New Study Set";
   },
 
+  pickedLanguage(){
+    if (this.refs[this.state.language_id]){
+      return this.refs[this.state.language_id].text;
+    } else {
+      return "Pick language";
+    }
+  },
+
   languageChoices(){
     return (
     <label>Choose language<select
@@ -211,16 +212,12 @@ const StudySetForm = React.createClass({
       onChange={this.languageChange}>
       {
         this.state.languages.map( language => {
-          // let selected = "false";
-          // if (language.id === this.state.language_id){
-          //   selected = "true"
-          // }
-          return <option value={language.id}
-            key={language.id}>{language.name}</option>
+          return (<option value={language.id}
+            key={language.id}
+            ref={language.id}>{language.name}</option>);
         })
       }
     </select></label>
-
     );
   },
 
@@ -242,7 +239,7 @@ const StudySetForm = React.createClass({
         <thead>
           <tr>
             <th>English</th>
-            <th>Foreign Language</th>
+            <th>{this.pickedLanguage()}</th>
           </tr>
         </thead>
         <tbody>
@@ -256,6 +253,29 @@ const StudySetForm = React.createClass({
       </div>
       </form>
     );
+  },
+
+  sendStudySet(event){
+    event.preventDefault();
+    let studySetData = {};
+    studySetData.studySet = {
+      name: this.refs.studySetName.value,
+      language_id: this.state.language_id
+    };
+    studySetData.words = deleteEmpty(_words).map(word => {
+      return {
+        word_english: word.word_english,
+        word_foreign: word.word_foreign
+      };
+    });
+
+    if (this.edit){
+      studySetData.studySet.id = this.id;
+      StudySetActions.editStudySet(studySetData);
+    } else {
+      console.log(studySetData);
+      StudySetActions.createStudySet(studySetData);
+    }
   }
 
 });

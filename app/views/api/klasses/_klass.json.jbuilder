@@ -1,4 +1,4 @@
-json.extract! klass, :id, :name, :description
+json.extract! klass, :id, :name, :description, :language_id
 
 json.teacher do
   json.username klass.teacher.username

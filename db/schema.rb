@@ -11,10 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160630041451) do
+ActiveRecord::Schema.define(version: 20160630173446) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "klass_set_joins", force: :cascade do |t|
+    t.integer  "klass_id",     null: false
+    t.integer  "study_set_id", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  add_index "klass_set_joins", ["klass_id", "study_set_id"], name: "index_klass_set_joins_on_klass_id_and_study_set_id", unique: true, using: :btree
+  add_index "klass_set_joins", ["klass_id"], name: "index_klass_set_joins_on_klass_id", using: :btree
+  add_index "klass_set_joins", ["study_set_id"], name: "index_klass_set_joins_on_study_set_id", using: :btree
 
   create_table "klasses", force: :cascade do |t|
     t.string   "name",        null: false

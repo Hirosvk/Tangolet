@@ -47,9 +47,14 @@ const Header = React.createClass({
     }
   },
 
+  backToIndex(){
+    hashHistory.push("/");
+  },
+
   render(){
     return (
       <header className="header">
+        <a onClick={this.backToIndex}>Back to Index</a>
         {this.loginStatus()}
       </header>
     );

@@ -3,6 +3,7 @@ const KlassActions = require('../actions/klass_actions');
 const KlassStore = require('../stores/klass_store');
 const CurrentUserStore = require('../stores/current_user_store');
 const hashHistory = require('react-router').hashHistory;
+const StudySetIndex = require('./study_set_index');
 
 const Klass = React.createClass({
   getInitialState(){
@@ -63,6 +64,7 @@ const Klass = React.createClass({
           {this.showDetails()}
           {this.buttons()}
         </header>
+        <StudySetIndex klassId={this.props.params.id} />
       </div>
     );
   }

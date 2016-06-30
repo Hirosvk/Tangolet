@@ -4,6 +4,9 @@ const CurrentUserStore = require('../stores/current_user_store');
 const ErrorStore = require('../stores/error_store');
 const hashHistory = require('react-router').hashHistory;
 const KlassStore = require('../stores/klass_store');
+const LanguageStore = require('../stores/language_store');
+const LanguageActions = require('../actions/language_actions');
+
 
 const KlassForm = React.createClass({
 
@@ -11,7 +14,9 @@ const KlassForm = React.createClass({
     return ({
       error: ErrorStore.full_errors(),
       name: "",
-      description: ""
+      description: "",
+      languages: LanguageStore.all(),
+      language_id: undefined
     });
   },
 
@@ -21,8 +26,11 @@ const KlassForm = React.createClass({
       this.edit = true;
       this.id = klass.id;
 
-      this.setState({name: klass.name});
-      this.setState({description: klass.description});
+      this.setState({
+        name: klass.name,
+        description: klass.description,
+        language_id: klass.language_id
+      });
     }
   },
 
@@ -31,25 +39,52 @@ const KlassForm = React.createClass({
   },
 
   componentDidMount(){
+    LanguageActions.fetchAllLanguages();
+    this.languageStoreListener = LanguageStore.addListener(this.receiveLanguages);
     this.errorStoreListener = ErrorStore.addListener(this.receiveErrors);
     this.studySetStoreListener = KlassStore.addListener(this.redirectToShow);
   },
 
   componentWillUnmount(){
+    this.languageStoreListener.remove();
     this.errorStoreListener.remove();
     this.studySetStoreListener.remove();
     ErrorStore.resetErrors();
   },
 
+// --------------
+// Store listeners
+
   redirectToShow(){
     const id = KlassStore.getKlass().id;
-    hashHistory.push(`/klass/${id}`);
+    hashHistory.push(`/class/${id}`);
   },
 
   receiveErrors(){
     this.setState({error: ErrorStore.full_errors()});
   },
 
+  receiveLanguages(){
+    this.setState({languages: LanguageStore.all()});
+  },
+
+
+
+// -------------
+// form event listeners
+
+  updateState(event){
+    let newState = {};
+    newState[event.target.id] = event.target.value;
+    this.setState(newState);
+  },
+
+  languageChange(event){
+    this.setState({language_id: event.target.value});
+  },
+
+// -------------
+// render helpers
 
   showErrors(){
     if (this.state.error.responseJSON){
@@ -73,32 +108,28 @@ const KlassForm = React.createClass({
     }
   },
 
-  sendKlass(event){
-    event.preventDefault();
-    let klassData = {};
-    klassData.name = this.state.name;
-    klassData.description = this.state.description;
-
-    if (this.edit){
-      klassData.id = this.id;
-      KlassActions.editKlass(klassData);
-    } else {
-      KlassActions.createKlass(klassData);
-    }
-  },
-
-  updateState(event){
-    let newState = {};
-    newState[event.target.id] = event.target.value;
-    this.setState(newState);
-  },
-
   submitButton(){
     return this.edit ? "Update" : "Create";
   },
 
   title(){
     return this.edit ? "Edit Class" : "Create New Class";
+  },
+
+  languageChoices(){
+    return (
+    <label>Choose language<select
+      defaultValue={this.state.language_id}
+      onChange={this.languageChange}>
+      {
+        this.state.languages.map( language => {
+          return (<option value={language.id}
+            key={language.id}
+            ref={language.id}>{language.name}</option>);
+        })
+      }
+    </select></label>
+    );
   },
 
   render(){
@@ -113,10 +144,31 @@ const KlassForm = React.createClass({
         <label>Description
         <textarea id="description" value={this.state.description} onChange={this.updateState}/></label>
 
+        {this.languageChoices()}
+
         <button onClick={this.sendKlass}>{this.submitButton()}</button>
       </form>
     );
+  },
+
+  sendKlass(event){
+    event.preventDefault();
+    let klassData = {};
+    klassData.name = this.state.name;
+    klassData.description = this.state.description;
+    klassData.language_id = this.state.language_id;
+
+    if (this.edit){
+      klassData.id = this.id;
+      console.log(klassData);
+      KlassActions.editKlass(klassData);
+    } else {
+      console.log(klassData);
+      KlassActions.createKlass(klassData);
+    }
   }
+
+
 
 });
 

@@ -11,6 +11,8 @@ const StudySetStore = require('./stores/study_set_store');
 const SessionActions = require('./actions/session_actions');
 const LanguageStore = require('./stores/language_store');
 const LanguageActions = require('./actions/language_actions');
+const IndexActions = require('./actions/index_actions');
+const IndexStores = require('./stores/index_store');
 
 const LoginForm = require('./components/login_form');
 const SignupForm = require('./components/signup_form');

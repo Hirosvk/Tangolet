@@ -106,54 +106,66 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 # Implementation Timeline
 
 ## Phase 1: Backend Setup and Frontend User Authentication (1.5day, W8D2)
-- [ ] npm, webpack, bundlers, .gitignore setup
-- [ ] user model
-- [ ] session controller
-- [ ] user controller
-- [ ] authentication
-- [ ] sign-up/log-in pages
-- [ ] static pages
-- [ ] basic header
-- [ ] SessionAction Cycle
+- [x] npm, webpack, bundlers, .gitignore setup
+- [x] user model
+- [x] session controller
+- [x] user controller
+- [x] authentication
+- [x] sign-up/log-in pages
+- [x] static pages
+- [x] basic header
+- [x] SessionAction Cycle
 
 ## Phase 2: Basic Models: study_sets & study_set_word (1day, W8D4)
-- [ ] heroku setup
+- [x] heroku setup
 
-- [ ] study_set model
-- [ ] study_set_word model
-- [ ] validations
-- [ ] setup JSON API for study_set
-- [ ] study_set#create
-- [ ] study_set#delete
-- [ ] study_set#show
+- [x] study_set model
+- [x] study_set_word model
+- [x] validations
+- [x] setup JSON API for study_set
+- [x] study_set#create
+- [x] study_set#delete
+- [x] study_set#show
 
 ## Phase 3: Basic React/Flux components (1.5day, W8D5)
-- [ ] StudySet & StudySetList React component
-- [ ] Basic Router setup
-- [ ] API Util: ajax GET, POST, DELETE request
-- [ ] StudySetAction
-- [ ] Dispatcher
-- [ ] StudySetStore
+- [x] StudySet & StudySetList React component
+- [x] Basic Router setup
+- [x] API Util: ajax GET, POST, DELETE request
+- [x] StudySetAction
+- [x] Dispatcher
+- [x] StudySetStore
 
-- [ ] StudySetForm component
+- [x] StudySetForm component
 
-- [ ] Basic CSS Styling
+- [x] Basic CSS Styling
 
 
 ## Phase 4: Add Class feature (2day, W8D7)
-- [ ] build models: klasses
-  - [ ] controllers: create, delete, update, show
-- [ ] class forms: new & update
-  - [ ] ClassAction
-  - [ ] ClassStore
-  - [ ] ClassStudySetStore
+- [x] build models: klasses
+  - [x] controllers: create, delete, update, show
+- [x] class forms: new & update
+  - [x] ClassAction
+  - [x] ClassStore
+  - [x] ClassStudySetStore
 
 
-## Phase 5: Enrollment & Class/StudySet Join(1day)
-- [ ] klass-set associations
-  - [ ] rails backend
-  - [ ] Api endpoint at KlassController using study_set_ids
-  - [ ] add StudySet to class Form
+## Phase 5: User/StudySet/Klass Associations(1day)
+- [x] language
+  - [x] languages models
+  - [x] add language drop down to class/study_set form & actions
+  - [x] add language to class/study_set show
+
+
+- [x] Index
+  - [x] StudySetIndex -- show all studysets
+  - [x] KlassIndex -- show all klasses
+
+- [x] klass-set associations
+  - [x] rails backend
+  - [x] Api endpoint at KlassController using study_set_ids
+  - [x] add StudySet to class Form
+  - [x] able to filter with study_sets#all with a query
+  - [ ] add-study-sets-to-class form
 
 
 - [ ] enrollment
@@ -161,12 +173,12 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
   - [ ] API endpoints & server routes
   - [ ] toggle button on Class page
 
-- [ ] language
-  - [ ] languages models
-  - [ ] add language drop down to class/study_set form & actions
-  - [ ] add language to class/study_set show
 
-## Phase 6: Navbar (1day w9d1)
+## Phase 6: Styling (1day w9d2)
+- [ ] CSS Styling
+- [ ] footer
+
+## Phase 7: Navbar (1day w9d1)
 - [ ] backend setup
   - [ ] user.klasses_created, user.klasses_enrolled, user.study_sets_created
   - [ ] API endpoints and server router setup
@@ -175,9 +187,6 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 - [ ] NavbarStore
 - [ ] ClassOptionBox for StudySetForm
 
-## Phase 7: Styling (1day w9d2)
-- [ ] CSS Styling
-- [ ] footer
 
 ## Phase 8: add Test feature (2day w9d3)
 - [ ] test_record model

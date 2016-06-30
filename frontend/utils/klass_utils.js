@@ -27,7 +27,8 @@ module.exports = {
       data: {
         klass: {
           name: data.name,
-          description: data.description
+          description: data.description,
+          language_id: data.language_id
         }
       },
       success: successCallback,

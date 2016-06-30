@@ -11,11 +11,17 @@ class Api::StudySetsController < ApplicationController
   end
 
   def index
-    @study_sets = StudySet.all
-    if @study_sets
-      render :index
+    if params[:class]
+      klass = Klass.find(params[:class])
+      if klass
+        @study_sets = klass.study_sets
+        render :index
+      else
+        render json: "Class not found", status: 404
+      end
     else
-      render json: "recod not found", status: 404
+      @study_sets = StudySet.all
+      render :index
     end
   end
 

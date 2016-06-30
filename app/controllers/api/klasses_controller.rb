@@ -1,6 +1,11 @@
 class Api::KlassesController < ApplicationController
   before_action :require_login, except: [:index, :show]
 
+  def index
+    @klasses = Klass.all
+    render :index
+  end
+
   def show
     @klass = Klass.find(params[:id])
     render :show

@@ -39,8 +39,8 @@
 ## klasses
 ### GET /api/klasses/
 * return all klasses created by all users
-
-### GET /api/klasses/;id
+  * include: :id, :name, :teacher
+### GET /api/klasses/:id
 * return klass info (id, name, description, teacher's username&id, created_at, num_of_students, num_of_study_set, enrollment_info)
 
 ### GET /api/klasses/:id/study_sets
@@ -75,7 +75,7 @@
 ## study_sets
 ### GET /api/study_sets/
 * return StudySets created by all users
-
+  * include: :id, :name, :creator
 ### GET /api/study_sets/:id
 * return single Study Set (name, creator's username, created_at, updated_at, words as nested hash)
 
@@ -90,6 +90,12 @@
     * require log-in
     * success: return the new study set
     * failure: return error messages
+
+## languages
+### GET /api/languages/
+* return all langauges
+  * id, name
+
 
 ## test_records
 ### POST /api/test_records

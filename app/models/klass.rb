@@ -6,4 +6,8 @@ class Klass < ActiveRecord::Base
     class_name: "User"
 
   belongs_to :language
+
+  has_many :klass_set_joins
+
+  has_many :study_sets, through: :klass_set_joins
 end

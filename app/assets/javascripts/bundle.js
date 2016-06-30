@@ -59,6 +59,8 @@
 	var SessionActions = __webpack_require__(257);
 	var LanguageStore = __webpack_require__(259);
 	var LanguageActions = __webpack_require__(261);
+	var IndexActions = __webpack_require__(280);
+	var IndexStores = __webpack_require__(283);
 	
 	var LoginForm = __webpack_require__(263);
 	var SignupForm = __webpack_require__(266);
@@ -33370,10 +33372,18 @@
 	      );
 	    }
 	  },
+	  backToIndex: function backToIndex() {
+	    hashHistory.push("/");
+	  },
 	  render: function render() {
 	    return React.createElement(
 	      'header',
 	      { className: 'header' },
+	      React.createElement(
+	        'a',
+	        { onClick: this.backToIndex },
+	        'Back to Index'
+	      ),
 	      this.loginStatus()
 	    );
 	  }
@@ -33599,21 +33609,25 @@
 /* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	var React = __webpack_require__(162);
+	var KlassIndex = __webpack_require__(286);
+	var StudySetIndex = __webpack_require__(284);
 	
 	var Index = React.createClass({
-	  displayName: "Index",
+	  displayName: 'Index',
 	  render: function render() {
 	    return React.createElement(
-	      "div",
-	      { className: "index" },
+	      'div',
+	      { className: 'index' },
 	      React.createElement(
-	        "h1",
+	        'h1',
 	        null,
-	        "This is Index"
-	      )
+	        'This is Index'
+	      ),
+	      React.createElement(KlassIndex, null),
+	      React.createElement(StudySetIndex, null)
 	    );
 	  }
 	});
@@ -33662,10 +33676,10 @@
 	  return newWords;
 	}
 	
-	var words = void 0;
+	var _words = void 0;
 	
 	function resetWords() {
-	  words = [new WordSkeleton("", ""), new WordSkeleton("", ""), new WordSkeleton("", "")];
+	  _words = [new WordSkeleton("", ""), new WordSkeleton("", ""), new WordSkeleton("", "")];
 	}
 	
 	var StudySetForm = React.createClass({
@@ -33675,6 +33689,7 @@
 	      error: ErrorStore.full_errors(),
 	      name: "",
 	      languages: LanguageStore.all(),
+	      language_name: "",
 	      language_id: undefined
 	    };
 	  },
@@ -33687,7 +33702,7 @@
 	        language_id: studySet.language_id
 	      });
 	      var toEditWords = studySet.words;
-	      words = toEditWords.map(function (word) {
+	      _words = toEditWords.map(function (word) {
 	        return new WordSkeleton(word.word_english, word.word_foreign);
 	      });
 	
@@ -33698,9 +33713,9 @@
 	  componentWillMount: function componentWillMount() {
 	    resetWords();
 	    this.setupEdit();
-	    LanguageActions.fetchAllLanguages();
 	  },
 	  componentDidMount: function componentDidMount() {
+	    LanguageActions.fetchAllLanguages();
 	    this.errorStoreListener = ErrorStore.addListener(this.receiveErrors);
 	    this.languageStoreListener = LanguageStore.addListener(this.receiveLanguages);
 	    this.studySetStoreListener = StudySetStore.addListener(this.redirectToShow);
@@ -33712,6 +33727,11 @@
 	    resetWords();
 	    ErrorStore.resetErrors();
 	  },
+	
+	
+	  // ---------------
+	  // Store listeners
+	
 	  redirectToShow: function redirectToShow() {
 	    var id = StudySetStore.getStudySet().id;
 	    hashHistory.push('/study_set/' + id);
@@ -33722,6 +33742,36 @@
 	  receiveLanguages: function receiveLanguages() {
 	    this.setState({ languages: LanguageStore.all() });
 	  },
+	
+	
+	  // ----------
+	  // form event listeners
+	
+	  addMoreWords: function addMoreWords(event) {
+	    event.preventDefault();
+	    _words.push(new WordSkeleton("", ""));
+	    this.forceUpdate();
+	  },
+	  updateWord: function updateWord(event) {
+	    var id = event.target.id;
+	    var regex = /(\d+)_(word_english|word_foreign)/;
+	    var idx = id.match(regex)[1];
+	    var key = id.match(regex)[2];
+	
+	    _words[idx][key] = event.target.value;
+	    this.forceUpdate();
+	  },
+	  nameChange: function nameChange(event) {
+	    this.setState({ name: event.target.value });
+	  },
+	  languageChange: function languageChange(event) {
+	    this.setState({ language_id: event.target.value });
+	  },
+	
+	
+	  // ------
+	  // render helpsers
+	
 	  showErrors: function showErrors() {
 	    if (this.state.error.responseJSON) {
 	      return React.createElement(
@@ -33747,52 +33797,10 @@
 	      );
 	    }
 	  },
-	  sendStudySet: function sendStudySet(event) {
-	    event.preventDefault();
-	    var studySetData = {};
-	    studySetData.studySet = {
-	      name: this.refs.studySetName.value,
-	      language_id: this.state.language_id
-	    };
-	    studySetData.words = deleteEmpty(words).map(function (word) {
-	      return {
-	        word_english: word.word_english,
-	        word_foreign: word.word_foreign
-	      };
-	    });
-	
-	    if (this.edit) {
-	      studySetData.studySet.id = this.id;
-	      StudySetActions.editStudySet(studySetData);
-	    } else {
-	      console.log(studySetData);
-	      StudySetActions.createStudySet(studySetData);
-	    }
-	  },
-	  addMoreWords: function addMoreWords(event) {
-	    event.preventDefault();
-	    words.push(new WordSkeleton("", ""));
-	    this.forceUpdate();
-	  },
-	  updateWord: function updateWord(event) {
-	    var id = event.target.id;
-	    var regex = /(\d+)_(word_english|word_foreign)/;
-	    var idx = id.match(regex)[1];
-	    var key = id.match(regex)[2];
-	
-	    words[idx][key] = event.target.value;
-	    this.forceUpdate();
-	  },
-	  nameChange: function nameChange(event) {
-	    this.setState({ name: event.target.value });
-	  },
-	  languageChange: function languageChange(event) {
-	    this.setState({ language_id: event.target.value });
-	  },
 	  newWordInput: function newWordInput() {
 	    var _this = this;
 	
-	    return words.map(function (word, idx) {
+	    return _words.map(function (word, idx) {
 	      return React.createElement(
 	        'tr',
 	        { className: 'word_row', key: idx + 'row' },
@@ -33802,7 +33810,7 @@
 	          React.createElement('input', { type: 'text',
 	            key: idx + '_english',
 	            id: idx + '_word_english',
-	            value: words[idx].word_english,
+	            value: _words[idx].word_english,
 	            onChange: _this.updateWord
 	          })
 	        ),
@@ -33812,7 +33820,7 @@
 	          React.createElement('input', { type: 'text',
 	            key: idx + '_foreign',
 	            id: idx + '_word_foreign',
-	            value: words[idx].word_foreign,
+	            value: _words[idx].word_foreign,
 	            onChange: _this.updateWord
 	          })
 	        )
@@ -33825,6 +33833,13 @@
 	  title: function title() {
 	    return this.edit ? "Edit Study Set" : "Create New Study Set";
 	  },
+	  pickedLanguage: function pickedLanguage() {
+	    if (this.refs[this.state.language_id]) {
+	      return this.refs[this.state.language_id].text;
+	    } else {
+	      return "Pick language";
+	    }
+	  },
 	  languageChoices: function languageChoices() {
 	    return React.createElement(
 	      'label',
@@ -33836,14 +33851,11 @@
 	          defaultValue: this.state.language_id,
 	          onChange: this.languageChange },
 	        this.state.languages.map(function (language) {
-	          // let selected = "false";
-	          // if (language.id === this.state.language_id){
-	          //   selected = "true"
-	          // }
 	          return React.createElement(
 	            'option',
 	            { value: language.id,
-	              key: language.id },
+	              key: language.id,
+	              ref: language.id },
 	            language.name
 	          );
 	        })
@@ -33889,7 +33901,7 @@
 	            React.createElement(
 	              'th',
 	              null,
-	              'Foreign Language'
+	              this.pickedLanguage()
 	            )
 	          )
 	        ),
@@ -33914,6 +33926,28 @@
 	        )
 	      )
 	    );
+	  },
+	  sendStudySet: function sendStudySet(event) {
+	    event.preventDefault();
+	    var studySetData = {};
+	    studySetData.studySet = {
+	      name: this.refs.studySetName.value,
+	      language_id: this.state.language_id
+	    };
+	    studySetData.words = deleteEmpty(_words).map(function (word) {
+	      return {
+	        word_english: word.word_english,
+	        word_foreign: word.word_foreign
+	      };
+	    });
+	
+	    if (this.edit) {
+	      studySetData.studySet.id = this.id;
+	      StudySetActions.editStudySet(studySetData);
+	    } else {
+	      console.log(studySetData);
+	      StudySetActions.createStudySet(studySetData);
+	    }
 	  }
 	});
 	
@@ -34029,7 +34063,8 @@
 	      data: {
 	        klass: {
 	          name: data.name,
-	          description: data.description
+	          description: data.description,
+	          language_id: data.language_id
 	        }
 	      },
 	      success: successCallback,
@@ -34058,6 +34093,8 @@
 	var ErrorStore = __webpack_require__(265);
 	var hashHistory = __webpack_require__(168).hashHistory;
 	var KlassStore = __webpack_require__(274);
+	var LanguageStore = __webpack_require__(259);
+	var LanguageActions = __webpack_require__(261);
 	
 	var KlassForm = React.createClass({
 	  displayName: 'KlassForm',
@@ -34065,7 +34102,9 @@
 	    return {
 	      error: ErrorStore.full_errors(),
 	      name: "",
-	      description: ""
+	      description: "",
+	      languages: LanguageStore.all(),
+	      language_id: undefined
 	    };
 	  },
 	  setupEdit: function setupEdit() {
@@ -34074,29 +34113,61 @@
 	      this.edit = true;
 	      this.id = klass.id;
 	
-	      this.setState({ name: klass.name });
-	      this.setState({ description: klass.description });
+	      this.setState({
+	        name: klass.name,
+	        description: klass.description,
+	        language_id: klass.language_id
+	      });
 	    }
 	  },
 	  componentWillMount: function componentWillMount() {
 	    this.setupEdit();
 	  },
 	  componentDidMount: function componentDidMount() {
+	    LanguageActions.fetchAllLanguages();
+	    this.languageStoreListener = LanguageStore.addListener(this.receiveLanguages);
 	    this.errorStoreListener = ErrorStore.addListener(this.receiveErrors);
 	    this.studySetStoreListener = KlassStore.addListener(this.redirectToShow);
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
+	    this.languageStoreListener.remove();
 	    this.errorStoreListener.remove();
 	    this.studySetStoreListener.remove();
 	    ErrorStore.resetErrors();
 	  },
+	
+	
+	  // --------------
+	  // Store listeners
+	
 	  redirectToShow: function redirectToShow() {
 	    var id = KlassStore.getKlass().id;
-	    hashHistory.push('/klass/' + id);
+	    hashHistory.push('/class/' + id);
 	  },
 	  receiveErrors: function receiveErrors() {
 	    this.setState({ error: ErrorStore.full_errors() });
 	  },
+	  receiveLanguages: function receiveLanguages() {
+	    this.setState({ languages: LanguageStore.all() });
+	  },
+	
+	
+	  // -------------
+	  // form event listeners
+	
+	  updateState: function updateState(event) {
+	    var newState = {};
+	    newState[event.target.id] = event.target.value;
+	    this.setState(newState);
+	  },
+	  languageChange: function languageChange(event) {
+	    this.setState({ language_id: event.target.value });
+	  },
+	
+	
+	  // -------------
+	  // render helpers
+	
 	  showErrors: function showErrors() {
 	    if (this.state.error.responseJSON) {
 	      return React.createElement(
@@ -34122,29 +34193,33 @@
 	      );
 	    }
 	  },
-	  sendKlass: function sendKlass(event) {
-	    event.preventDefault();
-	    var klassData = {};
-	    klassData.name = this.state.name;
-	    klassData.description = this.state.description;
-	
-	    if (this.edit) {
-	      klassData.id = this.id;
-	      KlassActions.editKlass(klassData);
-	    } else {
-	      KlassActions.createKlass(klassData);
-	    }
-	  },
-	  updateState: function updateState(event) {
-	    var newState = {};
-	    newState[event.target.id] = event.target.value;
-	    this.setState(newState);
-	  },
 	  submitButton: function submitButton() {
 	    return this.edit ? "Update" : "Create";
 	  },
 	  title: function title() {
 	    return this.edit ? "Edit Class" : "Create New Class";
+	  },
+	  languageChoices: function languageChoices() {
+	    return React.createElement(
+	      'label',
+	      null,
+	      'Choose language',
+	      React.createElement(
+	        'select',
+	        {
+	          defaultValue: this.state.language_id,
+	          onChange: this.languageChange },
+	        this.state.languages.map(function (language) {
+	          return React.createElement(
+	            'option',
+	            { value: language.id,
+	              key: language.id,
+	              ref: language.id },
+	            language.name
+	          );
+	        })
+	      )
+	    );
 	  },
 	  render: function render() {
 	    return React.createElement(
@@ -34169,12 +34244,29 @@
 	        'Description',
 	        React.createElement('textarea', { id: 'description', value: this.state.description, onChange: this.updateState })
 	      ),
+	      this.languageChoices(),
 	      React.createElement(
 	        'button',
 	        { onClick: this.sendKlass },
 	        this.submitButton()
 	      )
 	    );
+	  },
+	  sendKlass: function sendKlass(event) {
+	    event.preventDefault();
+	    var klassData = {};
+	    klassData.name = this.state.name;
+	    klassData.description = this.state.description;
+	    klassData.language_id = this.state.language_id;
+	
+	    if (this.edit) {
+	      klassData.id = this.id;
+	      console.log(klassData);
+	      KlassActions.editKlass(klassData);
+	    } else {
+	      console.log(klassData);
+	      KlassActions.createKlass(klassData);
+	    }
 	  }
 	});
 	
@@ -34192,6 +34284,7 @@
 	var KlassStore = __webpack_require__(274);
 	var CurrentUserStore = __webpack_require__(264);
 	var hashHistory = __webpack_require__(168).hashHistory;
+	var StudySetIndex = __webpack_require__(284);
 	
 	var Klass = React.createClass({
 	  displayName: 'Klass',
@@ -34268,12 +34361,313 @@
 	        ),
 	        this.showDetails(),
 	        this.buttons()
-	      )
+	      ),
+	      React.createElement(StudySetIndex, { klassId: this.props.params.id })
 	    );
 	  }
 	});
 	
 	module.exports = Klass;
+
+/***/ },
+/* 280 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var AppDispatcher = __webpack_require__(231);
+	var IndexUtils = __webpack_require__(281);
+	var IndexConstants = __webpack_require__(282);
+	
+	function log(a) {
+	  console.log(a);
+	}
+	
+	var IndexActions = {
+	  getStudySetIndex: function getStudySetIndex(errorCallback) {
+	    IndexUtils.getStudySetIndex(this.receiveStudySetIndex, errorCallback);
+	  },
+	  getStudySetIndexforKlass: function getStudySetIndexforKlass(klassId, errorCallback) {
+	    IndexUtils.getStudySetIndexforKlass(klassId, this.receiveStudySetIndex, errorCallback);
+	  },
+	  getKlassIndex: function getKlassIndex(errorCallback) {
+	    IndexUtils.getKlassIndex(this.receiveKlassIndex, errorCallback);
+	  },
+	  receiveStudySetIndex: function receiveStudySetIndex(studySets) {
+	    AppDispatcher.dispatch({
+	      actionType: IndexConstants.RECEIVE_STUDY_SET_INDEX,
+	      studySets: studySets
+	    });
+	  },
+	  receiveKlassIndex: function receiveKlassIndex(klasses) {
+	    AppDispatcher.dispatch({
+	      actionType: IndexConstants.RECEIVE_KLASS_INDEX,
+	      klasses: klasses
+	    });
+	  }
+	};
+	
+	module.exports = IndexActions;
+	window.IndexActions = IndexActions;
+
+/***/ },
+/* 281 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {
+	  getStudySetIndex: function getStudySetIndex(successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/study_sets/",
+	      type: "GET",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  getStudySetIndexforKlass: function getStudySetIndexforKlass(klassId, successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/study_sets?class=" + klassId,
+	      type: "GET",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  getKlassIndex: function getKlassIndex(successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/klasses/",
+	      type: "GEt",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  }
+	};
+
+/***/ },
+/* 282 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {
+	  RECEIVE_KLASS_INDEX: "RECEIVE_KLASS_INDEX",
+	  RECEIVE_STUDY_SET_INDEX: "RECEIVE_STUDY_SET_INDEX"
+	
+	};
+
+/***/ },
+/* 283 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Store = __webpack_require__(240).Store;
+	var AppDispatcher = __webpack_require__(231);
+	var IndexConstants = __webpack_require__(282);
+	
+	var IndexStore = new Store(AppDispatcher);
+	
+	var indices = {
+	  studySets: [],
+	  klasses: []
+	};
+	
+	IndexStore.getStudySets = function () {
+	  return indices.studySets;
+	};
+	
+	IndexStore.getKlasses = function () {
+	  return indices.klasses;
+	};
+	
+	IndexStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case IndexConstants.RECEIVE_STUDY_SET_INDEX:
+	      indices.studySets = payload.studySets.study_sets;
+	      this.__emitChange();
+	      break;
+	    case IndexConstants.RECEIVE_KLASS_INDEX:
+	      indices.klasses = payload.klasses.klasses;
+	      this.__emitChange();
+	      break;
+	
+	  }
+	};
+	
+	module.exports = IndexStore;
+	window.IndexStore = IndexStore;
+
+/***/ },
+/* 284 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(162);
+	var IndexStore = __webpack_require__(283);
+	var IndexActions = __webpack_require__(280);
+	var StudySetIndexItem = __webpack_require__(285);
+	
+	var StudySetIndex = React.createClass({
+	  displayName: 'StudySetIndex',
+	  getInitialState: function getInitialState() {
+	    return { studySets: IndexStore.getStudySets() };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    if (this.props.klassId) {
+	      IndexActions.getStudySetIndexforKlass(this.props.klassId);
+	    } else {
+	      IndexActions.getStudySetIndex();
+	    }
+	    this.indexListener = IndexStore.addListener(this.updateState);
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.indexListener.remove();
+	  },
+	  updateState: function updateState() {
+	    this.setState({ studySets: IndexStore.getStudySets() });
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'study_set_index' },
+	      React.createElement(
+	        'h1',
+	        null,
+	        'Study Set Index'
+	      ),
+	      this.state.studySets.map(function (studySet) {
+	        return React.createElement(StudySetIndexItem, { studySet: studySet, key: studySet.id });
+	      })
+	    );
+	  }
+	});
+	
+	module.exports = StudySetIndex;
+
+/***/ },
+/* 285 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(162);
+	var hashHistory = __webpack_require__(168).hashHistory;
+	
+	var StudySetIndexItem = React.createClass({
+	  displayName: 'StudySetIndexItem',
+	  goToStudySet: function goToStudySet() {
+	    hashHistory.push('/study_set/' + this.props.studySet.id);
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'study_set_index_item' },
+	      React.createElement(
+	        'a',
+	        { onClick: this.goToStudySet },
+	        React.createElement(
+	          'p',
+	          null,
+	          'name: ',
+	          this.props.studySet.name
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
+	          'creator: ',
+	          this.props.studySet.creator.username
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = StudySetIndexItem;
+
+/***/ },
+/* 286 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(162);
+	var IndexStore = __webpack_require__(283);
+	var IndexActions = __webpack_require__(280);
+	var KlassIndexItem = __webpack_require__(287);
+	
+	var KlassIndex = React.createClass({
+	  displayName: 'KlassIndex',
+	  getInitialState: function getInitialState() {
+	    return { klasses: IndexStore.getKlasses() };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    IndexActions.getKlassIndex();
+	    this.indexListener = IndexStore.addListener(this.updateState);
+	  },
+	  updateState: function updateState() {
+	    this.setState({ klasses: IndexStore.getKlasses() });
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.indexListener.remove();
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'klass_index' },
+	      React.createElement(
+	        'h1',
+	        null,
+	        'Class Index'
+	      ),
+	      this.state.klasses.map(function (klass) {
+	        return React.createElement(KlassIndexItem, { klass: klass, key: klass.id });
+	      })
+	    );
+	  }
+	});
+	
+	module.exports = KlassIndex;
+
+/***/ },
+/* 287 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(162);
+	var hashHistory = __webpack_require__(168).hashHistory;
+	
+	var KlassIndexItem = React.createClass({
+	  displayName: 'KlassIndexItem',
+	  goToKlass: function goToKlass() {
+	    hashHistory.push('/class/' + this.props.klass.id);
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'klass_index_item' },
+	      React.createElement(
+	        'a',
+	        { onClick: this.goToKlass },
+	        React.createElement(
+	          'p',
+	          null,
+	          'name: ',
+	          this.props.klass.name
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
+	          'creator: ',
+	          this.props.klass.teacher.username
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = KlassIndexItem;
 
 /***/ }
 /******/ ]);
