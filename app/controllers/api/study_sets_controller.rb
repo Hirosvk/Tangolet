@@ -21,7 +21,6 @@ class Api::StudySetsController < ApplicationController
 
   def create
     @study_set = current_user.study_sets.new(study_set_params)
-    debugger
     words_params.each do |_, word|
       @study_set.words.new(word.permit(:word_english, :word_foreign))
     end

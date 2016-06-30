@@ -33577,7 +33577,7 @@
 	function deleteEmpty(oldWords) {
 	  var newWords = [];
 	  oldWords.forEach(function (word) {
-	    if (word.word_english.length > 0 && word.word_foreign.length > 0) {
+	    if (!(word.word_english.length === 0 && word.word_foreign.length > 0)) {
 	      newWords.push(word);
 	    }
 	  });
@@ -33674,6 +33674,7 @@
 	      studySetData.studySet.id = this.id;
 	      StudySetActions.editStudySet(studySetData);
 	    } else {
+	      console.log(studySetData);
 	      StudySetActions.createStudySet(studySetData);
 	    }
 	  },
