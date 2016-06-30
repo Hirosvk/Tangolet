@@ -55,7 +55,7 @@ score           | integer   | null: false, (in %, btw 0 and 100)
 column names    | Data Type | Details
 ----------------|-----------|---------------------
 id              | integer   |
-klass_name      | string    | null: false
+name            | string    | null: false
 description     | text      |
 teacher_id      | integer   | null: false, indexed
 

@@ -13,7 +13,7 @@ User.create!(username: "Seiji", password: "koikoi", email: "seiji@seiji.com")
 s1 = User.first.study_sets.new(name: "Japanese 1")
 s1.words.new(word_english: "food", word_foreign: "tabemono")
 s1.words.new(word_english: "car", word_foreign: "kuruma")
-s1.words.new(word_english: "mother", word_foreign: "okasan")
+s1.words.new(word_english: "mother", word_foreign: "")
 s1.words.new(word_english: "mother", word_foreign: "mama")
 s1.save!
 
@@ -23,3 +23,7 @@ s2.words.new(word_english: "car", word_foreign: "coche")
 s2.words.new(word_english: "mother", word_foreign: "madre")
 s2.words.new(word_english: "father", word_foreign: "padre")
 s2.save!
+
+User.first.klasses_created.create!(name: "Japanese 101", description: "It's great!")
+User.first.klasses_created.create!(name: "Japanese 102", description: "It's fun!")
+User.second.klasses_created.create!(name: "Spanish 101", description: "vamos a apprendir")

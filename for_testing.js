@@ -29,3 +29,9 @@ $.ajax({
   success: log,
   error: log
 });
+
+
+let k = {
+    name: "Spanish 101",
+    description: "hey it's fun"
+}

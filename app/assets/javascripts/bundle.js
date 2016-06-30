@@ -67,6 +67,10 @@
 	var StudySetList = __webpack_require__(266);
 	var Index = __webpack_require__(267);
 	var StudySetForm = __webpack_require__(269);
+	var KlassStore = __webpack_require__(270);
+	var KlassActions = __webpack_require__(272);
+	var KlassForm = __webpack_require__(274);
+	var Klass = __webpack_require__(275);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -95,12 +99,14 @@
 	      Route,
 	      { component: Content },
 	      React.createElement(IndexRoute, { component: Index }),
+	      React.createElement(Route, { path: 'class/:id', component: Klass }),
 	      React.createElement(
 	        Route,
 	        { path: 'study_set/:id', component: StudySet },
 	        React.createElement(IndexRoute, { component: StudySetList })
 	      ),
-	      React.createElement(Route, { path: 'study_set_form(/:action)', component: StudySetForm })
+	      React.createElement(Route, { path: 'study_set_form(/:action)', component: StudySetForm }),
+	      React.createElement(Route, { path: 'class_form(/:action)', component: KlassForm })
 	    ),
 	    React.createElement(Route, { path: 'login', component: LoginForm }),
 	    React.createElement(Route, { path: 'signup', component: SignupForm })
@@ -26011,7 +26017,6 @@
 	    StudySetUtils.editStudySet(studySetData, this.receiveStudySet, ErrorActions.updateError);
 	  },
 	  deleteStudySet: function deleteStudySet(id, successCallback) {
-	    console.log("action");
 	    StudySetUtils.deleteStudySet(id, successCallback, ErrorActions.updateError);
 	  }
 	};
@@ -33612,8 +33617,6 @@
 	    this.setupEdit();
 	  },
 	  componentDidMount: function componentDidMount() {
-	    console.log("didmount");
-	    this.forceUpdate();
 	    this.errorStoreListener = ErrorStore.addListener(this.receiveErrors);
 	    this.studySetStoreListener = StudySetStore.addListener(this.redirectToShow);
 	  },
@@ -33798,6 +33801,361 @@
 	
 	module.exports = StudySetForm;
 	window.StudySetForm = StudySetForm;
+
+/***/ },
+/* 270 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Store = __webpack_require__(238).Store;
+	var AppDispatcher = __webpack_require__(231);
+	var KlassConstants = __webpack_require__(271);
+	
+	var KlassStore = new Store(AppDispatcher);
+	
+	var _klass = void 0;
+	
+	KlassStore.getKlass = function () {
+	  return _klass;
+	};
+	
+	KlassStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case KlassConstants.RECEIVE_KLASS:
+	      _klass = payload.klass;
+	      _klass.description = _klass.description || "";
+	      this.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = KlassStore;
+	window.KlassStore = KlassStore;
+
+/***/ },
+/* 271 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {
+	  RECEIVE_KLASS: "RECEIVE_KLASS"
+	};
+
+/***/ },
+/* 272 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var AppDispatcher = __webpack_require__(231);
+	var KlassConstants = __webpack_require__(271);
+	var KlassUtils = __webpack_require__(273);
+	var ErrorActions = __webpack_require__(268);
+	
+	var KlassActions = {
+	  fetchKlass: function fetchKlass(id, errorCallback) {
+	    KlassUtils.fetchKlass(id, this.receiveKlass, errorCallback);
+	  },
+	  receiveKlass: function receiveKlass(klass) {
+	    AppDispatcher.dispatch({
+	      actionType: KlassConstants.RECEIVE_KLASS,
+	      klass: klass
+	    });
+	  },
+	  createKlass: function createKlass(klassData) {
+	    KlassUtils.createKlass(klassData, this.receiveKlass, ErrorActions.updateError);
+	  },
+	  editKlass: function editKlass(klassData) {
+	    KlassUtils.editKlass(klassData, this.receiveKlass, ErrorActions.updateError);
+	  },
+	  deleteKlass: function deleteKlass(id, successCallback) {
+	    KlassUtils.deleteKlass(id, successCallback, ErrorActions.updateError);
+	  }
+	};
+	
+	module.exports = KlassActions;
+	window.KlassActions = KlassActions;
+
+/***/ },
+/* 273 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {
+	  fetchKlass: function fetchKlass(id, successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/klasses/" + id,
+	      type: "GET",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  createKlass: function createKlass(data, successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/klasses/",
+	      type: "POST",
+	      data: {
+	        klass: data
+	      },
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  editKlass: function editKlass(data, successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/klasses/" + data.id,
+	      type: "PATCH",
+	      data: {
+	        klass: {
+	          name: data.name,
+	          description: data.description
+	        }
+	      },
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  deleteKlass: function deleteKlass(id, successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/klasses/" + id,
+	      type: "DELETE",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  }
+	};
+
+/***/ },
+/* 274 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(162);
+	var KlassActions = __webpack_require__(272);
+	var CurrentUserStore = __webpack_require__(259);
+	var ErrorStore = __webpack_require__(260);
+	var hashHistory = __webpack_require__(168).hashHistory;
+	var KlassStore = __webpack_require__(270);
+	
+	var KlassForm = React.createClass({
+	  displayName: 'KlassForm',
+	  getInitialState: function getInitialState() {
+	    return {
+	      error: ErrorStore.full_errors(),
+	      name: "",
+	      description: ""
+	    };
+	  },
+	  setupEdit: function setupEdit() {
+	    if (!this.id && this.props.params.action === 'edit') {
+	      var klass = KlassStore.getKlass();
+	      this.edit = true;
+	      this.id = klass.id;
+	
+	      this.setState({ name: klass.name });
+	      this.setState({ description: klass.description });
+	    }
+	  },
+	  componentWillMount: function componentWillMount() {
+	    this.setupEdit();
+	  },
+	  componentDidMount: function componentDidMount() {
+	    this.errorStoreListener = ErrorStore.addListener(this.receiveErrors);
+	    this.studySetStoreListener = KlassStore.addListener(this.redirectToShow);
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.errorStoreListener.remove();
+	    this.studySetStoreListener.remove();
+	    ErrorStore.resetErrors();
+	  },
+	  redirectToShow: function redirectToShow() {
+	    var id = KlassStore.getKlass().id;
+	    hashHistory.push('/klass/' + id);
+	  },
+	  receiveErrors: function receiveErrors() {
+	    this.setState({ error: ErrorStore.full_errors() });
+	  },
+	  showErrors: function showErrors() {
+	    if (this.state.error.responseJSON) {
+	      return React.createElement(
+	        'ul',
+	        { classNam: 'errors' },
+	        this.state.error.responseJSON.map(function (message) {
+	          return React.createElement(
+	            'li',
+	            { key: message },
+	            message
+	          );
+	        })
+	      );
+	    } else if (this.state.error.responseText) {
+	      return React.createElement(
+	        'ul',
+	        { classNam: 'errors' },
+	        React.createElement(
+	          'li',
+	          null,
+	          this.state.error.responseText
+	        )
+	      );
+	    }
+	  },
+	  sendKlass: function sendKlass(event) {
+	    event.preventDefault();
+	    var klassData = {};
+	    klassData.name = this.state.name;
+	    klassData.description = this.state.description;
+	
+	    if (this.edit) {
+	      klassData.id = this.id;
+	      KlassActions.editKlass(klassData);
+	    } else {
+	      KlassActions.createKlass(klassData);
+	    }
+	  },
+	  updateState: function updateState(event) {
+	    var newState = {};
+	    newState[event.target.id] = event.target.value;
+	    this.setState(newState);
+	  },
+	  submitButton: function submitButton() {
+	    return this.edit ? "Update" : "Create";
+	  },
+	  title: function title() {
+	    return this.edit ? "Edit Class" : "Create New Class";
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'form',
+	      { className: 'klass_form' },
+	      React.createElement(
+	        'h1',
+	        null,
+	        this.title()
+	      ),
+	      this.showErrors(),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Class Name',
+	        React.createElement('input', { type: 'text', id: 'name', value: this.state.name, onChange: this.updateState })
+	      ),
+	      React.createElement('br', null),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Description',
+	        React.createElement('textarea', { id: 'description', value: this.state.description, onChange: this.updateState })
+	      ),
+	      React.createElement(
+	        'button',
+	        { onClick: this.sendKlass },
+	        this.submitButton()
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = KlassForm;
+	window.KlassForm = KlassForm;
+
+/***/ },
+/* 275 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(162);
+	var KlassActions = __webpack_require__(272);
+	var KlassStore = __webpack_require__(270);
+	var CurrentUserStore = __webpack_require__(259);
+	var hashHistory = __webpack_require__(168).hashHistory;
+	
+	var Klass = React.createClass({
+	  displayName: 'Klass',
+	  getInitialState: function getInitialState() {
+	    return { klass: KlassStore.getKlass() };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    var id = this.props.params.id;
+	    KlassActions.fetchKlass(id);
+	    this.listener = KlassStore.addListener(this.updateState);
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.listener.remove();
+	  },
+	  updateState: function updateState() {
+	    this.setState({ klass: KlassStore.getKlass() });
+	  },
+	  showDetails: function showDetails() {
+	    var klass = this.state.klass;
+	    if (klass) {
+	      return React.createElement(
+	        'p',
+	        null,
+	        klass.description
+	      );
+	    }
+	  },
+	  redirectToIndex: function redirectToIndex(resp) {
+	    hashHistory.push("/");
+	  },
+	  deleteKlass: function deleteKlass() {
+	    KlassActions.deleteKlass(this.props.params.id, this.redirectToIndex);
+	  },
+	  editKlass: function editKlass() {
+	    hashHistory.push("/class_form/edit");
+	  },
+	  buttons: function buttons() {
+	    if (this.state.klass) {
+	      if (CurrentUserStore.getCurrentUser().id === this.state.klass.teacher.id) {
+	        return React.createElement(
+	          'div',
+	          null,
+	          React.createElement(
+	            'button',
+	            { onClick: this.deleteKlass },
+	            'Delete'
+	          ),
+	          React.createElement(
+	            'button',
+	            { onClick: this.editKlass },
+	            'Edit'
+	          )
+	        );
+	      }
+	    }
+	  },
+	  render: function render() {
+	    var klass = void 0;
+	    if (this.state.klass) {
+	      klass = this.state.klass;
+	    } else {
+	      klass = {};
+	    }
+	    return React.createElement(
+	      'div',
+	      { className: 'klass' },
+	      React.createElement(
+	        'header',
+	        { className: 'klass_header' },
+	        React.createElement(
+	          'h1',
+	          null,
+	          klass.name
+	        ),
+	        this.showDetails(),
+	        this.buttons()
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = Klass;
 
 /***/ }
 /******/ ]);

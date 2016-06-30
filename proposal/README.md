@@ -135,36 +135,36 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 - [ ] Dispatcher
 - [ ] StudySetStore
 
-- [ ] StudySetForm component (w/o ClassOptionBox)
+- [ ] StudySetForm component
 
 - [ ] Basic CSS Styling
 
 
 ## Phase 4: Add Class feature (2day, W8D7)
-- [ ] build models: klasses, klass_set_joins
-- [ ] klass-set associations
-- [ ] KlassesController: Basic API endpoints for klass
-  - [ ] create with study_set_ids
-  - [ ] delete
-  - [ ] show
-  - [ ] study_sets
-- [ ] add class_ids in study_set#create
-
-- [ ] React Components: Class, ClassStudySetIndex, ClassStudySetIndexItem
-- [ ] ClassAction
-- [ ] ClassStore
-- [ ] ClassStudySetStore
-- [ ] ClassForm Component
+- [ ] build models: klasses
+  - [ ] controllers: create, delete, update, show
+- [ ] class forms: new & update
+  - [ ] ClassAction
+  - [ ] ClassStore
+  - [ ] ClassStudySetStore
 
 
 ## Phase 5: Enrollment & Class/StudySet Join(1day)
+- [ ] klass-set associations
+  - [ ] rails backend
+  - [ ] Api endpoint at KlassController using study_set_ids
+  - [ ] add StudySet to class Form
+
+
 - [ ] enrollment
   - [ ] model & migration
   - [ ] API endpoints & server routes
   - [ ] toggle button on Class page
-- [ ] Add Study Sets to Class feature
-  - [ ] API endpoints
-  - [ ] Form
+
+- [ ] language
+  - [ ] languages models
+  - [ ] add language drop down to class/study_set form & actions
+  - [ ] add language to class/study_set show
 
 ## Phase 6: Navbar (1day w9d1)
 - [ ] backend setup

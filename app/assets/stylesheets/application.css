@@ -30,7 +30,7 @@ form, input, textarea, footer, p {
 }
 
 input, textarea {
-  border: none;
+  border: 1px solid black;
 }
 
 button {

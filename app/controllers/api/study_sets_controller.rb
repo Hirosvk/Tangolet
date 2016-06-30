@@ -6,7 +6,7 @@ class Api::StudySetsController < ApplicationController
     if @study_set
       render :show
     else
-      render json: "no such Study Set found", status: 401
+      render json: "no such Study Set found", status: 404
     end
   end
 
@@ -15,12 +15,13 @@ class Api::StudySetsController < ApplicationController
     if @study_sets
       render :index
     else
-      render json: "recod not found", status: 401
+      render json: "recod not found", status: 404
     end
   end
 
   def create
     @study_set = current_user.study_sets.new(study_set_params)
+    debugger
     words_params.each do |_, word|
       @study_set.words.new(word.permit(:word_english, :word_foreign))
     end
@@ -28,7 +29,7 @@ class Api::StudySetsController < ApplicationController
     if @study_set.save
       render :show
     else
-      render json: @study_set.errors.full_messages, status: 401
+      render json: @study_set.errors.full_messages, status: 406
     end
 
   end
@@ -36,7 +37,7 @@ class Api::StudySetsController < ApplicationController
   def update
     @study_set = StudySet.find(params[:id])
     if @study_set.creator_id != current_user.id
-      render json: "Only creator can edit Study Set"
+      render json: "Only creator can edit Study Set", status: 401
     end
 
     @study_set.name = study_set_params[:name]
@@ -57,14 +58,14 @@ class Api::StudySetsController < ApplicationController
     @study_set = StudySet.find(params[:id])
 
     if @study_set.nil?
-      render json: "no such Study Set was found", status: 401
+      render json: "no such Study Set was found", status: 404
     elsif @study_set.creator_id != current_user.id
       render json: "only the creator can delete the Study Set", status: 401
     elsif @study_set.destroy
       render :show
       # ajax thinks that json: response an error, and calls error callback
     else
-      render json: "Error occured", status: 401
+      render json: "Error occured", status: 406
     end
   end
 

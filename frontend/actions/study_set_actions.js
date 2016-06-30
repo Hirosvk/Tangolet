@@ -24,7 +24,6 @@ const StudySetActions = {
   },
 
   deleteStudySet(id, successCallback){
-    console.log("action");
     StudySetUtils.deleteStudySet(id, successCallback, ErrorActions.updateError);
   }
 

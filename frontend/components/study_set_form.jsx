@@ -71,8 +71,6 @@ const StudySetForm = React.createClass({
   },
 
   componentDidMount(){
-    console.log("didmount");
-    this.forceUpdate();
     this.errorStoreListener = ErrorStore.addListener(this.receiveErrors);
     this.studySetStoreListener = StudySetStore.addListener(this.redirectToShow);
   },
