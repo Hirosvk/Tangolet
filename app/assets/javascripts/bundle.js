@@ -33239,7 +33239,7 @@
 	var CurrentUserStore = new Store(AppDispatcher);
 	
 	var _currentUser = {
-	  klassIds: []
+	  klass_ids: []
 	};
 	
 	CurrentUserStore.getCurrentUser = function () {
