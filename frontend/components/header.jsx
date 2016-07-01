@@ -29,20 +29,20 @@ const Header = React.createClass({
     hashHistory.push("/signup");
   },
 
-  loginStatus(){
+  userAccount(){
     if (this.state.currentUser.id) {
       return (
-        <div className="login_status">
+        <div className="user_account">
           <p className="item">Hello {this.state.currentUser.username}</p>
-          <button onClick={this.logout} className="item">Logout</button>
+          <Button className="btn" onClick={this.logout} bsSize="xsmall">Logout</Button>
         </div>
       );
     } else {
       return (
-        <div className="login_status">
+        <div className="user_account">
           <p className="item">You are not logged in</p>
-          <button className="item" onClick={this.toLogin}>Login</button>
-          <button className="item" onClick={this.toSignup}>Sign up</button>
+          <Button className="btn" bsSize="xsmall" onClick={this.toLogin}>Login</Button>
+          <Button className="btn" bsSize="xsmall" onClick={this.toSignup}>Sign up</Button>
         </div>
       );
     }
@@ -54,9 +54,9 @@ const Header = React.createClass({
 
   render(){
     return (
-      <header className="header">
-        <Button onClick={this.backToIndex}>Back to Index(dev.)</Button>
-        {this.loginStatus()}
+      <header className="top-header">
+        <Button onClick={this.backToIndex} bsSize="xsmall">Back to Index(dev.)</Button>
+        {this.userAccount()}
       </header>
     );
   }

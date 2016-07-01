@@ -2,28 +2,33 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-.header {
-  background: teal;
+.top-header {
+  background: #8EA800;
   display: flex;
   justify-content: flex-end;
+  padding: 5px;
 }
 
 
-.login_status {
+.user_account {
   display: flex;
   justify-content: flex-end;
   flex-direction: row;
 }
 
-.login_status>.item{
+.user_account>.item{
   padding: 2px;
   margin: 3px;
 }
 
-.main {
-  background: lightgrey;
-  min-height: 200px;
+.user_account p {
+  font-size: medium
 }
+
+.user_account .btn {
+  background: #FAF3EB;
+}
+
 
 .session_form {
   display: flex;

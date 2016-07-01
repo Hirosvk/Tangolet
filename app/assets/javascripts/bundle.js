@@ -33239,7 +33239,7 @@
 	var CurrentUserStore = new Store(AppDispatcher);
 	
 	var _currentUser = {
-	  klass_ids: []
+	  klassIds: []
 	};
 	
 	CurrentUserStore.getCurrentUser = function () {
@@ -33678,11 +33678,11 @@
 	  toSignup: function toSignup() {
 	    hashHistory.push("/signup");
 	  },
-	  loginStatus: function loginStatus() {
+	  userAccount: function userAccount() {
 	    if (this.state.currentUser.id) {
 	      return React.createElement(
 	        'div',
-	        { className: 'login_status' },
+	        { className: 'user_account' },
 	        React.createElement(
 	          'p',
 	          { className: 'item' },
@@ -33690,28 +33690,28 @@
 	          this.state.currentUser.username
 	        ),
 	        React.createElement(
-	          'button',
-	          { onClick: this.logout, className: 'item' },
+	          Button,
+	          { className: 'btn', onClick: this.logout, bsSize: 'xsmall' },
 	          'Logout'
 	        )
 	      );
 	    } else {
 	      return React.createElement(
 	        'div',
-	        { className: 'login_status' },
+	        { className: 'user_account' },
 	        React.createElement(
 	          'p',
 	          { className: 'item' },
 	          'You are not logged in'
 	        ),
 	        React.createElement(
-	          'button',
-	          { className: 'item', onClick: this.toLogin },
+	          Button,
+	          { className: 'btn', bsSize: 'xsmall', onClick: this.toLogin },
 	          'Login'
 	        ),
 	        React.createElement(
-	          'button',
-	          { className: 'item', onClick: this.toSignup },
+	          Button,
+	          { className: 'btn', bsSize: 'xsmall', onClick: this.toSignup },
 	          'Sign up'
 	        )
 	      );
@@ -33723,13 +33723,13 @@
 	  render: function render() {
 	    return React.createElement(
 	      'header',
-	      { className: 'header' },
+	      { className: 'top-header' },
 	      React.createElement(
 	        Button,
-	        { onClick: this.backToIndex },
+	        { onClick: this.backToIndex, bsSize: 'xsmall' },
 	        'Back to Index(dev.)'
 	      ),
-	      this.loginStatus()
+	      this.userAccount()
 	    );
 	  }
 	});
@@ -34033,7 +34033,7 @@
 	      }),
 	      React.createElement(
 	        Button,
-	        { bsStyle: 'link', onClick: this.createKlass },
+	        { onClick: this.createKlass },
 	        '+ Create New Class(dev.)'
 	      )
 	    );
@@ -34132,7 +34132,7 @@
 	      }),
 	      React.createElement(
 	        Button,
-	        { bsStyle: 'link', onClick: this.createStudySet },
+	        { onClick: this.createStudySet },
 	        '+ Create New Study Set(dev.)'
 	      )
 	    );

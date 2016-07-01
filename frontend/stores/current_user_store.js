@@ -5,7 +5,7 @@ const SessionConstants = require('../constants/session_constants');
 const CurrentUserStore = new Store(AppDispatcher);
 
 let _currentUser = {
-  klass_ids: []
+  klassIds: []
 };
 
 CurrentUserStore.getCurrentUser = function(){

@@ -38,7 +38,7 @@ const KlassIndex = React.createClass({
             return <KlassIndexItem klass={klass} key={klass.id}/>;
           })
         }
-        <Button bsStyle='link' onClick={this.createKlass}>+ Create New Class(dev.)</Button>
+        <Button onClick={this.createKlass}>+ Create New Class(dev.)</Button>
       </div>
     );
   }

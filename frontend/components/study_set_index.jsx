@@ -42,7 +42,7 @@ const StudySetIndex = React.createClass({
             return <StudySetIndexItem studySet={studySet} key={studySet.id}/>;
           })
         }
-        <Button bsStyle='link' onClick={this.createStudySet}>+ Create New Study Set(dev.)</Button>
+        <Button onClick={this.createStudySet}>+ Create New Study Set(dev.)</Button>
       </div>
     );
   }

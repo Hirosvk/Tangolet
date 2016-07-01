@@ -29,6 +29,12 @@ form, input, textarea, footer, p {
   background: transparent;
 }
 
+.main {
+  color: #4A280E;
+  background: #E3D5C3;
+  min-height: 200px;
+}
+
 /*input, textarea {
   border: 1px solid black;
 }*/
@@ -47,9 +53,9 @@ form, input, textarea, footer, p {
 	border-radius: 5px;
 }*/
 
-/*ul {
+ul {
   list-style: none;
-}*/
+}
 
 /*input[type="password"],
 input[type="email"],
