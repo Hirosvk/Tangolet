@@ -1,1 +1,1 @@
-json.partial! "klass", klass: @klass, details: true
+json.partial! "api/klasses/klass", klass: @klass, details: true

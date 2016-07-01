@@ -7,7 +7,7 @@
   <%= csrf_meta_tags %>
   <% if current_user %>
     <script>
-      window.currentUser = <%= render("api/users/user.json.jbuilder", user: current_user).html_safe %>
+      window.currentUser = <%= render("api/users/user.json.jbuilder", user: current_user, details: false).html_safe %>
     </script>
   <% end %>
 </head>

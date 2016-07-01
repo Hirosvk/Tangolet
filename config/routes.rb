@@ -4,6 +4,9 @@ Rails.application.routes.draw do
     resource :session, only: [:create, :destroy]
     resource :user, only: [:create, :show]
       patch 'user/enroll' => 'users#enroll'
+      get 'user/my_klasses' => 'users#my_klasses'
+      get 'user/my_klasses_created' => 'users#my_klasses_created'
+      get 'user/my_study_sets' => 'users#my_study_sets'
     resources :study_sets
     resources :klasses
       patch 'klasses/:id/update_study_sets' => 'klasses#update_study_sets'

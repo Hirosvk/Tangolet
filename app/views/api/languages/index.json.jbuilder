@@ -1,1 +1,1 @@
-json.languages @languages, :id, :name
+json.partial! "api/languages/language", collection: @languages, as: :language

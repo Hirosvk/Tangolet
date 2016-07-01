@@ -4,10 +4,10 @@ const LanguageConstants = require('../constants/language_constants');
 
 const LanguageStore = new Store(AppDispatcher);
 
-  let languages = {languages: []};
+  let languages = [];
 
 LanguageStore.all = function(){
-  return languages.languages;
+  return languages;
 };
 
 

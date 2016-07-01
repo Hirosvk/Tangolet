@@ -60,7 +60,11 @@ const AddStudySetForm = React.createClass({
               defaultChecked={this.checked(studySet.id)}
               key={studySet.id}
               onClick={this.updateStudySetIds}/>
-            {studySet.name}: created by {studySet.creator.username}<br />
+            <ul>
+            <li>{studySet.name}</li>
+            <li>created by {studySet.creator.username}</li>
+            <li>language: {studySet.language.name}</li>
+            </ul>
         </label>
       );
     });
@@ -93,7 +97,6 @@ const AddStudySetForm = React.createClass({
   },
 
   render(){
-    console.log(this.state.studySetIds);
     return(
       <form>
         {this.checkboxes()}

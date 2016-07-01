@@ -5,10 +5,7 @@ json.teacher do
   json.id klass.teacher.id
 end
 
-json.language do
-  json.name klass.language.name
-  json.id klass.language.id
-end
+json.language klass.language, partial: "api/languages/language", as: :language
 
 if details
   json.description klass.description

@@ -1,4 +1,5 @@
-json.extract! study_set, :id, :name, :language
+json.extract! study_set, :id, :name
+json.language study_set.language, partial: "api/languages/language", as: :language
 
 json.creator  do
   json.id study_set.creator.id

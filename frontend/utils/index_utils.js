@@ -24,6 +24,33 @@ module.exports = {
       success: successCallback,
       error: errorCallback
     });
+  },
+
+  getMyStudySetIndex(successCallback, errorCallback){
+    $.ajax({
+      url: `api/user/my_study_sets/`,
+      type: "GET",
+      success: successCallback,
+      error: errorCallback
+    });
+  },
+
+  getMyKlassIndex(successCallback, errorCallback){
+    $.ajax({
+      url: `api/user/my_klasses/`,
+      type: "GET",
+      success: successCallback,
+      error: errorCallback
+    });
+  },
+
+  getMyKlassCreatedIndex(successCallback, errorCallback){
+    $.ajax({
+      url: `api/user/my_klasses_created/`,
+      type: "GET",
+      success: successCallback,
+      error: errorCallback
+    });
   }
 
 };

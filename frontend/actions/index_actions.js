@@ -2,7 +2,6 @@ const AppDispatcher = require('../dispatcher/dispatcher');
 const IndexUtils = require('../utils/index_utils');
 const IndexConstants = require('../constants/index_constants');
 
-
 function log(a){
   console.log(a);
 }
@@ -18,6 +17,18 @@ const IndexActions = {
 
   getKlassIndex(errorCallback){
     IndexUtils.getKlassIndex(this.receiveKlassIndex, errorCallback);
+  },
+
+  getMyKlassIndex(errorCallback){
+    IndexUtils.getMyKlassIndex(log, log);
+  },
+
+  getMyKlassCreatedIndex(errorCallback){
+    IndexUtils.getMyKlassCreatedIndex(log, log);
+  },
+
+  getMyStudySetIndex(error){
+    IndexUtils.getMyStudySetIndex(log, log);
   },
 
   receiveStudySetIndex(studySets){

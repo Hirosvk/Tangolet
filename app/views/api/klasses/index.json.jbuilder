@@ -1,1 +1,1 @@
-json.partial! "klass", collection: @klasses, as: :klass, details: false
+json.partial! "api/klasses/klass", collection: @klasses, as: :klass, details: false

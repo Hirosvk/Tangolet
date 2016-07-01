@@ -32995,10 +32995,10 @@
 	
 	var LanguageStore = new Store(AppDispatcher);
 	
-	var languages = { languages: [] };
+	var languages = [];
 	
 	LanguageStore.all = function () {
-	  return languages.languages;
+	  return languages;
 	};
 	
 	LanguageStore.__onDispatch = function (payload) {
@@ -34511,6 +34511,15 @@
 	  getKlassIndex: function getKlassIndex(errorCallback) {
 	    IndexUtils.getKlassIndex(this.receiveKlassIndex, errorCallback);
 	  },
+	  getMyKlassIndex: function getMyKlassIndex(errorCallback) {
+	    IndexUtils.getMyKlassIndex(log, log);
+	  },
+	  getMyKlassCreatedIndex: function getMyKlassCreatedIndex(errorCallback) {
+	    IndexUtils.getMyKlassCreatedIndex(log, log);
+	  },
+	  getMyStudySetIndex: function getMyStudySetIndex(error) {
+	    IndexUtils.getMyStudySetIndex(log, log);
+	  },
 	  receiveStudySetIndex: function receiveStudySetIndex(studySets) {
 	    AppDispatcher.dispatch({
 	      actionType: IndexConstants.RECEIVE_STUDY_SET_INDEX,
@@ -34555,6 +34564,30 @@
 	    $.ajax({
 	      url: "api/klasses/",
 	      type: "GEt",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  getMyStudySetIndex: function getMyStudySetIndex(successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/user/my_study_sets/",
+	      type: "GET",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  getMyKlassIndex: function getMyKlassIndex(successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/user/my_klasses/",
+	      type: "GET",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  getMyKlassCreatedIndex: function getMyKlassCreatedIndex(successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/user/my_klasses_created/",
+	      type: "GET",
 	      success: successCallback,
 	      error: errorCallback
 	    });
@@ -34852,10 +34885,27 @@
 	          defaultChecked: _this.checked(studySet.id),
 	          key: studySet.id,
 	          onClick: _this.updateStudySetIds }),
-	        studySet.name,
-	        ': created by ',
-	        studySet.creator.username,
-	        React.createElement('br', null)
+	        React.createElement(
+	          'ul',
+	          null,
+	          React.createElement(
+	            'li',
+	            null,
+	            studySet.name
+	          ),
+	          React.createElement(
+	            'li',
+	            null,
+	            'created by ',
+	            studySet.creator.username
+	          ),
+	          React.createElement(
+	            'li',
+	            null,
+	            'language: ',
+	            studySet.language.name
+	          )
+	        )
 	      );
 	    });
 	  },
@@ -34884,7 +34934,6 @@
 	    KlassActions.updateStudySets(data);
 	  },
 	  render: function render() {
-	    console.log(this.state.studySetIds);
 	    return React.createElement(
 	      'form',
 	      null,
