@@ -59,25 +59,25 @@
 	var SessionActions = __webpack_require__(257);
 	var LanguageStore = __webpack_require__(259);
 	var LanguageActions = __webpack_require__(261);
-	var IndexActions = __webpack_require__(280);
-	var IndexStores = __webpack_require__(283);
-	var CurrentUserStore = __webpack_require__(264);
-	var KlassStore = __webpack_require__(274);
-	var KlassActions = __webpack_require__(276);
+	var IndexActions = __webpack_require__(263);
+	var IndexStores = __webpack_require__(266);
+	var CurrentUserStore = __webpack_require__(267);
+	var KlassStore = __webpack_require__(268);
+	var KlassActions = __webpack_require__(270);
 	
-	var LoginForm = __webpack_require__(263);
-	var SignupForm = __webpack_require__(266);
-	var Header = __webpack_require__(267);
-	var Main = __webpack_require__(268);
-	var Content = __webpack_require__(269);
-	var StudySet = __webpack_require__(270);
-	var StudySetList = __webpack_require__(271);
-	var Index = __webpack_require__(272);
-	var StudySetForm = __webpack_require__(273);
-	var KlassForm = __webpack_require__(278);
-	var Klass = __webpack_require__(279);
+	var LoginForm = __webpack_require__(272);
+	var SignupForm = __webpack_require__(274);
+	var Header = __webpack_require__(275);
+	var Main = __webpack_require__(276);
+	var Content = __webpack_require__(277);
+	var StudySet = __webpack_require__(278);
+	var StudySetList = __webpack_require__(279);
+	var Index = __webpack_require__(280);
+	var StudySetForm = __webpack_require__(285);
+	var KlassForm = __webpack_require__(286);
+	var Klass = __webpack_require__(287);
 	var AddStudySetForm = __webpack_require__(288);
-	var StudySetIndex = __webpack_require__(284);
+	var StudySetIndex = __webpack_require__(283);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -33071,10 +33071,374 @@
 
 	'use strict';
 	
+	var AppDispatcher = __webpack_require__(231);
+	var IndexUtils = __webpack_require__(264);
+	var IndexConstants = __webpack_require__(265);
+	
+	function log(a) {
+	  console.log(a);
+	}
+	
+	var IndexActions = {
+	  getStudySetIndex: function getStudySetIndex(errorCallback) {
+	    IndexUtils.getStudySetIndex(this.receiveStudySetIndex, errorCallback);
+	  },
+	  getStudySetIndexforKlass: function getStudySetIndexforKlass(klassId, errorCallback) {
+	    IndexUtils.getStudySetIndexforKlass(klassId, this.receiveStudySetIndex, errorCallback);
+	  },
+	  getKlassIndex: function getKlassIndex(errorCallback) {
+	    IndexUtils.getKlassIndex(this.receiveKlassIndex, errorCallback);
+	  },
+	  getMyKlassIndex: function getMyKlassIndex(errorCallback) {
+	    IndexUtils.getMyKlassIndex(log, log);
+	  },
+	  getMyKlassCreatedIndex: function getMyKlassCreatedIndex(errorCallback) {
+	    IndexUtils.getMyKlassCreatedIndex(log, log);
+	  },
+	  getMyStudySetIndex: function getMyStudySetIndex(error) {
+	    IndexUtils.getMyStudySetIndex(log, log);
+	  },
+	  receiveStudySetIndex: function receiveStudySetIndex(studySets) {
+	    AppDispatcher.dispatch({
+	      actionType: IndexConstants.RECEIVE_STUDY_SET_INDEX,
+	      studySets: studySets
+	    });
+	  },
+	  receiveKlassIndex: function receiveKlassIndex(klasses) {
+	    AppDispatcher.dispatch({
+	      actionType: IndexConstants.RECEIVE_KLASS_INDEX,
+	      klasses: klasses
+	    });
+	  }
+	};
+	
+	module.exports = IndexActions;
+	window.IndexActions = IndexActions;
+
+/***/ },
+/* 264 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {
+	  getStudySetIndex: function getStudySetIndex(successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/study_sets/",
+	      type: "GET",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  getStudySetIndexforKlass: function getStudySetIndexforKlass(klassId, successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/study_sets?class=" + klassId,
+	      type: "GET",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  getKlassIndex: function getKlassIndex(successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/klasses/",
+	      type: "GEt",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  getMyStudySetIndex: function getMyStudySetIndex(successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/user/my_study_sets/",
+	      type: "GET",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  getMyKlassIndex: function getMyKlassIndex(successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/user/my_klasses/",
+	      type: "GET",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  getMyKlassCreatedIndex: function getMyKlassCreatedIndex(successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/user/my_klasses_created/",
+	      type: "GET",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  }
+	};
+
+/***/ },
+/* 265 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {
+	  RECEIVE_KLASS_INDEX: "RECEIVE_KLASS_INDEX",
+	  RECEIVE_STUDY_SET_INDEX: "RECEIVE_STUDY_SET_INDEX"
+	
+	};
+
+/***/ },
+/* 266 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Store = __webpack_require__(240).Store;
+	var AppDispatcher = __webpack_require__(231);
+	var IndexConstants = __webpack_require__(265);
+	
+	var IndexStore = new Store(AppDispatcher);
+	
+	var indices = {
+	  studySets: [],
+	  klasses: []
+	};
+	
+	IndexStore.getStudySets = function () {
+	  return indices.studySets;
+	};
+	
+	IndexStore.getKlasses = function () {
+	  return indices.klasses;
+	};
+	
+	IndexStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case IndexConstants.RECEIVE_STUDY_SET_INDEX:
+	      indices.studySets = payload.studySets;
+	      this.__emitChange();
+	      break;
+	    case IndexConstants.RECEIVE_KLASS_INDEX:
+	      indices.klasses = payload.klasses;
+	      this.__emitChange();
+	      break;
+	
+	  }
+	};
+	
+	module.exports = IndexStore;
+	window.IndexStore = IndexStore;
+
+/***/ },
+/* 267 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Store = __webpack_require__(240).Store;
+	var AppDispatcher = __webpack_require__(231);
+	var SessionConstants = __webpack_require__(238);
+	
+	var CurrentUserStore = new Store(AppDispatcher);
+	
+	var _currentUser = {};
+	
+	CurrentUserStore.getCurrentUser = function () {
+	  return _currentUser;
+	};
+	
+	CurrentUserStore.klassIds = function () {
+	  return _currentUser.klass_ids;
+	  // if (_currentUser.klasses){
+	  //   return _currentUser.klasses.map(klass => klass.id);
+	  // }
+	};
+	
+	CurrentUserStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case SessionConstants.LOGIN_USER:
+	      _currentUser = payload.user;
+	      this.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = CurrentUserStore;
+	window.CurrentUserStore = CurrentUserStore;
+
+/***/ },
+/* 268 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Store = __webpack_require__(240).Store;
+	var AppDispatcher = __webpack_require__(231);
+	var KlassConstants = __webpack_require__(269);
+	
+	var KlassStore = new Store(AppDispatcher);
+	
+	var _klass = {
+	  teacher: {},
+	  language: {},
+	  study_set_ids: []
+	};
+	// properties are pre-defined here, so that the view files
+	// don't throw errors with undefined objects.
+	
+	KlassStore.getKlass = function () {
+	  return _klass;
+	};
+	
+	KlassStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case KlassConstants.RECEIVE_KLASS:
+	      _klass = payload.klass;
+	      _klass.description = _klass.description || "";
+	      this.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = KlassStore;
+	window.KlassStore = KlassStore;
+
+/***/ },
+/* 269 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {
+	  RECEIVE_KLASS: "RECEIVE_KLASS"
+	};
+
+/***/ },
+/* 270 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var AppDispatcher = __webpack_require__(231);
+	var KlassConstants = __webpack_require__(269);
+	var KlassUtils = __webpack_require__(271);
+	var ErrorActions = __webpack_require__(237);
+	var SessionActions = __webpack_require__(257);
+	
+	var KlassActions = {
+	  fetchKlass: function fetchKlass(id, errorCallback) {
+	    KlassUtils.fetchKlass(id, this.receiveKlass, errorCallback);
+	  },
+	  receiveKlass: function receiveKlass(klass) {
+	    AppDispatcher.dispatch({
+	      actionType: KlassConstants.RECEIVE_KLASS,
+	      klass: klass
+	    });
+	  },
+	  updateStudySets: function updateStudySets(data, errorCallback) {
+	    KlassUtils.updateStudySets(data, this.receiveKlass, ErrorActions.updateError);
+	  },
+	  createKlass: function createKlass(klassData) {
+	    KlassUtils.createKlass(klassData, this.receiveKlass, ErrorActions.updateError);
+	  },
+	  editKlass: function editKlass(klassData) {
+	    KlassUtils.editKlass(klassData, this.receiveKlass, ErrorActions.updateError);
+	  },
+	  deleteKlass: function deleteKlass(id, successCallback) {
+	    KlassUtils.deleteKlass(id, successCallback, ErrorActions.updateError);
+	  },
+	  toggleEnrollment: function toggleEnrollment(klassId, errorCallback) {
+	    KlassUtils.toggleEnrollment(klassId, SessionActions.receiveUser, ErrorActions.updateError);
+	  }
+	};
+	
+	module.exports = KlassActions;
+	window.KlassActions = KlassActions;
+
+/***/ },
+/* 271 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {
+	  fetchKlass: function fetchKlass(id, successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/klasses/" + id,
+	      type: "GET",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  createKlass: function createKlass(data, successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/klasses/",
+	      type: "POST",
+	      data: {
+	        klass: data
+	      },
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  editKlass: function editKlass(data, successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/klasses/" + data.id,
+	      type: "PATCH",
+	      data: {
+	        klass: {
+	          name: data.name,
+	          description: data.description,
+	          language_id: data.language_id
+	        }
+	      },
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  updateStudySets: function updateStudySets(data, successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/klasses/" + data.id + "/update_study_sets",
+	      type: "PATCH",
+	      data: {
+	        klass: {
+	          study_set_ids: data.studySetIds
+	        }
+	      },
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  deleteKlass: function deleteKlass(id, successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/klasses/" + id,
+	      type: "DELETE",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  toggleEnrollment: function toggleEnrollment(klassId, successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/user/enroll",
+	      type: "PATCH",
+	      data: {
+	        user: {
+	          klass_id: klassId
+	        }
+	      },
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  }
+	};
+
+/***/ },
+/* 272 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
 	var React = __webpack_require__(162);
 	var SessionActions = __webpack_require__(257);
-	var CurrentUserStore = __webpack_require__(264);
-	var ErrorStore = __webpack_require__(265);
+	var CurrentUserStore = __webpack_require__(267);
+	var ErrorStore = __webpack_require__(273);
 	var hashHistory = __webpack_require__(168).hashHistory;
 	
 	var LoginForm = React.createClass({
@@ -33153,44 +33517,7 @@
 	window.LoginForm = LoginForm;
 
 /***/ },
-/* 264 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Store = __webpack_require__(240).Store;
-	var AppDispatcher = __webpack_require__(231);
-	var SessionConstants = __webpack_require__(238);
-	
-	var CurrentUserStore = new Store(AppDispatcher);
-	
-	var _currentUser = {};
-	
-	CurrentUserStore.getCurrentUser = function () {
-	  return _currentUser;
-	};
-	
-	CurrentUserStore.klassIds = function () {
-	  return _currentUser.klass_ids;
-	  // if (_currentUser.klasses){
-	  //   return _currentUser.klasses.map(klass => klass.id);
-	  // }
-	};
-	
-	CurrentUserStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case SessionConstants.LOGIN_USER:
-	      _currentUser = payload.user;
-	      this.__emitChange();
-	      break;
-	  }
-	};
-	
-	module.exports = CurrentUserStore;
-	window.CurrentUserStore = CurrentUserStore;
-
-/***/ },
-/* 265 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33222,15 +33549,15 @@
 	window.ErrorStore = ErrorStore;
 
 /***/ },
-/* 266 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(162);
 	var SessionActions = __webpack_require__(257);
-	var CurrentUserStore = __webpack_require__(264);
-	var ErrorStore = __webpack_require__(265);
+	var CurrentUserStore = __webpack_require__(267);
+	var ErrorStore = __webpack_require__(273);
 	var hashHistory = __webpack_require__(168).hashHistory;
 	
 	var SignupForm = React.createClass({
@@ -33318,13 +33645,13 @@
 	window.SignupForm = SignupForm;
 
 /***/ },
-/* 267 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(162);
-	var CurrentUserStore = __webpack_require__(264);
+	var CurrentUserStore = __webpack_require__(267);
 	var SessionActions = __webpack_require__(257);
 	var hashHistory = __webpack_require__(168).hashHistory;
 	
@@ -33407,7 +33734,7 @@
 	module.exports = Header;
 
 /***/ },
-/* 268 */
+/* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33433,7 +33760,7 @@
 	module.exports = Main;
 
 /***/ },
-/* 269 */
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33459,7 +33786,7 @@
 	module.exports = Content;
 
 /***/ },
-/* 270 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33467,7 +33794,7 @@
 	var React = __webpack_require__(162);
 	var StudySetActions = __webpack_require__(230);
 	var StudySetStore = __webpack_require__(239);
-	var CurrentUserStore = __webpack_require__(264);
+	var CurrentUserStore = __webpack_require__(267);
 	var hashHistory = __webpack_require__(168).hashHistory;
 	
 	var StudySet = React.createClass({
@@ -33560,7 +33887,7 @@
 	module.exports = StudySet;
 
 /***/ },
-/* 271 */
+/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33622,14 +33949,14 @@
 	module.exports = StudySetList;
 
 /***/ },
-/* 272 */
+/* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(162);
-	var KlassIndex = __webpack_require__(286);
-	var StudySetIndex = __webpack_require__(284);
+	var KlassIndex = __webpack_require__(281);
+	var StudySetIndex = __webpack_require__(283);
 	
 	var Index = React.createClass({
 	  displayName: 'Index',
@@ -33651,15 +33978,187 @@
 	module.exports = Index;
 
 /***/ },
-/* 273 */
+/* 281 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(162);
+	var IndexStore = __webpack_require__(266);
+	var IndexActions = __webpack_require__(263);
+	var KlassIndexItem = __webpack_require__(282);
+	
+	var KlassIndex = React.createClass({
+	  displayName: 'KlassIndex',
+	  getInitialState: function getInitialState() {
+	    return { klasses: IndexStore.getKlasses() };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    IndexActions.getKlassIndex();
+	    this.indexListener = IndexStore.addListener(this.updateState);
+	  },
+	  updateState: function updateState() {
+	    this.setState({ klasses: IndexStore.getKlasses() });
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.indexListener.remove();
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'klass_index' },
+	      React.createElement(
+	        'h1',
+	        null,
+	        'Class Index'
+	      ),
+	      this.state.klasses.map(function (klass) {
+	        return React.createElement(KlassIndexItem, { klass: klass, key: klass.id });
+	      })
+	    );
+	  }
+	});
+	
+	module.exports = KlassIndex;
+
+/***/ },
+/* 282 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(162);
+	var hashHistory = __webpack_require__(168).hashHistory;
+	
+	var KlassIndexItem = React.createClass({
+	  displayName: 'KlassIndexItem',
+	  goToKlass: function goToKlass() {
+	    hashHistory.push('/class/' + this.props.klass.id);
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'klass_index_item' },
+	      React.createElement(
+	        'a',
+	        { onClick: this.goToKlass },
+	        React.createElement(
+	          'p',
+	          null,
+	          'name: ',
+	          this.props.klass.name
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
+	          'creator: ',
+	          this.props.klass.teacher.username
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = KlassIndexItem;
+
+/***/ },
+/* 283 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(162);
+	var IndexStore = __webpack_require__(266);
+	var IndexActions = __webpack_require__(263);
+	var StudySetIndexItem = __webpack_require__(284);
+	
+	var StudySetIndex = React.createClass({
+	  displayName: 'StudySetIndex',
+	  getInitialState: function getInitialState() {
+	    return { studySets: IndexStore.getStudySets() };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    if (this.props.klassId) {
+	      IndexActions.getStudySetIndexforKlass(this.props.klassId);
+	    } else {
+	      IndexActions.getStudySetIndex();
+	    }
+	    this.indexListener = IndexStore.addListener(this.updateState);
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.indexListener.remove();
+	  },
+	  updateState: function updateState() {
+	    this.setState({ studySets: IndexStore.getStudySets() });
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'study_set_index' },
+	      React.createElement(
+	        'h1',
+	        null,
+	        'Study Set Index'
+	      ),
+	      this.state.studySets.map(function (studySet) {
+	        return React.createElement(StudySetIndexItem, { studySet: studySet, key: studySet.id });
+	      })
+	    );
+	  }
+	});
+	
+	module.exports = StudySetIndex;
+
+/***/ },
+/* 284 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(162);
+	var hashHistory = __webpack_require__(168).hashHistory;
+	
+	var StudySetIndexItem = React.createClass({
+	  displayName: 'StudySetIndexItem',
+	  goToStudySet: function goToStudySet() {
+	    hashHistory.push('/study_set/' + this.props.studySet.id);
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'study_set_index_item' },
+	      React.createElement(
+	        'a',
+	        { onClick: this.goToStudySet },
+	        React.createElement(
+	          'p',
+	          null,
+	          'name: ',
+	          this.props.studySet.name
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
+	          'creator: ',
+	          this.props.studySet.creator.username
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = StudySetIndexItem;
+
+/***/ },
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(162);
 	var StudySetActions = __webpack_require__(230);
-	var CurrentUserStore = __webpack_require__(264);
-	var ErrorStore = __webpack_require__(265);
+	var CurrentUserStore = __webpack_require__(267);
+	var ErrorStore = __webpack_require__(273);
 	var hashHistory = __webpack_require__(168).hashHistory;
 	var StudySetStore = __webpack_require__(239);
 	var LanguageActions = __webpack_require__(261);
@@ -33971,183 +34470,17 @@
 	window.StudySetForm = StudySetForm;
 
 /***/ },
-/* 274 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Store = __webpack_require__(240).Store;
-	var AppDispatcher = __webpack_require__(231);
-	var KlassConstants = __webpack_require__(275);
-	
-	var KlassStore = new Store(AppDispatcher);
-	
-	var _klass = {
-	  teacher: {},
-	  language: {},
-	  study_set_ids: []
-	};
-	// properties are pre-defined here, so that the view files
-	// don't throw errors with undefined objects.
-	
-	KlassStore.getKlass = function () {
-	  return _klass;
-	};
-	
-	KlassStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case KlassConstants.RECEIVE_KLASS:
-	      _klass = payload.klass;
-	      _klass.description = _klass.description || "";
-	      this.__emitChange();
-	      break;
-	  }
-	};
-	
-	module.exports = KlassStore;
-	window.KlassStore = KlassStore;
-
-/***/ },
-/* 275 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	module.exports = {
-	  RECEIVE_KLASS: "RECEIVE_KLASS"
-	};
-
-/***/ },
-/* 276 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var AppDispatcher = __webpack_require__(231);
-	var KlassConstants = __webpack_require__(275);
-	var KlassUtils = __webpack_require__(277);
-	var ErrorActions = __webpack_require__(237);
-	var SessionActions = __webpack_require__(257);
-	
-	var KlassActions = {
-	  fetchKlass: function fetchKlass(id, errorCallback) {
-	    KlassUtils.fetchKlass(id, this.receiveKlass, errorCallback);
-	  },
-	  receiveKlass: function receiveKlass(klass) {
-	    AppDispatcher.dispatch({
-	      actionType: KlassConstants.RECEIVE_KLASS,
-	      klass: klass
-	    });
-	  },
-	  updateStudySets: function updateStudySets(data, errorCallback) {
-	    KlassUtils.updateStudySets(data, this.receiveKlass, ErrorActions.updateError);
-	  },
-	  createKlass: function createKlass(klassData) {
-	    KlassUtils.createKlass(klassData, this.receiveKlass, ErrorActions.updateError);
-	  },
-	  editKlass: function editKlass(klassData) {
-	    KlassUtils.editKlass(klassData, this.receiveKlass, ErrorActions.updateError);
-	  },
-	  deleteKlass: function deleteKlass(id, successCallback) {
-	    KlassUtils.deleteKlass(id, successCallback, ErrorActions.updateError);
-	  },
-	  toggleEnrollment: function toggleEnrollment(klassId, errorCallback) {
-	    KlassUtils.toggleEnrollment(klassId, SessionActions.receiveUser, ErrorActions.updateError);
-	  }
-	};
-	
-	module.exports = KlassActions;
-	window.KlassActions = KlassActions;
-
-/***/ },
-/* 277 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	module.exports = {
-	  fetchKlass: function fetchKlass(id, successCallback, errorCallback) {
-	    $.ajax({
-	      url: "api/klasses/" + id,
-	      type: "GET",
-	      success: successCallback,
-	      error: errorCallback
-	    });
-	  },
-	  createKlass: function createKlass(data, successCallback, errorCallback) {
-	    $.ajax({
-	      url: "api/klasses/",
-	      type: "POST",
-	      data: {
-	        klass: data
-	      },
-	      success: successCallback,
-	      error: errorCallback
-	    });
-	  },
-	  editKlass: function editKlass(data, successCallback, errorCallback) {
-	    $.ajax({
-	      url: "api/klasses/" + data.id,
-	      type: "PATCH",
-	      data: {
-	        klass: {
-	          name: data.name,
-	          description: data.description,
-	          language_id: data.language_id
-	        }
-	      },
-	      success: successCallback,
-	      error: errorCallback
-	    });
-	  },
-	  updateStudySets: function updateStudySets(data, successCallback, errorCallback) {
-	    $.ajax({
-	      url: "api/klasses/" + data.id + "/update_study_sets",
-	      type: "PATCH",
-	      data: {
-	        klass: {
-	          study_set_ids: data.studySetIds
-	        }
-	      },
-	      success: successCallback,
-	      error: errorCallback
-	    });
-	  },
-	  deleteKlass: function deleteKlass(id, successCallback, errorCallback) {
-	    $.ajax({
-	      url: "api/klasses/" + id,
-	      type: "DELETE",
-	      success: successCallback,
-	      error: errorCallback
-	    });
-	  },
-	  toggleEnrollment: function toggleEnrollment(klassId, successCallback, errorCallback) {
-	    $.ajax({
-	      url: "api/user/enroll",
-	      type: "PATCH",
-	      data: {
-	        user: {
-	          klass_id: klassId
-	        }
-	      },
-	      success: successCallback,
-	      error: errorCallback
-	    });
-	  }
-	};
-
-/***/ },
-/* 278 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(162);
-	var KlassActions = __webpack_require__(276);
-	var CurrentUserStore = __webpack_require__(264);
-	var ErrorStore = __webpack_require__(265);
+	var KlassActions = __webpack_require__(270);
+	var CurrentUserStore = __webpack_require__(267);
+	var ErrorStore = __webpack_require__(273);
 	var hashHistory = __webpack_require__(168).hashHistory;
-	var KlassStore = __webpack_require__(274);
+	var KlassStore = __webpack_require__(268);
 	var LanguageStore = __webpack_require__(259);
 	var LanguageActions = __webpack_require__(261);
 	
@@ -34329,17 +34662,17 @@
 	window.KlassForm = KlassForm;
 
 /***/ },
-/* 279 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(162);
-	var KlassActions = __webpack_require__(276);
-	var KlassStore = __webpack_require__(274);
-	var CurrentUserStore = __webpack_require__(264);
+	var KlassActions = __webpack_require__(270);
+	var KlassStore = __webpack_require__(268);
+	var CurrentUserStore = __webpack_require__(267);
 	var hashHistory = __webpack_require__(168).hashHistory;
-	var StudySetIndex = __webpack_require__(284);
+	var StudySetIndex = __webpack_require__(283);
 	var AddStudySetForm = __webpack_require__(288);
 	
 	var Klass = React.createClass({
@@ -34488,349 +34821,16 @@
 	module.exports = Klass;
 
 /***/ },
-/* 280 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var AppDispatcher = __webpack_require__(231);
-	var IndexUtils = __webpack_require__(281);
-	var IndexConstants = __webpack_require__(282);
-	
-	function log(a) {
-	  console.log(a);
-	}
-	
-	var IndexActions = {
-	  getStudySetIndex: function getStudySetIndex(errorCallback) {
-	    IndexUtils.getStudySetIndex(this.receiveStudySetIndex, errorCallback);
-	  },
-	  getStudySetIndexforKlass: function getStudySetIndexforKlass(klassId, errorCallback) {
-	    IndexUtils.getStudySetIndexforKlass(klassId, this.receiveStudySetIndex, errorCallback);
-	  },
-	  getKlassIndex: function getKlassIndex(errorCallback) {
-	    IndexUtils.getKlassIndex(this.receiveKlassIndex, errorCallback);
-	  },
-	  getMyKlassIndex: function getMyKlassIndex(errorCallback) {
-	    IndexUtils.getMyKlassIndex(log, log);
-	  },
-	  getMyKlassCreatedIndex: function getMyKlassCreatedIndex(errorCallback) {
-	    IndexUtils.getMyKlassCreatedIndex(log, log);
-	  },
-	  getMyStudySetIndex: function getMyStudySetIndex(error) {
-	    IndexUtils.getMyStudySetIndex(log, log);
-	  },
-	  receiveStudySetIndex: function receiveStudySetIndex(studySets) {
-	    AppDispatcher.dispatch({
-	      actionType: IndexConstants.RECEIVE_STUDY_SET_INDEX,
-	      studySets: studySets
-	    });
-	  },
-	  receiveKlassIndex: function receiveKlassIndex(klasses) {
-	    AppDispatcher.dispatch({
-	      actionType: IndexConstants.RECEIVE_KLASS_INDEX,
-	      klasses: klasses
-	    });
-	  }
-	};
-	
-	module.exports = IndexActions;
-	window.IndexActions = IndexActions;
-
-/***/ },
-/* 281 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	module.exports = {
-	  getStudySetIndex: function getStudySetIndex(successCallback, errorCallback) {
-	    $.ajax({
-	      url: "api/study_sets/",
-	      type: "GET",
-	      success: successCallback,
-	      error: errorCallback
-	    });
-	  },
-	  getStudySetIndexforKlass: function getStudySetIndexforKlass(klassId, successCallback, errorCallback) {
-	    $.ajax({
-	      url: "api/study_sets?class=" + klassId,
-	      type: "GET",
-	      success: successCallback,
-	      error: errorCallback
-	    });
-	  },
-	  getKlassIndex: function getKlassIndex(successCallback, errorCallback) {
-	    $.ajax({
-	      url: "api/klasses/",
-	      type: "GEt",
-	      success: successCallback,
-	      error: errorCallback
-	    });
-	  },
-	  getMyStudySetIndex: function getMyStudySetIndex(successCallback, errorCallback) {
-	    $.ajax({
-	      url: "api/user/my_study_sets/",
-	      type: "GET",
-	      success: successCallback,
-	      error: errorCallback
-	    });
-	  },
-	  getMyKlassIndex: function getMyKlassIndex(successCallback, errorCallback) {
-	    $.ajax({
-	      url: "api/user/my_klasses/",
-	      type: "GET",
-	      success: successCallback,
-	      error: errorCallback
-	    });
-	  },
-	  getMyKlassCreatedIndex: function getMyKlassCreatedIndex(successCallback, errorCallback) {
-	    $.ajax({
-	      url: "api/user/my_klasses_created/",
-	      type: "GET",
-	      success: successCallback,
-	      error: errorCallback
-	    });
-	  }
-	};
-
-/***/ },
-/* 282 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	module.exports = {
-	  RECEIVE_KLASS_INDEX: "RECEIVE_KLASS_INDEX",
-	  RECEIVE_STUDY_SET_INDEX: "RECEIVE_STUDY_SET_INDEX"
-	
-	};
-
-/***/ },
-/* 283 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Store = __webpack_require__(240).Store;
-	var AppDispatcher = __webpack_require__(231);
-	var IndexConstants = __webpack_require__(282);
-	
-	var IndexStore = new Store(AppDispatcher);
-	
-	var indices = {
-	  studySets: [],
-	  klasses: []
-	};
-	
-	IndexStore.getStudySets = function () {
-	  return indices.studySets;
-	};
-	
-	IndexStore.getKlasses = function () {
-	  return indices.klasses;
-	};
-	
-	IndexStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case IndexConstants.RECEIVE_STUDY_SET_INDEX:
-	      indices.studySets = payload.studySets;
-	      this.__emitChange();
-	      break;
-	    case IndexConstants.RECEIVE_KLASS_INDEX:
-	      indices.klasses = payload.klasses;
-	      this.__emitChange();
-	      break;
-	
-	  }
-	};
-	
-	module.exports = IndexStore;
-	window.IndexStore = IndexStore;
-
-/***/ },
-/* 284 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(162);
-	var IndexStore = __webpack_require__(283);
-	var IndexActions = __webpack_require__(280);
-	var StudySetIndexItem = __webpack_require__(285);
-	
-	var StudySetIndex = React.createClass({
-	  displayName: 'StudySetIndex',
-	  getInitialState: function getInitialState() {
-	    return { studySets: IndexStore.getStudySets() };
-	  },
-	  componentDidMount: function componentDidMount() {
-	    if (this.props.klassId) {
-	      IndexActions.getStudySetIndexforKlass(this.props.klassId);
-	    } else {
-	      IndexActions.getStudySetIndex();
-	    }
-	    this.indexListener = IndexStore.addListener(this.updateState);
-	  },
-	  componentWillUnmount: function componentWillUnmount() {
-	    this.indexListener.remove();
-	  },
-	  updateState: function updateState() {
-	    this.setState({ studySets: IndexStore.getStudySets() });
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      { className: 'study_set_index' },
-	      React.createElement(
-	        'h1',
-	        null,
-	        'Study Set Index'
-	      ),
-	      this.state.studySets.map(function (studySet) {
-	        return React.createElement(StudySetIndexItem, { studySet: studySet, key: studySet.id });
-	      })
-	    );
-	  }
-	});
-	
-	module.exports = StudySetIndex;
-
-/***/ },
-/* 285 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(162);
-	var hashHistory = __webpack_require__(168).hashHistory;
-	
-	var StudySetIndexItem = React.createClass({
-	  displayName: 'StudySetIndexItem',
-	  goToStudySet: function goToStudySet() {
-	    hashHistory.push('/study_set/' + this.props.studySet.id);
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      { className: 'study_set_index_item' },
-	      React.createElement(
-	        'a',
-	        { onClick: this.goToStudySet },
-	        React.createElement(
-	          'p',
-	          null,
-	          'name: ',
-	          this.props.studySet.name
-	        ),
-	        React.createElement(
-	          'p',
-	          null,
-	          'creator: ',
-	          this.props.studySet.creator.username
-	        )
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = StudySetIndexItem;
-
-/***/ },
-/* 286 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(162);
-	var IndexStore = __webpack_require__(283);
-	var IndexActions = __webpack_require__(280);
-	var KlassIndexItem = __webpack_require__(287);
-	
-	var KlassIndex = React.createClass({
-	  displayName: 'KlassIndex',
-	  getInitialState: function getInitialState() {
-	    return { klasses: IndexStore.getKlasses() };
-	  },
-	  componentDidMount: function componentDidMount() {
-	    IndexActions.getKlassIndex();
-	    this.indexListener = IndexStore.addListener(this.updateState);
-	  },
-	  updateState: function updateState() {
-	    this.setState({ klasses: IndexStore.getKlasses() });
-	  },
-	  componentWillUnmount: function componentWillUnmount() {
-	    this.indexListener.remove();
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      { className: 'klass_index' },
-	      React.createElement(
-	        'h1',
-	        null,
-	        'Class Index'
-	      ),
-	      this.state.klasses.map(function (klass) {
-	        return React.createElement(KlassIndexItem, { klass: klass, key: klass.id });
-	      })
-	    );
-	  }
-	});
-	
-	module.exports = KlassIndex;
-
-/***/ },
-/* 287 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(162);
-	var hashHistory = __webpack_require__(168).hashHistory;
-	
-	var KlassIndexItem = React.createClass({
-	  displayName: 'KlassIndexItem',
-	  goToKlass: function goToKlass() {
-	    hashHistory.push('/class/' + this.props.klass.id);
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      { className: 'klass_index_item' },
-	      React.createElement(
-	        'a',
-	        { onClick: this.goToKlass },
-	        React.createElement(
-	          'p',
-	          null,
-	          'name: ',
-	          this.props.klass.name
-	        ),
-	        React.createElement(
-	          'p',
-	          null,
-	          'creator: ',
-	          this.props.klass.teacher.username
-	        )
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = KlassIndexItem;
-
-/***/ },
 /* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(162);
-	var IndexStore = __webpack_require__(283);
-	var IndexActions = __webpack_require__(280);
-	var KlassStore = __webpack_require__(274);
-	var KlassActions = __webpack_require__(276);
+	var IndexStore = __webpack_require__(266);
+	var IndexActions = __webpack_require__(263);
+	var KlassStore = __webpack_require__(268);
+	var KlassActions = __webpack_require__(270);
 	var hashHistory = __webpack_require__(168).hashHistory;
 	// users are redirected here from the class,
 	// hence have access to KlassStore
