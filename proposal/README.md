@@ -1,7 +1,7 @@
 # Tangolet
 
   [Heroku Link][heroku_link]
-[heroku_link]: tangolet.heroku.com
+[heroku_link]: http://tangolet.heroku.com
 
 # Minimum Viable Product
 Tangolet is a web application inspired by Quizlet, a popular classroom tool for foreign language studies. On Tangolet students can memorize new vocabularies in interactive ways, and teachers can manage their classes. The app will be built using Ruby on Rails and React.js.
