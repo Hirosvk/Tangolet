@@ -1,5 +1,6 @@
 const React = require('react');
 const hashHistory = require('react-router').hashHistory;
+const ListGroupItem = require('react-bootstrap').ListGroupItem;
 
 const KlassIndexItem = React.createClass({
 
@@ -9,12 +10,11 @@ const KlassIndexItem = React.createClass({
 
   render(){
     return(
-      <div className="klass_index_item">
-        <a onClick={this.goToKlass}>
-          <p>name: {this.props.klass.name}</p>
-          <p>creator: {this.props.klass.teacher.username}</p>
-        </a>
-      </div>
+      <ListGroupItem
+        onClick={this.goToKlass}
+        header={this.props.klass.name}>
+        language: {this.props.klass.language.name} | teacher: {this.props.klass.teacher.username}
+      </ListGroupItem>
     );
   }
 

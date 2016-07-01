@@ -1,0 +1,48 @@
+.study_set_index,
+.klass_index {
+}
+
+.study_set_index .title,
+.klass_index .title {
+  background: #BC1818;
+  color: #E3D5C3;
+  padding: 0.2em 0.5em;
+  text-align: right;
+}
+
+div.list-group{
+  margin: 10px;
+}
+
+button.list-group-item {
+  color: #4A280E;
+}
+
+/* same as h2 */
+button.list-group-item .list-group-item-heading
+ {
+  color: inherit;
+  font: inherit;
+  font-weight: bold;
+  font-size: x-large;
+}
+
+/* same as h3 */
+.list-group-item-text
+ {
+  color: inherit;
+  font: inherit;
+  font-weight: normal;
+  font-size: large;
+}
+
+
+.list-group-item {
+  color: inherit;
+  font: inherit;
+  background: #FAF3EB;
+}
+
+button.list-group-item:hover {
+  background-color: #26A6B8;
+}

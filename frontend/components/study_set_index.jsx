@@ -4,6 +4,7 @@ const IndexActions = require('../actions/index_actions');
 const StudySetIndexItem = require('./study_set_index_item');
 const Button = require('react-bootstrap').Button;
 const hashHistory = require('react-router').hashHistory;
+const ListGroup = require('react-bootstrap').ListGroup;
 
 const StudySetIndex = React.createClass({
 
@@ -36,12 +37,14 @@ const StudySetIndex = React.createClass({
   render(){
     return(
       <div className="study_set_index">
-        <h1>{this.props.title}</h1>
+        <h1 className="title">{this.props.title}</h1>
+        <ListGroup>
         {
           this.state.studySets.map( studySet => {
             return <StudySetIndexItem studySet={studySet} key={studySet.id}/>;
           })
         }
+        </ListGroup>
         <Button onClick={this.createStudySet}>+ Create New Study Set(dev.)</Button>
       </div>
     );

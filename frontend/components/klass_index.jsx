@@ -4,6 +4,7 @@ const IndexActions = require('../actions/index_actions');
 const KlassIndexItem = require('./klass_index_item');
 const Button = require('react-bootstrap').Button;
 const hashHistory = require('react-router').hashHistory;
+const ListGroup = require('react-bootstrap').ListGroup;
 
 const KlassIndex = React.createClass({
 
@@ -32,12 +33,14 @@ const KlassIndex = React.createClass({
   render(){
     return(
       <div className="klass_index">
-        <h1>{this.props.title}</h1>
+        <h1 className="title">{this.props.title}</h1>
+        <ListGroup>
         {
           this.state.klasses.map( klass => {
             return <KlassIndexItem klass={klass} key={klass.id}/>;
           })
         }
+        </ListGroup>
         <Button onClick={this.createKlass}>+ Create New Class(dev.)</Button>
       </div>
     );

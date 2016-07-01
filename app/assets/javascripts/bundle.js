@@ -33999,6 +33999,7 @@
 	var KlassIndexItem = __webpack_require__(282);
 	var Button = __webpack_require__(289).Button;
 	var hashHistory = __webpack_require__(168).hashHistory;
+	var ListGroup = __webpack_require__(289).ListGroup;
 	
 	var KlassIndex = React.createClass({
 	  displayName: 'KlassIndex',
@@ -34025,12 +34026,16 @@
 	      { className: 'klass_index' },
 	      React.createElement(
 	        'h1',
-	        null,
+	        { className: 'title' },
 	        this.props.title
 	      ),
-	      this.state.klasses.map(function (klass) {
-	        return React.createElement(KlassIndexItem, { klass: klass, key: klass.id });
-	      }),
+	      React.createElement(
+	        ListGroup,
+	        null,
+	        this.state.klasses.map(function (klass) {
+	          return React.createElement(KlassIndexItem, { klass: klass, key: klass.id });
+	        })
+	      ),
 	      React.createElement(
 	        Button,
 	        { onClick: this.createKlass },
@@ -34050,6 +34055,7 @@
 	
 	var React = __webpack_require__(162);
 	var hashHistory = __webpack_require__(168).hashHistory;
+	var ListGroupItem = __webpack_require__(289).ListGroupItem;
 	
 	var KlassIndexItem = React.createClass({
 	  displayName: 'KlassIndexItem',
@@ -34058,24 +34064,14 @@
 	  },
 	  render: function render() {
 	    return React.createElement(
-	      'div',
-	      { className: 'klass_index_item' },
-	      React.createElement(
-	        'a',
-	        { onClick: this.goToKlass },
-	        React.createElement(
-	          'p',
-	          null,
-	          'name: ',
-	          this.props.klass.name
-	        ),
-	        React.createElement(
-	          'p',
-	          null,
-	          'creator: ',
-	          this.props.klass.teacher.username
-	        )
-	      )
+	      ListGroupItem,
+	      {
+	        onClick: this.goToKlass,
+	        header: this.props.klass.name },
+	      'language: ',
+	      this.props.klass.language.name,
+	      ' | teacher: ',
+	      this.props.klass.teacher.username
 	    );
 	  }
 	});
@@ -34094,6 +34090,7 @@
 	var StudySetIndexItem = __webpack_require__(284);
 	var Button = __webpack_require__(289).Button;
 	var hashHistory = __webpack_require__(168).hashHistory;
+	var ListGroup = __webpack_require__(289).ListGroup;
 	
 	var StudySetIndex = React.createClass({
 	  displayName: 'StudySetIndex',
@@ -34124,12 +34121,16 @@
 	      { className: 'study_set_index' },
 	      React.createElement(
 	        'h1',
-	        null,
+	        { className: 'title' },
 	        this.props.title
 	      ),
-	      this.state.studySets.map(function (studySet) {
-	        return React.createElement(StudySetIndexItem, { studySet: studySet, key: studySet.id });
-	      }),
+	      React.createElement(
+	        ListGroup,
+	        null,
+	        this.state.studySets.map(function (studySet) {
+	          return React.createElement(StudySetIndexItem, { studySet: studySet, key: studySet.id });
+	        })
+	      ),
 	      React.createElement(
 	        Button,
 	        { onClick: this.createStudySet },
@@ -34149,6 +34150,7 @@
 	
 	var React = __webpack_require__(162);
 	var hashHistory = __webpack_require__(168).hashHistory;
+	var ListGroupItem = __webpack_require__(289).ListGroupItem;
 	
 	var StudySetIndexItem = React.createClass({
 	  displayName: 'StudySetIndexItem',
@@ -34157,24 +34159,14 @@
 	  },
 	  render: function render() {
 	    return React.createElement(
-	      'div',
-	      { className: 'study_set_index_item' },
-	      React.createElement(
-	        'a',
-	        { onClick: this.goToStudySet },
-	        React.createElement(
-	          'p',
-	          null,
-	          'name: ',
-	          this.props.studySet.name
-	        ),
-	        React.createElement(
-	          'p',
-	          null,
-	          'creator: ',
-	          this.props.studySet.creator.username
-	        )
-	      )
+	      ListGroupItem,
+	      {
+	        onClick: this.goToStudySet,
+	        header: this.props.studySet.name },
+	      'language: ',
+	      this.props.studySet.language.name,
+	      ' | created by ',
+	      this.props.studySet.creator.username
 	    );
 	  }
 	});
