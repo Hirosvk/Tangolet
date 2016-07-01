@@ -4,7 +4,7 @@ const Content = React.createClass({
   render(){
     return (
       <div id="content">
-        <p>This is Content</p>
+        <p>guest log-in hasn't been created. use(username: Hiro, password: hirohiro)</p>
         {this.props.children}
       </div>
     );

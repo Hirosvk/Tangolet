@@ -29,13 +29,13 @@ form, input, textarea, footer, p {
   background: transparent;
 }
 
-input, textarea {
+/*input, textarea {
   border: 1px solid black;
-}
+}*/
 
-button {
+/*button {*/
 /* http://tympanus.net/codrops/2012/01/11/css-buttons-with-pseudo-elements/ */
-	background-color:#ba2323;
+	/*background-color:#ba2323;
 	padding:10px;
 	position:relative;
 	font-family: 'Open Sans', sans-serif;
@@ -45,11 +45,11 @@ button {
 	border: solid 1px #831212;
 	background-image: linear-gradient(bottom, rgb(171,27,27) 0%, rgb(212,51,51) 100%);
 	border-radius: 5px;
-}
+}*/
 
-ul {
+/*ul {
   list-style: none;
-}
+}*/
 
 /*input[type="password"],
 input[type="email"],

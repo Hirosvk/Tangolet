@@ -52,8 +52,7 @@ const StudySetForm = React.createClass({
       error: ErrorStore.full_errors(),
       name: "",
       languages: LanguageStore.all(),
-      language_name: "",
-      language_id: undefined
+      languagePicked: {}
     });
   },
 
@@ -63,7 +62,8 @@ const StudySetForm = React.createClass({
 
       this.setState({
         name: studySet.name,
-        language_id: studySet.language_id,
+        languagePicked: studySet.language
+        // language_name: studySet.language.name
       });
       const toEditWords = studySet.words;
       _words = toEditWords.map( word => {
@@ -137,13 +137,22 @@ const StudySetForm = React.createClass({
   },
 
   languageChange(event){
-    this.setState({language_id: event.target.value});
+    this.setState({languagePicked: this.findLanguageById(event.target.value)});
+  },
+
+  findLanguageById(id){
+    let found;
+    this.state.languages.forEach( language => {
+      if (language.id === parseInt(id)){
+        found = language;
+      }
+    });
+    return found;
   },
 
 
-
 // ------
-// render helpsers
+// render helpers
 
   showErrors(){
     if (this.state.error.responseJSON){
@@ -198,8 +207,8 @@ const StudySetForm = React.createClass({
   },
 
   pickedLanguage(){
-    if (this.refs[this.state.language_id]){
-      return this.refs[this.state.language_id].text;
+    if (this.state.languagePicked.id){
+      return this.state.languagePicked.name;
     } else {
       return "Pick language";
     }
@@ -208,11 +217,12 @@ const StudySetForm = React.createClass({
   languageChoices(){
     return (
     <label>Choose language<select
-      defaultValue={this.state.language_id}
+      defaultValue={this.state.languagePicked.id}
       onChange={this.languageChange}>
       {
         this.state.languages.map( language => {
-          return (<option value={language.id}
+          return (<option
+            value={language.id}
             key={language.id}
             ref={language.id}>{language.name}</option>);
         })
@@ -222,6 +232,7 @@ const StudySetForm = React.createClass({
   },
 
   render(){
+    console.log(this.state.languagePicked);
     return(
       <form className="study_set_form">
         <header className="study_set_header">
@@ -259,8 +270,8 @@ const StudySetForm = React.createClass({
     event.preventDefault();
     let studySetData = {};
     studySetData.studySet = {
-      name: this.refs.studySetName.value,
-      language_id: this.state.language_id
+      name: this.state.languagePicked.name,
+      language_id: this.state.languagePicked.id
     };
     studySetData.words = deleteEmpty(_words).map(word => {
       return {

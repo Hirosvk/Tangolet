@@ -2,6 +2,7 @@ const React = require('react');
 const CurrentUserStore = require('../stores/current_user_store');
 const SessionActions = require('../actions/session_actions');
 const hashHistory = require('react-router').hashHistory;
+const Button = require('react-bootstrap').Button;
 
 const Header = React.createClass({
   getInitialState(){
@@ -48,13 +49,13 @@ const Header = React.createClass({
   },
 
   backToIndex(){
-    hashHistory.push("/");
+    hashHistory.push('/');
   },
 
   render(){
     return (
       <header className="header">
-        <a onClick={this.backToIndex}>Back to Index</a>
+        <Button onClick={this.backToIndex}>Back to Index(dev.)</Button>
         {this.loginStatus()}
       </header>
     );

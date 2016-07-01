@@ -50,7 +50,7 @@ const appRouter = (
   <Router history={hashHistory}>
     <Route path="/" component={App}>
       <Route component={Content}>
-        <IndexRoute component={Index} />
+        <IndexRoute component={Index}/>
         <Route path="class/:klassId" component={Klass}>
           <IndexRoute component={StudySetIndex} />
           <Route path='add_study_sets' component={AddStudySetForm} />

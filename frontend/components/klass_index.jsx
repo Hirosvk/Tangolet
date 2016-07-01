@@ -2,6 +2,8 @@ const React = require('react');
 const IndexStore = require('../stores/index_store');
 const IndexActions = require('../actions/index_actions');
 const KlassIndexItem = require('./klass_index_item');
+const Button = require('react-bootstrap').Button;
+const hashHistory = require('react-router').hashHistory;
 
 const KlassIndex = React.createClass({
 
@@ -22,15 +24,21 @@ const KlassIndex = React.createClass({
     this.indexListener.remove();
   },
 
+  createKlass(event){
+    event.preventDefault();
+    hashHistory.push("/class_form");
+  },
+
   render(){
     return(
       <div className="klass_index">
-        <h1>Class Index</h1>
+        <h1>{this.props.title}</h1>
         {
           this.state.klasses.map( klass => {
             return <KlassIndexItem klass={klass} key={klass.id}/>;
           })
         }
+        <Button bsStyle='link' onClick={this.createKlass}>+ Create New Class(dev.)</Button>
       </div>
     );
   }
