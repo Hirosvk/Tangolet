@@ -31,41 +31,9 @@ h1, h2, h3, h4 {
 }
 
 
-/*input, textarea {
-  border: 1px solid black;
-}*/
-
-/*button {*/
-/* http://tympanus.net/codrops/2012/01/11/css-buttons-with-pseudo-elements/ */
-	/*background-color:#ba2323;
-	padding:10px;
-	position:relative;
-	font-family: 'Open Sans', sans-serif;
-	font-size:12px;
-	text-decoration:none;
-	color:#fff;
-	border: solid 1px #831212;
-	background-image: linear-gradient(bottom, rgb(171,27,27) 0%, rgb(212,51,51) 100%);
-	border-radius: 5px;
-}*/
-
 ul {
   list-style: none;
 }
-
-/*input[type="password"],
-input[type="email"],
-input[type="text"],
-input[type="submit"],
-textarea,
-button {
-
-  Get rid of native styling. Read more here:
-  http://css-tricks.com/almanac/properties/a/appearance/
-
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}*/
 
 button,
 input[type="submit"], a {
@@ -83,11 +51,8 @@ input[type="submit"], a {
 
 body {
   background: #E3D5C3;
-:
 }
 
-.app {
-}
 
 .main {
   position: absolute;
