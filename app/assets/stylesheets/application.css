@@ -30,11 +30,6 @@ h1, h2, h3, h4 {
   background: transparent;
 }
 
-.main {
-  color: #4A280E;
-  background: #E3D5C3;
-  min-height: 200px;
-}
 
 /*input, textarea {
   border: 1px solid black;
@@ -86,8 +81,26 @@ input[type="submit"], a {
 }
 
 
+body {
+  background: #E3D5C3;
+:
+}
+
+.app {
+}
+
+.main {
+  position: absolute;
+  top: 38px;
+  width: 100%;
+  color: #4A280E;
+  background: #E3D5C3;
+  min-height: 200px;
+}
+
+
 h1 {
-  font-weight: bolder;
+  font-weight: bold;
   font-size: xx-large;
 }
 
@@ -105,4 +118,13 @@ h3
 h4 {
   font-weight: normal;
   font-size: medium;
+}
+
+.errors {
+  font-size: large;
+  font-weight: bold;
+}
+
+.errors:before{
+  content: "ERROR";
 }

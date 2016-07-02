@@ -1,3 +1,113 @@
 // Place all the styles related to the api/klasses controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+// Place all the styles related to the api/klasss controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.klass {
+  padding-bottom: 20px;
+}
+
+.klass_header {
+  background: #BC1818;
+  padding: 4px;
+  text-align: right;
+}
+
+.klass_header .title{
+  color: #E3D5C3;
+  margin: 10px;
+}
+
+.klass_header .description {
+  margin: 0px 10px;
+  max-width: 400px;
+  display: inline-block;
+  /* w/o inline-block, description did not align correctly */
+}
+
+.klass_header .details{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: baseline;
+
+  margin: 10px;
+  text-align: right;
+}
+
+.klass_header .btn-group {
+  margin: 0px 0px 0px 5px;
+}
+
+.klass_header .btn {
+  background: #E3D5C3;
+  font-weight: bold;
+  font-size: large;
+
+}
+
+.klass_header .btn:hover{
+  background: #DEBB0D;
+}
+
+
+/* FORM */
+
+.klass_form {
+  background-color: #E3D5C3;
+}
+
+.klass_form .klass_header {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.klass_form .klass_header h1 {
+  margin: 0px;
+  /* this resets bootstrap default margin */
+}
+
+.input_klass_name {
+  border: 2px solid #4A280E;
+  border-radius: 0.3em;
+  font-weight: bolder;
+  font-size: xx-large;
+  padding: 0.3em;
+  margin: 0px 0px 0px 7px;
+  background-color: #E3D5C3;
+  color: #4A280E;
+}
+
+.klass_form h3{
+  margin: 10px;
+}
+
+.klass_form select{
+  margin: 0px 0px 0px 5px;
+  background-color: #E3D5C3;
+}
+
+.klass_form .btn-group {
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+  /* it would not center w/o display: table */
+}
+
+.klass_form .btn {
+  background-color: #BC1818;
+  margin: 15px;
+  font-weight: bold;
+  font-size: large;
+  color: #E3D5C3;
+}
+
+.klass_form .btn:hover{
+  background-color: #DEBB0D;
+  color: #4A280E;
+}

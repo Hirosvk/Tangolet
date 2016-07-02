@@ -34,7 +34,7 @@ const StudySetIndex = require('./components/study_set_index');
 const App = React.createClass({
   render(){
     return (
-      <div className='app'>
+      <div className='app group'>
         <Header/>
         <main className="main">
           {this.props.children}

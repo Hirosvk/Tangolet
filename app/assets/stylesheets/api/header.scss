@@ -3,10 +3,13 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 .top-header {
+  position: fixed;
+  z-index: 100;
   background: #8EA800;
   display: flex;
   justify-content: flex-end;
   padding: 5px;
+  width: 100%;
 }
 
 
@@ -27,9 +30,14 @@
 
 .user_account .btn {
   background: #FAF3EB;
+  margin: 0px 3px;
 }
 
+.user_account .btn:hover{
+  background: #E3D5C3;
+}
 
+/* fix these!!! */
 .session_form {
   display: flex;
   flex-direction: column;

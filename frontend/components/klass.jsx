@@ -5,6 +5,8 @@ const CurrentUserStore = require('../stores/current_user_store');
 const hashHistory = require('react-router').hashHistory;
 const StudySetIndex = require('./study_set_index');
 const AddStudySetForm = require('./add_study_set_form');
+const ButtonGroup = require('react-bootstrap').ButtonGroup;
+const Button = require('react-bootstrap').Button;
 
 const Klass = React.createClass({
   getInitialState(){
@@ -71,13 +73,14 @@ const Klass = React.createClass({
 // render helpers
 
   showDetails(){
-      return (
-        <div className="klass_details">
-          <p>Teacher: {this.state.klass.teacher.username}</p>
-          <p>Description: {this.state.klass.description}</p>
-          <p>Language: {this.state.klass.language.name}</p>
-        </div>
-      );
+    const klass = this.state.klass;
+    const d = new Date(klass.created_at);
+    const date = (d.getMonth() + 1) + '/' + d.getDate() + '/' + d.getFullYear();
+    return (
+      <div className="details">
+        <h3>Language: {this.state.klass.language.name} | Teacher: {this.state.klass.teacher.username} | created at {date}{this.buttons()}</h3>
+      </div>
+    );
   },
 
 
@@ -85,17 +88,25 @@ const Klass = React.createClass({
     const currentUser = CurrentUserStore.getCurrentUser();
     if (currentUser.id === this.state.klass.teacher.id ){
       return (
-        <div>
-          <button onClick={this.deleteKlass}>Delete</button>
-          <button onClick={this.editKlass}>Edit</button>
-          <button onClick={this.addStudySets}>Add Study Sets</button>
-        </div>
+        <ButtonGroup>
+          <Button onClick={this.deleteKlass}>Delete</Button>
+          <Button onClick={this.editKlass}>Edit</Button>
+          <Button onClick={this.addStudySets}>Add Study Sets</Button>
+        </ButtonGroup>
       );
     } else if (currentUser.id) {
       if (this.state.enrollmentStatus){
-        return <button onClick={this.toggleEnrollment}>Unenroll</button>;
+        return (
+          <ButtonGroup>
+            <Button onClick={this.toggleEnrollment}>Unenroll</Button>
+          </ButtonGroup>
+        );
       } else {
-        return <button onClick={this.toggleEnrollment}>Enroll</button>;
+        return (
+          <ButtonGroup>
+            <Button onClick={this.toggleEnrollment}>Enroll</Button>
+          </ButtonGroup>
+        );
       }
     }
   },
@@ -104,13 +115,13 @@ const Klass = React.createClass({
     let children = React.cloneElement(this.props.children, {
       klassId: this.props.params.klassId
     });
-    console.log(this.state.enrollmentStatus);
     return (
       <div className="klass">
         <header className="klass_header">
-          <h1>{this.state.klass.name}</h1>
+          <h4 className="title">Class</h4>
+          <h1 className="title">{this.state.klass.name}</h1>
+          <h3 className="description">Class description: {this.state.klass.description}</h3>
           {this.showDetails()}
-          {this.buttons()}
         </header>
         {children}
       </div>

@@ -6,6 +6,8 @@ const hashHistory = require('react-router').hashHistory;
 const StudySetStore = require('../stores/study_set_store');
 const LanguageActions = require('../actions/language_actions');
 const LanguageStore = require('../stores/language_store');
+const Button = require('react-bootstrap').Button;
+const ButtonGroup = require('react-bootstrap').ButtonGroup;
 
 // here I'm using a global variable because...
 // ## the only way I could find to update array state, you need to
@@ -157,7 +159,7 @@ const StudySetForm = React.createClass({
   showErrors(){
     if (this.state.error.responseJSON){
       return (
-        <ul classNam="errors">
+        <ul className="errors">
           {
             this.state.error.responseJSON.map( message => {
               return <li key={message}>{message}</li>;
@@ -167,7 +169,7 @@ const StudySetForm = React.createClass({
       );
     } else if (this.state.error.responseText) {
       return (
-        <ul classNam="errors">
+        <ul className="errors">
           {
             <li>{this.state.error.responseText}</li>
           }
@@ -232,17 +234,21 @@ const StudySetForm = React.createClass({
   },
 
   render(){
-    console.log(this.state.languagePicked);
     return(
       <form className="study_set_form">
         <header className="study_set_header">
-          <h1>{this.title()}</h1>
+
+          <h4 className='title'>{this.title()}</h4>
+
           {this.showErrors()}
-          <label>Study Set Name
+
+          <label className="title"><h1>Enter name
             <input type="text" className="input_study_set_name"
                   ref="studySetName" value={this.state.name} onChange={this.nameChange}/>
-          </label>
-          {this.languageChoices()}
+          </h1></label>
+
+
+          <h3>{this.languageChoices()}</h3>
         </header>
 
 
@@ -258,11 +264,11 @@ const StudySetForm = React.createClass({
         </tbody>
       </table>
 
-      <div className="buttons">
-        <button onClick={this.addMoreWords}>Add more words</button>
-        <button onClick={this.sendStudySet}>{this.submitButton()}</button>
-      </div>
-      </form>
+      <ButtonGroup>
+        <Button onClick={this.addMoreWords}>Add more words</Button>
+        <Button onClick={this.sendStudySet}>{this.submitButton()}</Button>
+      </ButtonGroup>
+    </form>
     );
   },
 
@@ -270,7 +276,7 @@ const StudySetForm = React.createClass({
     event.preventDefault();
     let studySetData = {};
     studySetData.studySet = {
-      name: this.state.languagePicked.name,
+      name: this.state.name,
       language_id: this.state.languagePicked.id
     };
     studySetData.words = deleteEmpty(_words).map(word => {

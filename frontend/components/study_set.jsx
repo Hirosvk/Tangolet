@@ -3,6 +3,8 @@ const StudySetActions = require('../actions/study_set_actions');
 const StudySetStore = require('../stores/study_set_store');
 const CurrentUserStore = require('../stores/current_user_store');
 const hashHistory = require('react-router').hashHistory;
+const ButtonGroup = require('react-bootstrap').ButtonGroup;
+const Button = require('react-bootstrap').Button;
 
 const StudySet = React.createClass({
   getInitialState(){
@@ -25,11 +27,13 @@ const StudySet = React.createClass({
 
   showDetails(){
     const studySet = this.state.studySet;
+    const d = new Date(studySet.created_at);
+    const date = (d.getMonth() + 1) + '/' + d.getDate() + '/' + d.getFullYear();
+    // getMonth gives value 0 - 11
     return (
-      <ul>
-        <li>Created by {studySet.creator.username}</li>
-        <li>Created at {new Date(studySet.created_at).toLocaleString()}</li>
-      </ul>
+      <div className="details">
+        <h3>created by {studySet.creator.username} | created at {date}{this.buttons()}</h3>
+      </div>
     );
   },
 
@@ -48,10 +52,10 @@ const StudySet = React.createClass({
   buttons(){
     if (CurrentUserStore.getCurrentUser().id === this.state.studySet.creator.id ){
       return (
-        <div>
-          <button onClick={this.deleteStudySet}>Delete</button>
-          <button onClick={this.editStudySet}>Edit</button>
-        </div>
+        <ButtonGroup>
+          <Button bsSize='small' onClick={this.deleteStudySet}>Delete</Button>
+          <Button bsSize='small' onClick={this.editStudySet}>Edit</Button>
+        </ButtonGroup>
       );
     }
   },
@@ -65,9 +69,9 @@ const StudySet = React.createClass({
     return (
       <div className="study_set">
         <header className="study_set_header">
-          <h1>{this.state.studySet.name}</h1>
+          <h4 className="title">Study Set</h4>
+          <h1 className="title">{this.state.studySet.name}</h1>
           {this.showDetails()}
-          {this.buttons()}
         </header>
         {children}
       </div>

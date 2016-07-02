@@ -2,73 +2,138 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-.study_set_header {
-  background: lightblue;
-  padding: 10px;
+.study_set {
+  padding-bottom: 20px;
 }
 
-.study_set_header ul{
+.study_set_header {
+  background: #BC1818;
+  padding: 4px;
+  text-align: right;
+}
+
+.study_set_header .title{
+  color: #E3D5C3;
+  margin: 10px;
+}
+
+.study_set_header .details{
   display: flex;
   flex-direction: row;
+  justify-content: flex-end;
+  align-items: baseline;
+
+  margin: 10px;
+  text-align: right;
+}
+
+.study_set_header .btn-group {
+  margin: 0px 0px 0px 5px;
+}
+
+.study_set_header .btn {
+  background: #E3D5C3;
+  font-weight: bold;
+  font-size: large;
+
+}
+
+.study_set_header .btn:hover{
+  background: #DEBB0D;
+}
+
+
+/* FORM */
+
+.study_set_form {
+  background-color: #E3D5C3;
+}
+
+.study_set_form .study_set_header {
+  display: flex;
   justify-content: flex-start;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
-.study_set_header li {
-  margin: 5px;
-  padding: 5px;
+.study_set_form .study_set_header h1 {
+  margin: 0px;
+  /* this resets bootstrap default margin */
 }
 
-.study_set_header button {
-  margin: 5px;
+.input_study_set_name {
+  border: 2px solid #4A280E;
+  border-radius: 0.3em;
+  font-weight: bolder;
+  font-size: xx-large;
+  padding: 0.3em;
+  margin: 0px 0px 0px 7px;
+  background-color: #E3D5C3;
+  color: #4A280E;
+}
+
+.study_set_form h3{
+  margin: 10px;
+}
+
+.study_set_form select{
+  margin: 0px 0px 0px 5px;
+  background-color: #E3D5C3;
+}
+
+.study_set_form .btn-group {
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+  /* it would not center w/o display: table */
+}
+
+.study_set_form .btn {
+  background-color: #BC1818;
+  margin: 15px;
+  font-weight: bold;
+  font-size: large;
+  color: #E3D5C3;
+}
+
+.study_set_form .btn:hover{
+  background-color: #DEBB0D;
+  color: #4A280E;
 }
 
 
 table {
   margin-left: auto;
   margin-right:auto;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  border: 3px solid black;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 5px solid black;
+  width: 80%;
+  border-collapse: separate;
+  border-radius: 0.5em;
 }
 
 tr {
 }
 
 th {
-  background: lightpink;
+  background: #DEBB0D;
 }
 
 td {
-  background: lightgrey;
+  background: #E3D5C3;
 }
 
 th, td {
-  padding: 0.2rem;
+  padding: 2rem;
   text-align: left;
-  border: 1px solid black;
-  min-width: 150px;
+  border: 1px solid #4A280E;
+  width: 50%;
   min-height: 40px;
+  font-size: xx-large;
+
 }
 
 td input{
   border: none;
-}
-
-.study_set_form {
-  padding: 15px;
-  background: lightgreen;
-}
-
-.input_study_set_name {
-  border: 2px solid black;
-  margin: 5px;
-}
-
-.study_set_form .buttons {
-  display: flex;
-  justify-content: center;
-}
-
-.study_set_form button {
-  margin: 5px;
 }

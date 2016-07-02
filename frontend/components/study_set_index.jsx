@@ -35,9 +35,13 @@ const StudySetIndex = React.createClass({
   },
 
   render(){
+    let title;
+    if (this.props.title) {
+      title = <h1 className="title">{this.props.title}</h1>;
+    }
     return(
       <div className="study_set_index">
-        <h1 className="title">{this.props.title}</h1>
+        {title}
         <ListGroup>
         {
           this.state.studySets.map( studySet => {
