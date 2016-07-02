@@ -5,6 +5,10 @@ const CurrentUserStore = require('../stores/current_user_store');
 const hashHistory = require('react-router').hashHistory;
 const ButtonGroup = require('react-bootstrap').ButtonGroup;
 const Button = require('react-bootstrap').Button;
+const StudySetList = require('./study_set_list');
+const Tabs = require('react-bootstrap').Tabs;
+const Tab = require('react-bootstrap').Tab;
+
 
 const StudySet = React.createClass({
   getInitialState(){
@@ -60,12 +64,14 @@ const StudySet = React.createClass({
     }
   },
 
+
+
   render(){
-    let children = "";
-    children = React.cloneElement(this.props.children, {
-      words: this.state.studySet.words,
-      language_name: this.state.studySet.language.name
-    });
+    // let children = "";
+    // children = React.cloneElement(this.props.children, {
+    //   words: this.state.studySet.words,
+    //   language_name: this.state.studySet.language.name
+    // });
     return (
       <div className="study_set">
         <header className="study_set_header">
@@ -73,7 +79,15 @@ const StudySet = React.createClass({
           <h1 className="title">{this.state.studySet.name}</h1>
           {this.showDetails()}
         </header>
-        {children}
+
+        <Tabs defaultActiveKey={1} id="study-set-options">
+          <Tab eventKey={1} title="List">
+            <StudySetList words={this.state.studySet.words}
+              language_name={this.state.studySet.language.name}/>
+          </Tab>
+          <Tab eventKey={2} title="Flashcards" disabled />
+          <Tab eventKey={3} title="Test" disabled />
+        </Tabs>
       </div>
     );
   }

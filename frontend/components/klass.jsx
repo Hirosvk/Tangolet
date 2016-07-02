@@ -7,6 +7,9 @@ const StudySetIndex = require('./study_set_index');
 const AddStudySetForm = require('./add_study_set_form');
 const ButtonGroup = require('react-bootstrap').ButtonGroup;
 const Button = require('react-bootstrap').Button;
+const Tabs = require('react-bootstrap').Tabs;
+const Tab = require('react-bootstrap').Tab;
+
 
 const Klass = React.createClass({
   getInitialState(){
@@ -91,7 +94,6 @@ const Klass = React.createClass({
         <ButtonGroup>
           <Button onClick={this.deleteKlass}>Delete</Button>
           <Button onClick={this.editKlass}>Edit</Button>
-          <Button onClick={this.addStudySets}>Add Study Sets</Button>
         </ButtonGroup>
       );
     } else if (currentUser.id) {
@@ -111,10 +113,34 @@ const Klass = React.createClass({
     }
   },
 
+  isTeacher(){
+    return (CurrentUserStore.getCurrentUser().id === this.state.klass.teacher.id)
+  },
+
+  tabs(){
+    let thirdTab;
+    if (this.isTeacher()){
+      thirdTab = (<Tab eventKey={3} title="Add Study Sets"><AddStudySetForm /></Tab>);
+    }
+
+    return (
+      <Tabs defaultActiveKey={1} id="klass-options">
+        <Tab eventKey={1} title="Study Sets">
+          <StudySetIndex klassId={this.props.params.klassId} />
+        </Tab>
+        <Tab eventKey={2} title="Students" disabled />
+        {thirdTab}
+      </Tabs>
+    );
+  },
+
   render(){
-    let children = React.cloneElement(this.props.children, {
-      klassId: this.props.params.klassId
-    });
+    // this code is no longer necessary b/c I'm using bootstrap,
+    // but it would make it possible to pass props to Router children.
+
+    // let children = React.cloneElement(this.props.children, {
+    //   klassId: this.props.params.klassId
+    // });
     return (
       <div className="klass">
         <header className="klass_header">
@@ -123,7 +149,7 @@ const Klass = React.createClass({
           <h3 className="description">Class description: {this.state.klass.description}</h3>
           {this.showDetails()}
         </header>
-        {children}
+        {this.tabs()}
       </div>
     );
   }

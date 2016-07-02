@@ -53,6 +53,19 @@
   background: #DEBB0D;
 }
 
+.klass .nav-tabs {
+  margin: 15px;
+  font-size: large;
+  border-bottom: 4px dashed #4A280E;
+}
+
+.klass .nav-tabs>li {
+  margin-bottom: -4px;
+}
+
+.klass .nav-tabs>li.active>a {
+  background-color: #FAF3EB;
+}
 
 .add_study_set_form {
   padding: 10px;

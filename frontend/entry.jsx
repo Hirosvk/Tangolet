@@ -51,10 +51,7 @@ const appRouter = (
     <Route path="/" component={App}>
       <Route component={Content}>
         <IndexRoute component={Index}/>
-        <Route path="class/:klassId" component={Klass}>
-          <IndexRoute component={StudySetIndex} />
-          <Route path='add_study_sets' component={AddStudySetForm} />
-        </Route>
+        <Route path="class/:klassId" component={Klass} />
         <Route path="study_set/:id" component={StudySet}>
           <IndexRoute component={StudySetList} />
         </Route>

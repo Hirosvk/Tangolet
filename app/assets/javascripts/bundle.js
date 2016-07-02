@@ -106,12 +106,7 @@
 	      Route,
 	      { component: Content },
 	      React.createElement(IndexRoute, { component: Index }),
-	      React.createElement(
-	        Route,
-	        { path: 'class/:klassId', component: Klass },
-	        React.createElement(IndexRoute, { component: StudySetIndex }),
-	        React.createElement(Route, { path: 'add_study_sets', component: AddStudySetForm })
-	      ),
+	      React.createElement(Route, { path: 'class/:klassId', component: Klass }),
 	      React.createElement(
 	        Route,
 	        { path: 'study_set/:id', component: StudySet },
@@ -52965,6 +52960,9 @@
 	var hashHistory = __webpack_require__(168).hashHistory;
 	var ButtonGroup = __webpack_require__(276).ButtonGroup;
 	var Button = __webpack_require__(276).Button;
+	var StudySetList = __webpack_require__(542);
+	var Tabs = __webpack_require__(276).Tabs;
+	var Tab = __webpack_require__(276).Tab;
 	
 	var StudySet = React.createClass({
 	  displayName: 'StudySet',
@@ -53029,11 +53027,11 @@
 	    }
 	  },
 	  render: function render() {
-	    var children = "";
-	    children = React.cloneElement(this.props.children, {
-	      words: this.state.studySet.words,
-	      language_name: this.state.studySet.language.name
-	    });
+	    // let children = "";
+	    // children = React.cloneElement(this.props.children, {
+	    //   words: this.state.studySet.words,
+	    //   language_name: this.state.studySet.language.name
+	    // });
 	    return React.createElement(
 	      'div',
 	      { className: 'study_set' },
@@ -53052,7 +53050,18 @@
 	        ),
 	        this.showDetails()
 	      ),
-	      children
+	      React.createElement(
+	        Tabs,
+	        { defaultActiveKey: 1, id: 'study-set-options' },
+	        React.createElement(
+	          Tab,
+	          { eventKey: 1, title: 'List' },
+	          React.createElement(StudySetList, { words: this.state.studySet.words,
+	            language_name: this.state.studySet.language.name })
+	        ),
+	        React.createElement(Tab, { eventKey: 2, title: 'Flashcards', disabled: true }),
+	        React.createElement(Tab, { eventKey: 3, title: 'Test', disabled: true })
+	      )
 	    );
 	  }
 	});
@@ -53890,6 +53899,8 @@
 	var AddStudySetForm = __webpack_require__(551);
 	var ButtonGroup = __webpack_require__(276).ButtonGroup;
 	var Button = __webpack_require__(276).Button;
+	var Tabs = __webpack_require__(276).Tabs;
+	var Tab = __webpack_require__(276).Tab;
 	
 	var Klass = React.createClass({
 	  displayName: 'Klass',
@@ -53983,11 +53994,6 @@
 	          Button,
 	          { onClick: this.editKlass },
 	          'Edit'
-	        ),
-	        React.createElement(
-	          Button,
-	          { onClick: this.addStudySets },
-	          'Add Study Sets'
 	        )
 	      );
 	    } else if (currentUser.id) {
@@ -54014,10 +54020,38 @@
 	      }
 	    }
 	  },
+	  isTeacher: function isTeacher() {
+	    return CurrentUserStore.getCurrentUser().id === this.state.klass.teacher.id;
+	  },
+	  tabs: function tabs() {
+	    var thirdTab = void 0;
+	    if (this.isTeacher()) {
+	      thirdTab = React.createElement(
+	        Tab,
+	        { eventKey: 3, title: 'Add Study Sets' },
+	        React.createElement(AddStudySetForm, null)
+	      );
+	    }
+	
+	    return React.createElement(
+	      Tabs,
+	      { defaultActiveKey: 1, id: 'klass-options' },
+	      React.createElement(
+	        Tab,
+	        { eventKey: 1, title: 'Study Sets' },
+	        React.createElement(StudySetIndex, { klassId: this.props.params.klassId })
+	      ),
+	      React.createElement(Tab, { eventKey: 2, title: 'Students', disabled: true }),
+	      thirdTab
+	    );
+	  },
 	  render: function render() {
-	    var children = React.cloneElement(this.props.children, {
-	      klassId: this.props.params.klassId
-	    });
+	    // this code is no longer necessary b/c I'm using bootstrap,
+	    // but it would make it possible to pass props to Router children.
+	
+	    // let children = React.cloneElement(this.props.children, {
+	    //   klassId: this.props.params.klassId
+	    // });
 	    return React.createElement(
 	      'div',
 	      { className: 'klass' },
@@ -54042,7 +54076,7 @@
 	        ),
 	        this.showDetails()
 	      ),
-	      children
+	      this.tabs()
 	    );
 	  }
 	});
