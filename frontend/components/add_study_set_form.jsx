@@ -8,6 +8,7 @@ const hashHistory = require('react-router').hashHistory;
 // hence have access to KlassStore
 const ListGroup = require('react-bootstrap').ListGroup;
 const ListGroupItem = require('react-bootstrap').ListGroupItem;
+const Button = require('react-bootstrap').Button;
 
 const AddStudySetForm = React.createClass({
   getInitialState(){
@@ -108,12 +109,14 @@ const AddStudySetForm = React.createClass({
   },
 
   render(){
-    console.log(this.state.studySetIds);
     return(
-      <ListGroup>
-        {this.checkboxes()}
-        <button onClick={this.sendNewIds}>Update</button>
-      </ListGroup>
+      <div className="add_study_set_form">
+        <h2>Select or unselect study sets for this class.</h2>
+        <ListGroup>
+          {this.checkboxes()}
+          <Button onClick={this.sendNewIds}>Update</Button>
+        </ListGroup>
+      </div>
     );
   }
 

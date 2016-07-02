@@ -54065,6 +54065,7 @@
 	// hence have access to KlassStore
 	var ListGroup = __webpack_require__(276).ListGroup;
 	var ListGroupItem = __webpack_require__(276).ListGroupItem;
+	var Button = __webpack_require__(276).Button;
 	
 	var AddStudySetForm = React.createClass({
 	  displayName: 'AddStudySetForm',
@@ -54161,15 +54162,23 @@
 	    KlassActions.updateStudySets(data);
 	  },
 	  render: function render() {
-	    console.log(this.state.studySetIds);
 	    return React.createElement(
-	      ListGroup,
-	      null,
-	      this.checkboxes(),
+	      'div',
+	      { className: 'add_study_set_form' },
 	      React.createElement(
-	        'button',
-	        { onClick: this.sendNewIds },
-	        'Update'
+	        'h2',
+	        null,
+	        'Select or unselect study sets for this class.'
+	      ),
+	      React.createElement(
+	        ListGroup,
+	        null,
+	        this.checkboxes(),
+	        React.createElement(
+	          Button,
+	          { onClick: this.sendNewIds },
+	          'Update'
+	        )
 	      )
 	    );
 	  }
