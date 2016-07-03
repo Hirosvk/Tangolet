@@ -2,8 +2,7 @@ const React = require('react');
 const SessionActions = require('../actions/session_actions');
 const CurrentUserStore = require('../stores/current_user_store');
 const ErrorStore = require('../stores/error_store');
-const hashHistory = require('react-router').hashHistory;
-
+const Button = require('react-bootstrap').Button;
 
 const SignupForm = React.createClass({
   getInitialState(){
@@ -11,7 +10,7 @@ const SignupForm = React.createClass({
   },
 
   componentDidMount(){
-    this.currentUserStoreListener = CurrentUserStore.addListener(this.redirectToIndex);
+    this.currentUserStoreListener = CurrentUserStore.addListener(this.closeModal);
     this.errorStoreListener = ErrorStore.addListener(this.receiveErrors);
   },
 
@@ -21,17 +20,15 @@ const SignupForm = React.createClass({
     ErrorStore.resetErrors();
   },
 
-  redirectToIndex(){
-    if (CurrentUserStore.getCurrentUser()){
-      hashHistory.push("/");
-    }
+  closeModal(){
+    this.props.closeModal();
   },
 
   receiveErrors(){
     this.setState({error: ErrorStore.full_errors()});
   },
 
-  login(event){
+  signup(event){
     event.preventDefault();
     let userInfo = {
       username: this.refs.username.value,
@@ -44,7 +41,7 @@ const SignupForm = React.createClass({
   showErrors(){
     if (this.state.error.responseJSON){
       return (
-        <ul classNam="errors">
+        <ul className="errors">
           {
             this.state.error.responseJSON.map( message => {
               return <li key={message}>{message}</li>;
@@ -57,18 +54,19 @@ const SignupForm = React.createClass({
 
   render(){
     return(
-      <form onSubmit={this.login} className="session_form">
+      <form className="session_form">
+        <h2 className="title">Welcome to Tangolet</h2>
         {this.showErrors()}
-        <label className="item">Username
-        <input type="text" ref="username" /></label><br/>
+        <label className="item"><h2>Username
+        <input type="text" ref="username" /></h2></label>
 
-        <label className="item">Password
-        <input type="password" ref="password" /></label><br/>
+        <label className="item"><h2>Password
+        <input type="password" ref="password" /></h2></label>
 
-        <label className="item">Email
-        <input type="text" ref="email" /></label><br/>
+        <label className="item"><h2>Email
+        <input type="text" ref="email" /></h2></label>
 
-        <button>Sign up</button>
+        <Button bsClass="btn" size="medium" onClick={this.signup}>Sign up</Button>
       </form>
     );
   }

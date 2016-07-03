@@ -1,10 +1,11 @@
 const React = require('react');
+const SideNavbar = require('./side_navbar');
 
 const Content = React.createClass({
   render(){
     return (
-      <div class="content">
-        <p>guest log-in hasn't been created. use(username: Hiro, password: hirohiro)</p>
+      <div className="content">
+        <SideNavbar />
         {this.props.children}
       </div>
     );

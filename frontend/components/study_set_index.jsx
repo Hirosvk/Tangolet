@@ -9,24 +9,37 @@ const ListGroup = require('react-bootstrap').ListGroup;
 const StudySetIndex = React.createClass({
 
   getInitialState(){
-    return ({studySets: IndexStore.getStudySets()});
+    return ({studySets: []});
   },
 
   componentDidMount(){
     if (this.props.klassId){
-      IndexActions.getStudySetIndexforKlass(this.props.klassId);
+      this.setState({studySets: KlassStore.getStudySets()});
+      this.klassListener = KlassStore.addListener(this.updateState);
     } else {
-      IndexActions.getStudySetIndex();
+      if (this.props.option === "myStudySets") {
+        IndexActions.getMyStudySetIndex();
+      } else {
+        IndexActions.getStudySetIndex();
+      }
+      this.indexListener = IndexStore.addListener(this.updateState);
     }
-    this.indexListener = IndexStore.addListener(this.updateState);
   },
 
   componentWillUnmount(){
-    this.indexListener.remove();
+    if (this.klassListener) {
+      this.klassListener.remove();
+    } else {
+      this.indexListener.remove();
+    }
   },
 
   updateState(){
-    this.setState({studySets: IndexStore.getStudySets()});
+    if (this.klassListener) {
+      this.setState({studySets: KlassStore.getStudySets()});
+    } else {
+      this.setState({studySets: IndexStore.getStudySets()});
+    }
   },
 
   createStudySet(event){

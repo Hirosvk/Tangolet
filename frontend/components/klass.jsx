@@ -15,11 +15,12 @@ const Klass = React.createClass({
   getInitialState(){
     return ({
       klass: KlassStore.getKlass(),
-      enrollmentStatus: this.enrollmentStatus()
+      enrollmentStatus: this.enrollmentStatus(),
+      activeKey: 1
     });
   },
 
-  componentDidMount(){
+  componentWillMount(){
     const id = this.props.params.klassId;
     KlassActions.fetchKlass(id);
     this.listener = KlassStore.addListener(this.updateState);
@@ -117,14 +118,25 @@ const Klass = React.createClass({
     return (CurrentUserStore.getCurrentUser().id === this.state.klass.teacher.id)
   },
 
+  changeActiveKey(eventKey){
+    this.setState({activeKey: parseInt(eventKey)});
+  },
+
+  backToStudySets(){
+    this.setState({activeKey: 1});
+  },
+
   tabs(){
     let thirdTab;
     if (this.isTeacher()){
-      thirdTab = (<Tab eventKey={3} title="Add Study Sets"><AddStudySetForm /></Tab>);
+      thirdTab = (
+        <Tab eventKey={3} title="Add Study Sets">
+          <AddStudySetForm backToStudySets={this.backToStudySets}/>
+        </Tab>);
     }
 
     return (
-      <Tabs defaultActiveKey={1} id="klass-options">
+      <Tabs activeKey={this.state.activeKey} onSelect={this.changeActiveKey} id="klass-options">
         <Tab eventKey={1} title="Study Sets">
           <StudySetIndex klassId={this.props.params.klassId} />
         </Tab>
@@ -135,8 +147,8 @@ const Klass = React.createClass({
   },
 
   render(){
-    // this code is no longer necessary b/c I'm using bootstrap,
-    // but it would make it possible to pass props to Router children.
+    // this code is no longer necessary b/c I'm using bootstrap.
+    // Without it I would have had to pass props like below.
 
     // let children = React.cloneElement(this.props.children, {
     //   klassId: this.props.params.klassId

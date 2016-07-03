@@ -25,7 +25,7 @@ const AddStudySetForm = React.createClass({
   componentDidMount(){
     IndexActions.getStudySetIndex();
     this.indexListener = IndexStore.addListener(this.updateStudySets);
-    this.klassListener = KlassStore.addListener(this.redirectToKlass);
+    this.klassListener = KlassStore.addListener(this.redirect);
   },
 
 
@@ -34,8 +34,9 @@ const AddStudySetForm = React.createClass({
     this.klassListener.remove();
   },
 
-  redirectToKlass(){
-    hashHistory.push(`class/${this.state.klassId}`);
+  redirect(){
+    this.props.backToStudySets();
+    // alert("successfully updated");
   },
 
   updateStudySets(){

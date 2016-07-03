@@ -2,17 +2,10 @@ const AppDispatcher = require('../dispatcher/dispatcher');
 const IndexUtils = require('../utils/index_utils');
 const IndexConstants = require('../constants/index_constants');
 
-function log(a){
-  console.log(a);
-}
 
 const IndexActions = {
   getStudySetIndex(errorCallback){
     IndexUtils.getStudySetIndex(this.receiveStudySetIndex, errorCallback);
-  },
-
-  getStudySetIndexforKlass(klassId, errorCallback){
-    IndexUtils.getStudySetIndexforKlass(klassId, this.receiveStudySetIndex, errorCallback);
   },
 
   getKlassIndex(errorCallback){
@@ -20,15 +13,15 @@ const IndexActions = {
   },
 
   getMyKlassIndex(errorCallback){
-    IndexUtils.getMyKlassIndex(log, log);
+    IndexUtils.getMyKlassIndex(this.receiveKlassIndex, errorCallback);
   },
 
   getMyKlassCreatedIndex(errorCallback){
-    IndexUtils.getMyKlassCreatedIndex(log, log);
+    IndexUtils.getMyKlassCreatedIndex(this.receiveKlassIndex, errorCallback);
   },
 
-  getMyStudySetIndex(error){
-    IndexUtils.getMyStudySetIndex(log, log);
+  getMyStudySetIndex(errorCallback){
+    IndexUtils.getMyStudySetIndex(this.receiveStudySetIndex, errorCallback);
   },
 
   receiveStudySetIndex(studySets){

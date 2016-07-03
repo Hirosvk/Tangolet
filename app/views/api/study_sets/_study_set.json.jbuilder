@@ -6,7 +6,7 @@ json.creator  do
   json.username study_set.creator.username
 end
 
-if details
+if !details.nil?
   json.words study_set.words do |word|
     json.word_english word.word_english
     json.word_foreign word.word_foreign

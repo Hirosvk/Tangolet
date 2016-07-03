@@ -6,6 +6,8 @@ const hashHistory = require('react-router').hashHistory;
 const KlassStore = require('../stores/klass_store');
 const LanguageStore = require('../stores/language_store');
 const LanguageActions = require('../actions/language_actions');
+const Button = require('react-bootstrap').Button;
+const ButtonGroup = require('react-bootstrap').ButtonGroup;
 
 
 const KlassForm = React.createClass({
@@ -89,7 +91,7 @@ const KlassForm = React.createClass({
   showErrors(){
     if (this.state.error.responseJSON){
       return (
-        <ul classNam="errors">
+        <ul className="errors">
           {
             this.state.error.responseJSON.map( message => {
               return <li key={message}>{message}</li>;
@@ -99,7 +101,7 @@ const KlassForm = React.createClass({
       );
     } else if (this.state.error.responseText) {
       return (
-        <ul classNam="errors">
+        <ul className="errors">
           {
             <li>{this.state.error.responseText}</li>
           }
@@ -118,7 +120,7 @@ const KlassForm = React.createClass({
 
   languageChoices(){
     return (
-    <label>Choose language<select
+    <label className="item"><h4>Choose language<select
       defaultValue={this.state.language_id}
       onChange={this.languageChange}>
       {
@@ -128,28 +130,40 @@ const KlassForm = React.createClass({
             ref={language.id}>{language.name}</option>);
         })
       }
-    </select></label>
+    </select></h4></label>
     );
   },
 
   render(){
     return(
       <form className="klass_form">
-        <h1>{this.title()}</h1>
+        <header className="klass_header" >
+        <h4 className="title">{this.title()}</h4>
         {this.showErrors()}
 
-        <label>Class Name
-        <input type="text" id="name" value={this.state.name} onChange={this.updateState}/></label>
-        <br />
-        <label>Description
-        <textarea id="description" value={this.state.description} onChange={this.updateState}/></label>
+        <label><h1>Class Name
+          <input className="input_klass_name"
+                 type="text"
+                 id="name"
+                 value={this.state.name}
+                 onChange={this.updateState}/>
+        </h1></label>
 
-        {this.languageChoices()}
+        </header>
+          <div className="details">
+          <label className="item"><h4>Description
+            <textarea id="description" value={this.state.description} onChange={this.updateState}/>
+          </h4></label>
 
-        <button onClick={this.sendKlass}>{this.submitButton()}</button>
+          {this.languageChoices()}
+
+          <Button bsClass="item btn" onClick={this.sendKlass}>{this.submitButton()}</Button>
+        </div>
       </form>
     );
   },
+
+
 
   sendKlass(event){
     event.preventDefault();

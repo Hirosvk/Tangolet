@@ -1,0 +1,58 @@
+.session_form {
+  display: flex;
+  flex-direction: column;
+}
+
+.session_form >.item {
+  margin: 5px;
+}
+
+.session_form .errors {
+  color: #BC1818;
+
+}
+
+.session_form input {
+  border: 2px solid #4A280E;
+  border-radius: 0.3em;
+  margin: 0px 0px 0px 15px;
+}
+
+.session_form .btn {
+  margin: 15px auto;
+
+  background-color: #BC1818;
+  margin: 15px;
+  font-weight: bold;
+  font-size: large;
+  color: #E3D5C3;
+}
+
+.session_form .btn:hover{
+  background-color: #DEBB0D;
+  color: #4A280E;
+}
+
+.session_form .modal-content {
+  background-color: #FAF3EB;
+}
+
+.session_form h2 {
+  color: #4A280E;
+  margin: 10px auto;
+}
+
+.session_form .title {
+  text-align: center;
+}
+// .input_study_set_name {
+//   border: 2px solid #4A280E;
+//   border-radius: 0.3em;
+//   font-weight: bolder;
+//   font-size: xx-large;
+//   padding: 0.3em;
+//   margin: 0px 0px 0px 7px;
+//   background-color: #E3D5C3;
+//   color: #4A280E;
+//   text-align: left;
+// }

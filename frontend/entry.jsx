@@ -28,8 +28,8 @@ const Index = require('./components/index.jsx');
 const StudySetForm = require('./components/study_set_form');
 const KlassForm = require('./components/klass_form');
 const Klass = require('./components/klass');
-const AddStudySetForm = require('./components/add_study_set_form');
 const StudySetIndex = require('./components/study_set_index');
+const KlassIndex = require('./components/klass_index');
 
 const App = React.createClass({
   render(){
@@ -58,8 +58,6 @@ const appRouter = (
         <Route path="study_set_form(/:action)" component={StudySetForm} />
         <Route path="class_form(/:action)" component={KlassForm} />
       </Route>
-      <Route path="login" component={LoginForm} />
-      <Route path="signup" component={SignupForm} />
     </Route>
   </Router>
 );

@@ -67,6 +67,10 @@
   background-color: #FAF3EB;
 }
 
+
+
+
+
 .add_study_set_form {
   padding: 10px;
 }
@@ -110,9 +114,27 @@
   margin: 0px 0px 0px 7px;
   background-color: #E3D5C3;
   color: #4A280E;
+  text-align: left;
 }
 
-.klass_form h3{
+.klass_form .details {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.klass_form .details label {
+  vertical-align: top;
+  padding: 10px;
+}
+
+.klass_form .details textarea {
+  border: 2px solid #4A280E;
+  border-radius: 0.3em;
+  margin: 0px 0px 0px 10px;
+}
+
+.kass_form .details .item{
   margin: 10px;
 }
 
@@ -120,6 +142,8 @@
   margin: 0px 0px 0px 5px;
   background-color: #E3D5C3;
 }
+
+.klass_form
 
 .klass_form .btn-group {
   display: table;

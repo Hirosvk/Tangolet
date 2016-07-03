@@ -83,7 +83,7 @@ const StudySet = React.createClass({
         <Tabs defaultActiveKey={1} id="study-set-options">
           <Tab eventKey={1} title="List">
             <StudySetList words={this.state.studySet.words}
-              language_name={this.state.studySet.language.name}/>
+              language_name={this.state.studySet.language.name}/> 
           </Tab>
           <Tab eventKey={2} title="Flashcards" disabled />
           <Tab eventKey={3} title="Test" disabled />

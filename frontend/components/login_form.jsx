@@ -2,8 +2,7 @@ const React = require('react');
 const SessionActions = require('../actions/session_actions');
 const CurrentUserStore = require('../stores/current_user_store');
 const ErrorStore = require('../stores/error_store');
-const hashHistory = require('react-router').hashHistory;
-
+const Button = require('react-bootstrap').Button;
 
 const LoginForm = React.createClass({
   getInitialState(){
@@ -11,7 +10,7 @@ const LoginForm = React.createClass({
   },
 
   componentDidMount(){
-    this.currentUserStoreListener = CurrentUserStore.addListener(this.redirectToIndex);
+    this.currentUserStoreListener = CurrentUserStore.addListener(this.closeModal);
     this.errorStoreListener = ErrorStore.addListener(this.receiveErrors);
   },
 
@@ -21,10 +20,11 @@ const LoginForm = React.createClass({
     ErrorStore.resetErrors();
   },
 
-  redirectToIndex(){
-    if (CurrentUserStore.getCurrentUser()){
-      hashHistory.push("/");
-    }
+  closeModal(){
+    this.props.closeModal();
+    // if (CurrentUserStore.getCurrentUser()){
+    //   hashHistory.push("/");
+    // }
   },
 
   receiveErrors(){
@@ -41,7 +41,6 @@ const LoginForm = React.createClass({
   },
 
   showErrors(){
-    console.log(this.state.error);
     if (this.state.error.responseText){
       return (
         <ul className="errors">
@@ -54,17 +53,19 @@ const LoginForm = React.createClass({
   render(){
     return(
       <form onSubmit={this.login} className="session_form">
+        <h2 className="title">Welcome Back</h2>
         {this.showErrors()}
-        <label className="item">Username
-        <input type="text" ref="username" /></label><br/>
+        <label className="item"><h2>Username
+        <input type="text" ref="username" /></h2></label>
 
-        <label className="item">Password
-        <input type="password" ref="password" /></label><br/>
+        <label className="item"><h2>Password
+        <input type="password" ref="password" /></h2></label>
 
-        <button>Login</button>
+        <Button bsClass='btn' size='medium' onClick={this.login} >Login</Button>
       </form>
     );
   }
+
 
 });
 

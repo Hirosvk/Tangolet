@@ -14,15 +14,15 @@ CurrentUserStore.getCurrentUser = function(){
 
 CurrentUserStore.klassIds = function(){
   return _currentUser.klass_ids;
-  // if (_currentUser.klasses){
-  //   return _currentUser.klasses.map(klass => klass.id);
-  // }
 };
 
 CurrentUserStore.__onDispatch = function(payload){
   switch(payload.actionType){
     case SessionConstants.LOGIN_USER:
       _currentUser = payload.user;
+      if (!payload.user.klass_ids) {
+        _currentUser.klass_ids = [];
+      }
       this.__emitChange();
       break;
   }

@@ -186,8 +186,13 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
   - [x] user.klasses_created, user.klasses, user.study_sets
   - [x] API endpoints and server router setup
 
-- [ ] front-end setup
-  - [x] getMyKlassIndex, getMyStudySetIndex, getMyKlassCreatedIndex made and tested in IndexActions and IndexUtils
+- [x] getMyKlassIndex, getMyStudySetIndex, getMyKlassCreatedIndex made and tested in IndexActions and IndexUtils
+
+- [x] style Klass form
+- [x] sign-up/log-in page overlay
+- [x] side bar
+
+- [ ] fix my Classes bug
 
 
 ## Phase 8: add Test feature (2day w9d3)
@@ -200,7 +205,18 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 
 ## Phase 10: Final Touch (1.5day w9d4)
 - [ ] thorough styling
-- [ ] seed data
 - [ ] invalid/unauthorized navigation redirected
+- [ ] fix redirect to Klass page after adding new study sets
+- [ ] add filter to add-study-set page
+
+- [ ] details
+  - [ ] standardize font sizes and colors
+    - [ ] form input text colors
+    - [ ] header text color and sizes
+    - [ ] button colors and sizes
+
+  - [ ] header with login tucked in
+  - [ ] pick font
+  - [ ] seed data
 
 ## Phase 11: Bonus
