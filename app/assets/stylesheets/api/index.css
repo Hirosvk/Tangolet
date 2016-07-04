@@ -1,6 +1,7 @@
 
 .study_set_index .title,
-.klass_index .title {
+.klass_index .title,
+.test_score_index .title {
   background: #BC1818;
   color: #E3D5C3;
   padding: 0.2em 0.5em;
@@ -11,12 +12,14 @@ div.list-group{
   margin: 10px;
 }
 
-button.list-group-item {
+button.list-group-item,
+span.list-group-item {
   color: #4A280E;
 }
 
 /* same as h2 */
-button.list-group-item .list-group-item-heading
+button.list-group-item .list-group-item-heading,
+span.list-group-item .list-group-item-heading
  {
   color: inherit;
   font: inherit;
@@ -42,4 +45,8 @@ button.list-group-item .list-group-item-heading
 
 button.list-group-item:hover {
   background-color: #DEBB0D;
+}
+
+.link {
+  background: transparent;
 }

@@ -9,16 +9,14 @@ class Api::TestsController < ApplicationController
 
     if current_user
       teacher_id = current_user.id
-
       if klass_id && user_id
         @tests = Test.find_by_sql([QUERY_BY_STUDENTS, klass_id, user_id, teacher_id])
       elsif klass_id && study_set_id
         @tests = Test.find_by_sql([QUERY_BY_STUDYSETS, klass_id, study_set_id, teacher_id])
       else
-        @tests = current_user.tests
+        @tests = Test.find_by_sql([QUERY_BY_CURRENT_USER, teacher_id])
       end
       render json: @tests, status: 200
-
     else
       render json: "only the user and teacher get test scores", status: 401
     end
@@ -27,14 +25,14 @@ class Api::TestsController < ApplicationController
   def collection
     option = params[:option]
     klass_id = params[:klass_id].to_i
-
+    debugger
     if current_user
       teacher_id = current_user.id
 
       if option == "by_study_sets"
-        @tests = Test.find_by_sql([COLLECTION_QUERY_BY_STUDYSETS, klass_id, teacher_id])
+        @tests = Test.find_by_sql([COLLECTION_QUERY_BY_STUDYSETS, klass_id, teacher_id, klass_id])
       elsif option == "by_students"
-        @tests = Test.find_by_sql([COLLECTION_QUERY_BY_STUDENTS, klass_id, teacher_id])
+        @tests = Test.find_by_sql([COLLECTION_QUERY_BY_STUDENTS, klass_id, teacher_id, klass_id])
       end
       render json: @tests, status: 200
     else
@@ -55,6 +53,14 @@ end
 ## - average score = average_score
 ## - link to TestIndex --> ajax request with klass_id and study_set_id
 
+
+# get test score info of
+# of study_sets that belong to the klass
+# of students who are enrolled in the class
+# not include scores of the users who are not the students
+# not incluce the scores of study sets that don't belong to
+#   the class
+
 COLLECTION_QUERY_BY_STUDYSETS = <<-SQL
   SELECT
     study_sets.name AS name,
@@ -71,10 +77,22 @@ COLLECTION_QUERY_BY_STUDYSETS = <<-SQL
     JOIN users AS teachers
     ON klasses.teacher_id = teachers.id
   WHERE
-    klasses.id = ? AND teachers.id = ?
+    klasses.id = ? AND teachers.id = ? AND
+    students.id IN (
+      SELECT
+        students.id
+      FROM
+        klasses JOIN enrollments
+        ON klasses.id = enrollments.klass_id
+        JOIN users students
+        ON enrollments.student_id = students.id
+      WHERE
+        klasses.id = ?
+      )
   GROUP BY
     study_sets.id
 SQL
+
 
 COLLECTION_QUERY_BY_STUDENTS = <<-SQL
   SELECT
@@ -94,10 +112,22 @@ COLLECTION_QUERY_BY_STUDENTS = <<-SQL
     JOIN users AS teachers
     ON klasses.teacher_id = teachers.id
   WHERE
-    klasses.id = ? AND teachers.id = ?
+    klasses.id = ? AND teachers.id = ? AND
+    students.id IN (
+      SELECT
+        students.id
+      FROM
+        klasses JOIN enrollments
+        ON klasses.id = enrollments.klass_id
+        JOIN users students
+        ON enrollments.student_id = students.id
+      WHERE
+        klasses.id = ?
+      )
   GROUP BY
     students.id
 SQL
+
 
 ## TestScoreCollection test scores by students
 ## - study_set.name
@@ -172,4 +202,23 @@ FROM
   ON klasses.teacher_id = teachers.id
 WHERE
   klasses.id = ? AND study_sets.id = ? AND teachers.id = ?
+SQL
+
+QUERY_BY_CURRENT_USER = <<-SQL
+SELECT
+  DISTINCT
+  study_sets.name AS study_set_name,
+  study_sets.id AS study_set_id,
+  tests.score AS score,
+  tests.created_at AS created_at,
+  students.username AS student_username,
+  students.id AS student_id,
+  tests.id AS id
+FROM
+  tests JOIN study_sets
+  ON tests.study_set_id = study_sets.id
+  JOIN users students
+  ON tests.user_id = students.id
+WHERE
+  students.id = ?
 SQL

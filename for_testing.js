@@ -37,7 +37,7 @@ function log(a){
   console.log(a);
 }
 $.ajax({
-  url: "api/tests/collection?klass_id=4&option=by_study_sets",
+  url: "api/tests",
   type: "GET",
   success: log,
   error: log

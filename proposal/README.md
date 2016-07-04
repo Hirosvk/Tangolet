@@ -191,9 +191,6 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 - [x] sign-up/log-in page overlay
 - [x] side bar
 
-- [ ] fix my Classes bug
-
-
 ## Phase 8: add Test feature (2day w9d3)
 - [x] test_record model
 - [x] Test React component
@@ -204,31 +201,41 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 - [ ] todo as of W8D7
   - [ ] TestIndex/TestIndexItem/TestCollection component
   - [ ] css style test form
+  - [ ] Navbar styling
 
 ## Phase 9: add Search feature (0.5 day)
 - [x] backend, single-word, case-sensitive search functional
 
-## Phase 10: Final Touch (1.5day w9d4)
-- [ ] thorough styling
+## Phase 10: Flashcards
+- [ ] flashcard feature
+
+
+## Phase 11: Final Touch (1.5day w9d4)
 - [ ] invalid/unauthorized navigation redirected
-- [ ] fix redirect to Klass page after adding new study sets
-- [ ] add filter to add-study-set page
-- [ ] Klass Student page (Student Index)
 
 - [ ] welcome page
 - [ ] about page
 
-- [ ] brush up the details
-  - [ ] standardize font sizes and colors
-    - [ ] form input text colors
-    - [ ] header text color and sizes
-    - [ ] button colors and sizes
+- [ ] standardize font sizes and colors
+  - [ ] form input text colors
+  - [ ] header text color and sizes
+  - [ ] button colors and sizes
 
-  - [ ] header with login tucked in
-  - [ ] pick font
-  - [ ] seed data
+- [ ] header with login tucked in
+- [ ] pick font
+- [ ] seed data
+- [ ] Views: get info from store instead of from props whenever possible
+- [ ] clean up left-behind error message
+- [ ] add error message display function in test form
 
+## Phase 12: Refactor
 - [ ] use stores instead of passing info as props
+- [ ] refactor controllers based on design patterns: use presenters
+- [ ] disable buttons after click
+- [ ] refactor JavaScript code to minimize file size
+- [ ] consolidate data parsing
+- [ ] standardize name conventions
 
-## Phase 11: Bonus
-- [ ] flashcard feature
+## Phase12: bonus
+- [ ] Klass Student page (Student Index)
+- [ ] add filter to add-study-set page

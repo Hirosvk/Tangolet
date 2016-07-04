@@ -1,1 +1,1 @@
-json.partial! "api/tests/test", collection: @tests, as: :test
+# json.partial! "api/tests/test", collection: @tests, as: :test

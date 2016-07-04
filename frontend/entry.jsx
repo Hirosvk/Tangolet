@@ -16,6 +16,8 @@ const IndexStores = require('./stores/index_store');
 const CurrentUserStore = require('./stores/current_user_store');
 const KlassStore = require('./stores/klass_store');
 const KlassActions = require('./actions/klass_actions');
+const TestActions = require('./actions/test_actions');
+const TestStore = require('./stores/test_store');
 
 const LoginForm = require('./components/login_form');
 const SignupForm = require('./components/signup_form');
@@ -30,6 +32,7 @@ const KlassForm = require('./components/klass_form');
 const Klass = require('./components/klass');
 const StudySetIndex = require('./components/study_set_index');
 const KlassIndex = require('./components/klass_index');
+const TestScoreIndex = require('./components/test_score_index');
 
 const App = React.createClass({
   render(){
@@ -57,6 +60,7 @@ const appRouter = (
         </Route>
         <Route path="study_set_form(/:action)" component={StudySetForm} />
         <Route path="class_form(/:action)" component={KlassForm} />
+        <Route path="my_test_scores" component={TestScoreIndex} />
       </Route>
     </Route>
   </Router>

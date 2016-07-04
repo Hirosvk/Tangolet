@@ -3,6 +3,7 @@ const CurrentUserStore = require('../stores/current_user_store');
 const StudySetActions = require('../actions/study_set_actions');
 const Button = require('react-bootstrap').Button;
 const StudySetStore = require('../stores/study_set_store');
+const ErrorStore = require('../stores/error_store');
 // state: graded: boolean, initially false
 // props: shuffled test, language_name
 // clock feature
@@ -13,11 +14,15 @@ const StudySetStore = require('../stores/study_set_store');
 
 const TestForm = React.createClass({
   getInitialState(){
-    return({completed: false})
+    return({completed: false});
   },
 
   componentWillMount(){
     this.words = this.props.words;
+  },
+
+  componentWillUnmount(){
+    ErrorStore.resetErrors();
   },
 
   testBody(){
@@ -42,7 +47,7 @@ const TestForm = React.createClass({
 
   testRowsGraded(){
     if (this.gradedTable) { return this.gradedTable }
-    
+
     let score = 0;
     let rows = this.words.map( (word, idx) =>{
       let style;
@@ -118,11 +123,10 @@ const TestForm = React.createClass({
 
   submitScore(){
     if (this.score){
-      clearInterval(this.scorePending)
+      clearInterval(this.scorePending);
       let testData = {};
       testData.score = parseInt((this.score / this.words.length) * 100);
       testData.studySetId = StudySetStore.getStudySet().id;
-      debugger;
       StudySetActions.submitTest(testData);
     }
   },

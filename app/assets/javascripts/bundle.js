@@ -64,6 +64,8 @@
 	var CurrentUserStore = __webpack_require__(269);
 	var KlassStore = __webpack_require__(270);
 	var KlassActions = __webpack_require__(272);
+	var TestActions = __webpack_require__(558);
+	var TestStore = __webpack_require__(561);
 	
 	var LoginForm = __webpack_require__(274);
 	var SignupForm = __webpack_require__(539);
@@ -78,6 +80,7 @@
 	var Klass = __webpack_require__(555);
 	var StudySetIndex = __webpack_require__(544);
 	var KlassIndex = __webpack_require__(546);
+	var TestScoreIndex = __webpack_require__(562);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -113,7 +116,8 @@
 	        React.createElement(IndexRoute, { component: StudySetList })
 	      ),
 	      React.createElement(Route, { path: 'study_set_form(/:action)', component: StudySetForm }),
-	      React.createElement(Route, { path: 'class_form(/:action)', component: KlassForm })
+	      React.createElement(Route, { path: 'class_form(/:action)', component: KlassForm }),
+	      React.createElement(Route, { path: 'my_test_scores', component: TestScoreIndex })
 	    )
 	  )
 	);
@@ -53793,6 +53797,12 @@
 	      ' | created by ',
 	      this.props.studySet.creator.username
 	    );
+	    // I have spent hours trying to get rid of "Unknown prop 'header'"" on Chrome console.
+	    // The website renders fine with all functioinalities.
+	    // Since the link provided by the Chrome console suggested that it might be because
+	    // I'm passing its own props as props. I tried giving constant strings to the 'header' props,
+	    // but it still doesnt work. so the warning is not from the passing of the props.
+	    // One online discussion suggested that nothing breaks, and that it's just a noise.
 	  }
 	});
 	
@@ -54181,6 +54191,7 @@
 	var StudySetActions = __webpack_require__(232);
 	var Button = __webpack_require__(276).Button;
 	var StudySetStore = __webpack_require__(241);
+	var ErrorStore = __webpack_require__(275);
 	// state: graded: boolean, initially false
 	// props: shuffled test, language_name
 	// clock feature
@@ -54196,6 +54207,9 @@
 	  },
 	  componentWillMount: function componentWillMount() {
 	    this.words = this.props.words;
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    ErrorStore.resetErrors();
 	  },
 	  testBody: function testBody() {
 	    var testRows = this.testRows;
@@ -54337,7 +54351,6 @@
 	      var testData = {};
 	      testData.score = parseInt(this.score / this.words.length * 100);
 	      testData.studySetId = StudySetStore.getStudySet().id;
-	      debugger;
 	      StudySetActions.submitTest(testData);
 	    }
 	  },
@@ -55331,6 +55344,278 @@
 	});
 	
 	module.exports = AddStudySetForm;
+
+/***/ },
+/* 557 */,
+/* 558 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var TestUtils = __webpack_require__(559);
+	var AppDispatcher = __webpack_require__(233);
+	var TestConstants = __webpack_require__(560);
+	var TestStore = __webpack_require__(561);
+	
+	var TestActions = {
+	  fetchScoresCurrentUser: function fetchScoresCurrentUser() {
+	    TestUtils.fetchScoresCurrentUser(this.receiveTestScores);
+	  },
+	  fetchScoresByStudySets: function fetchScoresByStudySets(data) {
+	    TestUtils.fetchScoresByStudySets(data, this.receiveTestScores);
+	  },
+	  fetchScoresByStudents: function fetchScoresByStudents(data) {
+	    TestUtils.fetchScoresByStudents(data, this.receiveTestScores);
+	  },
+	  receiveTestScores: function receiveTestScores(testScores) {
+	    AppDispatcher.dispatch({
+	      actionType: TestConstants.RECEIVE_TEST_SCORES,
+	      testScores: testScores
+	    });
+	  },
+	  fetchCollectionByStudents: function fetchCollectionByStudents(klassId) {
+	    TestUtils.fetchCollectionByStudents(klassId, this.receiveCollection);
+	  },
+	  fetchCollectionByStudySets: function fetchCollectionByStudySets(klassId) {
+	    TestUtils.fetchCollectionByStudySets(klassId, this.receiveCollection);
+	  },
+	  receiveCollection: function receiveCollection(testCollections) {
+	    AppDispatcher.dispatch({
+	      actionType: TestConstants.RECEIVE_TEST_SCORE_COLLECTION,
+	      testCollections: testCollections
+	    });
+	  }
+	};
+	
+	module.exports = TestActions;
+	window.TestActions = TestActions;
+
+/***/ },
+/* 559 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	var TestScoreUtils = {
+	  fetchScoresCurrentUser: function fetchScoresCurrentUser(successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/tests",
+	      type: "GET",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  fetchScoresByStudySets: function fetchScoresByStudySets(data, successCallback, errorCallback) {
+	    var klass_id = data.klassId;
+	    var study_set_id = data.studySetId;
+	    $.ajax({
+	      url: "api/tests?klass_id=" + klass_id + "&study_set_id=" + study_set_id,
+	      type: "GET",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  fetchScoresByStudents: function fetchScoresByStudents(data, successCallback, errorCallback) {
+	    var klass_id = data.klassId;
+	    var user_id = data.studentId;
+	    $.ajax({
+	      url: "api/tests?klass_id=" + klass_id + "&user_id=" + user_id,
+	      type: "GET",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  fetchCollectionByStudents: function fetchCollectionByStudents(klassId, successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/tests/collection?klass_id=" + klassId + "&option=by_students",
+	      type: "GET",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  fetchCollectionByStudySets: function fetchCollectionByStudySets(klassId, successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/tests/collection?klass_id=" + klassId + "&option=by_study_sets",
+	      type: "GET",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  }
+	};
+	
+	module.exports = TestScoreUtils;
+	window.TestScoreUtils = TestScoreUtils;
+
+/***/ },
+/* 560 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {
+	  RECEIVE_TEST_SCORES: "RECEIVE_TEST_SCORES",
+	  RECEIVE_TEST_SCORE_COLLECTION: "RECEIVE_TEST_SCORE_COLLECTION"
+	};
+
+/***/ },
+/* 561 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Store = __webpack_require__(242).Store;
+	var AppDispatcher = __webpack_require__(233);
+	var TestConstants = __webpack_require__(560);
+	
+	var _testScores = [];
+	var _testCollections = [];
+	
+	var TestStore = new Store(AppDispatcher);
+	
+	TestStore.getTestScores = function () {
+	  return _testScores;
+	};
+	
+	TestStore.getTestCollection = function () {
+	  return _testCollections;
+	};
+	
+	TestStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case TestConstants.RECEIVE_TEST_SCORES:
+	      _testScores = payload.testScores;
+	      this.__emitChange();
+	      break;
+	    case TestConstants.RECEIVE_TEST_SCORE_COLLECTION:
+	      _testCollections = payload.testCollections;
+	      this.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = TestStore;
+	window.TestStore = TestStore;
+
+/***/ },
+/* 562 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(164);
+	var TestStore = __webpack_require__(561);
+	var TestActions = __webpack_require__(558);
+	var Button = __webpack_require__(276).Button;
+	var hashHistory = __webpack_require__(170).hashHistory;
+	var ListGroup = __webpack_require__(276).ListGroup;
+	var CurrentUserStore = __webpack_require__(269);
+	var TestScoreIndexItem = __webpack_require__(563);
+	
+	var TestScoreIndex = React.createClass({
+	  displayName: 'TestScoreIndex',
+	  getInitialState: function getInitialState() {
+	    return { testScores: [] };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    this.testListener = TestStore.addListener(this.updateState);
+	
+	    if (this.props.klassId) {
+	      var data = { klassId: this.props.klassId };
+	
+	      if (this.props.studentId) {
+	        console.log("bystudentId");
+	        data.studentId = this.props.studentId;
+	        TestActions.fetchScoresByStudents(data);
+	      } else if (this.props.studySetId) {
+	        console.log("by studysets");
+	        data.studySetId = this.props.studySetId;
+	        TestActions.fetchScoresByStudySets(data);
+	      }
+	    } else if (CurrentUserStore.getCurrentUser().id) {
+	      console.log("current_user");
+	      TestActions.fetchScoresCurrentUser();
+	    }
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.testListener.remove();
+	  },
+	  updateState: function updateState() {
+	    this.setState({ testScores: TestStore.getTestScores() });
+	  },
+	  render: function render() {
+	    var title = void 0;
+	    if (this.props.title) {
+	      title = React.createElement(
+	        'h1',
+	        { className: 'title' },
+	        this.props.title
+	      );
+	    }
+	    return React.createElement(
+	      'div',
+	      { className: 'study_set_index' },
+	      title,
+	      React.createElement(
+	        ListGroup,
+	        null,
+	        this.state.testScores.map(function (testScore) {
+	          return React.createElement(TestScoreIndexItem, { testScore: testScore, link: 'true' });
+	        })
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = TestScoreIndex;
+
+/***/ },
+/* 563 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(164);
+	var ListGroupItem = __webpack_require__(276).ListGroupItem;
+	var hashHistory = __webpack_require__(170).hashHistory;
+	var Button = __webpack_require__(276).Button;
+	var TestScoreIndexItem = React.createClass({
+	  displayName: 'TestScoreIndexItem',
+	  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
+	    this.testScore = newProps.testScore;
+	  },
+	  goToStudySet: function goToStudySet() {
+	    hashHistory.push('/study_set/' + this.props.testScore.id);
+	  },
+	  render: function render() {
+	    var titleAndScore = void 0;
+	    var details = void 0;
+	    var link = void 0;
+	    if (this.testScore || this.props.testScore) {
+	      var testScore = this.testScore || this.props.testScore;
+	      titleAndScore = 'Score: ' + testScore.score + ' | ' + testScore.study_set_name;
+	      var date = new Date(testScore.created_at);
+	      var dateString = date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
+	      details = 'taken on: ' + dateString + ' | taken by: ' + testScore.student_username;
+	
+	      if (this.props.link) {
+	        link = React.createElement(
+	          Button,
+	          { bsStyle: 'link', onClick: this.goToStudySet },
+	          'go to Study Set'
+	        );
+	      }
+	    }
+	    return React.createElement(
+	      ListGroupItem,
+	      {
+	        header: titleAndScore },
+	      details,
+	      link
+	    );
+	  }
+	});
+	
+	module.exports = TestScoreIndexItem;
 
 /***/ }
 /******/ ]);
