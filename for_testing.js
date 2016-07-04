@@ -37,7 +37,7 @@ function log(a){
   console.log(a);
 }
 $.ajax({
-  url: "api/tests",
+  url: "api/search?search=spanish",
   type: "GET",
   success: log,
   error: log

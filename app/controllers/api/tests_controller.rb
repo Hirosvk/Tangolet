@@ -2,7 +2,6 @@ class Api::TestsController < ApplicationController
 
 
   def index
-    debugger
     klass_id = params[:klass_id]
     study_set_id = params[:study_set_id]
     user_id = params[:user_id]
@@ -25,7 +24,6 @@ class Api::TestsController < ApplicationController
   def collection
     option = params[:option]
     klass_id = params[:klass_id].to_i
-    debugger
     if current_user
       teacher_id = current_user.id
 
@@ -74,6 +72,8 @@ COLLECTION_QUERY_BY_STUDYSETS = <<-SQL
     ON study_sets.id = klass_set_joins.study_set_id
     JOIN tests
     ON study_sets.id = tests.study_set_id
+    JOIN users AS students
+    ON tests.user_id = students.id
     JOIN users AS teachers
     ON klasses.teacher_id = teachers.id
   WHERE
@@ -157,7 +157,8 @@ FROM
   JOIN users teachers
   ON klasses.teacher_id = teachers.id
 WHERE
-  klasses.id = ? AND students.id = ? AND teachers.id = ?
+  klasses.id = ? AND students.id = ?
+  AND teachers.id = ? AND teachers.id != students.id
 SQL
 
 ## TestIndex displays the following as TestIndexItems
@@ -201,7 +202,8 @@ FROM
   JOIN users teachers
   ON klasses.teacher_id = teachers.id
 WHERE
-  klasses.id = ? AND study_sets.id = ? AND teachers.id = ?
+  klasses.id = ? AND study_sets.id = ?
+  AND teachers.id = ? AND teachers.id != students.id
 SQL
 
 QUERY_BY_CURRENT_USER = <<-SQL

@@ -202,12 +202,11 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
   - [ ] TestIndex/TestIndexItem/TestCollection component
   - [ ] css style test form
   - [ ] Navbar styling
+  - [ ] students index
 
 ## Phase 9: add Search feature (0.5 day)
 - [x] backend, single-word, case-sensitive search functional
-
-## Phase 10: Flashcards
-- [ ] flashcard feature
+- [ ] language index for showing search result
 
 
 ## Phase 11: Final Touch (1.5day w9d4)
@@ -227,6 +226,7 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 - [ ] Views: get info from store instead of from props whenever possible
 - [ ] clean up left-behind error message
 - [ ] add error message display function in test form
+- [ ] when you log out while visiting page that require authorization, user is redirected
 
 ## Phase 12: Refactor
 - [ ] use stores instead of passing info as props
@@ -235,6 +235,14 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 - [ ] refactor JavaScript code to minimize file size
 - [ ] consolidate data parsing
 - [ ] standardize name conventions
+- [ ] check 'state' of each view file and evaluate the necessity
+- [ ] check controlled values of each form and evaluate necessity
+- [ ] check for unmounting
+- [ ] CSS
+
+## Phase 10: Flashcards
+- [ ] flashcard feature
+
 
 ## Phase12: bonus
 - [ ] Klass Student page (Student Index)

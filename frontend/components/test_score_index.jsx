@@ -48,15 +48,18 @@ const TestScoreIndex = React.createClass({
   render(){
     let title;
     if (this.props.title) {
-      title = <h1 className="title">{this.props.title}</h1>;
+      title = this.props.title;
+    } else {
+      title = `${CurrentUserStore.getCurrentUser().username}'s Test Score`;
     }
+
     return(
       <div className="study_set_index">
-        {title}
+        <h1 className="title">{title}</h1>
         <ListGroup>
         {
           this.state.testScores.map( testScore => {
-            return <TestScoreIndexItem testScore={testScore} link="true"/>;
+            return <TestScoreIndexItem testScore={testScore} link="true" key={testScore.id} />;
           })
         }
       </ListGroup>

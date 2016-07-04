@@ -4,14 +4,13 @@ const TestConstants = require('../constants/test_constants');
 
 let _testScores = [];
 let _testCollections = [];
-
 const TestStore = new Store(AppDispatcher);
 
 TestStore.getTestScores = function(){
   return _testScores;
 };
 
-TestStore.getTestCollection = function(){
+TestStore.getTestCollections = function(){
   return _testCollections;
 };
 

@@ -9,7 +9,7 @@ const ButtonGroup = require('react-bootstrap').ButtonGroup;
 const Button = require('react-bootstrap').Button;
 const Tabs = require('react-bootstrap').Tabs;
 const Tab = require('react-bootstrap').Tab;
-
+const TestCollection = require('./test_collection');
 
 const Klass = React.createClass({
   getInitialState(){
@@ -126,12 +126,36 @@ const Klass = React.createClass({
     this.setState({activeKey: 1});
   },
 
+  testScoreOption(){
+    if (this.state.activeKey === 4){
+      return "by_study_sets";
+    } else if (this.state.activeKey === 5){
+      return "by_students";
+    }
+  },
+
   tabs(){
     let thirdTab;
     if (this.isTeacher()){
       thirdTab = (
         <Tab eventKey={3} title="Add Study Sets">
           <AddStudySetForm backToStudySets={this.backToStudySets}/>
+        </Tab>);
+    }
+
+    let forthTab;
+    if (this.isTeacher()){
+      forthTab = (
+        <Tab eventKey={4} title="Test Scores by Study Sets">
+          <TestCollection option={this.testScoreOption()}/>
+        </Tab>);
+    }
+
+    let fifthTab;
+    if (this.isTeacher()){
+      fifthTab = (
+        <Tab eventKey={5} title="Test Scores by Students">
+          <TestCollection option={this.testScoreOption()}/>
         </Tab>);
     }
 
@@ -142,6 +166,8 @@ const Klass = React.createClass({
         </Tab>
         <Tab eventKey={2} title="Students" disabled />
         {thirdTab}
+        {forthTab}
+        {fifthTab}
       </Tabs>
     );
   },

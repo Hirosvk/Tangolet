@@ -19,6 +19,11 @@ const SideNavbar = React.createClass({
     hashHistory.push("?option=my_classes_created");
   },
 
+  toMyTestScores(){
+    hashHistory.push("my_test_scores");
+  },
+
+
   toIndex(){
     hashHistory.push("/");
   },
@@ -31,7 +36,7 @@ const SideNavbar = React.createClass({
         <button className="btn" onClick={this.toMyKlassesCreated}>Classes I Teach</button>
         <button className="btn" onClick={this.toMyKlasses}>Classes I Take</button>
         <button className="btn" onClick={this.toMyStudySets}>Study Sets I Created</button>
-        <button className="btn" >My Test Scores</button>
+        <button className="btn" onClick={this.toMyTestScores}>My Test Scores</button>
         <button className="btn" >About</button>
       </div>
     )

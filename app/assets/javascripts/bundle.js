@@ -53642,6 +53642,9 @@
 	  toMyKlassesCreated: function toMyKlassesCreated() {
 	    hashHistory.push("?option=my_classes_created");
 	  },
+	  toMyTestScores: function toMyTestScores() {
+	    hashHistory.push("my_test_scores");
+	  },
 	  toIndex: function toIndex() {
 	    hashHistory.push("/");
 	  },
@@ -53676,7 +53679,7 @@
 	      ),
 	      React.createElement(
 	        'button',
-	        { className: 'btn' },
+	        { className: 'btn', onClick: this.toMyTestScores },
 	        'My Test Scores'
 	      ),
 	      React.createElement(
@@ -55018,6 +55021,7 @@
 	var Button = __webpack_require__(276).Button;
 	var Tabs = __webpack_require__(276).Tabs;
 	var Tab = __webpack_require__(276).Tab;
+	var TestCollection = __webpack_require__(564);
 	
 	var Klass = React.createClass({
 	  displayName: 'Klass',
@@ -55147,6 +55151,13 @@
 	  backToStudySets: function backToStudySets() {
 	    this.setState({ activeKey: 1 });
 	  },
+	  testScoreOption: function testScoreOption() {
+	    if (this.state.activeKey === 4) {
+	      return "by_study_sets";
+	    } else if (this.state.activeKey === 5) {
+	      return "by_students";
+	    }
+	  },
 	  tabs: function tabs() {
 	    var thirdTab = void 0;
 	    if (this.isTeacher()) {
@@ -55154,6 +55165,24 @@
 	        Tab,
 	        { eventKey: 3, title: 'Add Study Sets' },
 	        React.createElement(AddStudySetForm, { backToStudySets: this.backToStudySets })
+	      );
+	    }
+	
+	    var forthTab = void 0;
+	    if (this.isTeacher()) {
+	      forthTab = React.createElement(
+	        Tab,
+	        { eventKey: 4, title: 'Test Scores by Study Sets' },
+	        React.createElement(TestCollection, { option: this.testScoreOption() })
+	      );
+	    }
+	
+	    var fifthTab = void 0;
+	    if (this.isTeacher()) {
+	      fifthTab = React.createElement(
+	        Tab,
+	        { eventKey: 5, title: 'Test Scores by Students' },
+	        React.createElement(TestCollection, { option: this.testScoreOption() })
 	      );
 	    }
 	
@@ -55166,7 +55195,9 @@
 	        React.createElement(StudySetIndex, { klassId: this.props.params.klassId })
 	      ),
 	      React.createElement(Tab, { eventKey: 2, title: 'Students', disabled: true }),
-	      thirdTab
+	      thirdTab,
+	      forthTab,
+	      fifthTab
 	    );
 	  },
 	  render: function render() {
@@ -55469,14 +55500,13 @@
 	
 	var _testScores = [];
 	var _testCollections = [];
-	
 	var TestStore = new Store(AppDispatcher);
 	
 	TestStore.getTestScores = function () {
 	  return _testScores;
 	};
 	
-	TestStore.getTestCollection = function () {
+	TestStore.getTestCollections = function () {
 	  return _testCollections;
 	};
 	
@@ -55545,21 +55575,24 @@
 	  render: function render() {
 	    var title = void 0;
 	    if (this.props.title) {
-	      title = React.createElement(
-	        'h1',
-	        { className: 'title' },
-	        this.props.title
-	      );
+	      title = this.props.title;
+	    } else {
+	      title = CurrentUserStore.getCurrentUser().username + '\'s Test Score';
 	    }
+	
 	    return React.createElement(
 	      'div',
 	      { className: 'study_set_index' },
-	      title,
+	      React.createElement(
+	        'h1',
+	        { className: 'title' },
+	        title
+	      ),
 	      React.createElement(
 	        ListGroup,
 	        null,
 	        this.state.testScores.map(function (testScore) {
-	          return React.createElement(TestScoreIndexItem, { testScore: testScore, link: 'true' });
+	          return React.createElement(TestScoreIndexItem, { testScore: testScore, link: 'true', key: testScore.id });
 	        })
 	      )
 	    );
@@ -55616,6 +55649,122 @@
 	});
 	
 	module.exports = TestScoreIndexItem;
+
+/***/ },
+/* 564 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(164);
+	var TestStore = __webpack_require__(561);
+	var TestActions = __webpack_require__(558);
+	var KlassStore = __webpack_require__(270);
+	var ListGroup = __webpack_require__(276).ListGroup;
+	var ListGroupItem = __webpack_require__(276).ListGroupItem;
+	var TestScoreIndex = __webpack_require__(562);
+	var Button = __webpack_require__(276).Button;
+	
+	var TestCollection = React.createClass({
+	  displayName: 'TestCollection',
+	  getInitialState: function getInitialState() {
+	    return { testCollections: TestStore.getTestCollections(),
+	      status: false,
+	      indexShow: false };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    this.klassId = KlassStore.getKlass().id;
+	    this.option = this.props.option;
+	
+	    this.fetchCollection();
+	    this.listener = TestStore.addListener(this.updateState);
+	    this.klassListener = KlassStore.addListener(this.fetchCollection);
+	  },
+	  fetchCollection: function fetchCollection() {
+	    if (this.option === "by_students") {
+	      TestActions.fetchCollectionByStudents(this.klassId);
+	    } else if (this.option === "by_study_sets") {
+	      TestActions.fetchCollectionByStudySets(this.klassId);
+	    }
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.listener.remove();
+	    this.klassListener.remove();
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
+	    this.option = newProps.option;
+	    if (this.setState) {
+	      this.setState({ indexShow: false });
+	    }
+	    this.fetchCollection();
+	  },
+	  updateState: function updateState() {
+	    this.setState({ testCollections: TestStore.getTestCollections() });
+	  },
+	  goToTestScoreIndex: function goToTestScoreIndex(event) {
+	    event.preventDefault();
+	    var data = { klassId: this.klassId };
+	    var idx = event.currentTarget.id;
+	    this.id = this.state.testCollections[idx].id;
+	    this.collectionName = this.state.testCollections[idx].name;
+	    this.setState({ indexShow: true });
+	  },
+	  content: function content() {
+	    var _this = this;
+	
+	    if (this.state.indexShow) {
+	      if (this.option === "by_students") {
+	        return React.createElement(TestScoreIndex, {
+	          klassId: this.klassId,
+	          studentId: this.id,
+	          title: this.collectionName + '\'s test scores\''
+	        });
+	      } else if (this.option === "by_study_sets") {
+	        return React.createElement(TestScoreIndex, {
+	          klassId: this.klassId,
+	          studySetId: this.id,
+	          title: this.collectionName + ' | test scores'
+	        });
+	      }
+	    } else {
+	      return this.state.testCollections.map(function (testCollection, idx) {
+	        return React.createElement(
+	          ListGroupItem,
+	          { key: testCollection.id,
+	            id: idx,
+	            header: testCollection.name,
+	            onClick: _this.goToTestScoreIndex },
+	          'Average Score: ',
+	          testCollection.average_score,
+	          ' | Num of Tests Taken: ',
+	          testCollection.num_of_tests_taken
+	        );
+	      });
+	    }
+	  },
+	  backToCollection: function backToCollection() {
+	    this.setState({ indexShow: false });
+	  },
+	  backButton: function backButton() {
+	    if (this.state.indexShow) {
+	      return React.createElement(
+	        Button,
+	        { onClick: this.backToCollection },
+	        'Back'
+	      );
+	    }
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      ListGroup,
+	      null,
+	      this.content(),
+	      this.backButton()
+	    );
+	  }
+	});
+	
+	module.exports = TestCollection;
 
 /***/ }
 /******/ ]);
