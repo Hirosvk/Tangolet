@@ -1,4 +1,4 @@
-module.exports = {
+const StudySetUtils = {
   fetchStudySet(id, successCallback, errorCallback){
     $.ajax({
       url: `api/study_sets/${id}`,
@@ -41,6 +41,24 @@ module.exports = {
       success: successCallback,
       error: errorCallback
     });
+  },
+
+  submitTest(testData, successCallback, errorCallback){
+    $.ajax({
+      url: `api/study_sets/${testData.studySetId}/submit_test`,
+      type: "POST",
+      data: {
+        test: {
+          score: testData.score
+        }
+      },
+      success: successCallback,
+      error: errorCallback
+
+    });
   }
 
 };
+
+module.exports = StudySetUtils;
+window.StudySetUtils = StudySetUtils;

@@ -19,9 +19,6 @@ $.ajax({
   error: log
 });
 
-function log(a){
-  console.log(a);
-}
 
 $.ajax({
   url: "api/study_sets/1",
@@ -31,7 +28,17 @@ $.ajax({
 });
 
 
-let k = {
-    name: "Spanish 101",
-    description: "hey it's fun"
+let t = {
+    studySetId: 2,
+    score: 30
 }
+
+function log(a){
+  console.log(a);
+}
+$.ajax({
+  url: "api/tests/collection?klass_id=4&option=by_study_sets",
+  type: "GET",
+  success: log,
+  error: log
+});

@@ -12,10 +12,11 @@ const KlassIndex = React.createClass({
     return ({klasses: IndexStore.getKlasses()});
   },
 
-  fetchBasedOnProps(){
-    if (this.props.option === "myKlassesCreated") {
+  fetchBasedOnProps(newProps){
+    const option = newProps ? newProps.option : this.props.option;
+    if (option === "myKlassesCreated") {
       IndexActions.getMyKlassCreatedIndex();
-    } else if (this.props.option === "myKlasses") {
+    } else if (option === "myKlasses") {
       IndexActions.getMyKlassIndex();
     } else {
       IndexActions.getKlassIndex();
@@ -35,8 +36,8 @@ const KlassIndex = React.createClass({
     this.indexListener.remove();
   },
 
-  componentWillReceiveProps(){
-    this.fetchBasedOnProps();
+  componentWillReceiveProps(newProps){
+    this.fetchBasedOnProps(newProps);
   },
 
   createKlass(event){

@@ -1,5 +1,5 @@
 class Api::StudySetsController < ApplicationController
-  before_action :require_login, only: [:create, :destroy, :update]
+  before_action :require_login, except: [:show, :index]
 
   def show
     @study_set = StudySet.find(params[:id])
@@ -36,7 +36,6 @@ class Api::StudySetsController < ApplicationController
     else
       render json: @study_set.errors.full_messages, status: 406
     end
-
   end
 
   def update
@@ -57,7 +56,18 @@ class Api::StudySetsController < ApplicationController
     else
       render json: @study_set.errors.full_messages, status: 401
     end
+  end
 
+  def submit_test
+    @test = current_user.tests.new(
+              study_set_id: params[:id],
+              score: score_params
+            )
+    if @test.save
+      render json: "successfully submitted", status: 200
+    else
+      render json: @test.errors.full_messages, status: 406
+    end
   end
 
   def destroy
@@ -83,6 +93,10 @@ private
   def words_params
     return {} if params["words"].nil?
     params.require(:words)
+  end
+
+  def score_params
+    params.require(:test)["score"].to_i
   end
 
 end

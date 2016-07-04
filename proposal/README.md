@@ -176,10 +176,9 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 
 
 ## Phase 6: Styling (1day w9d2)
-- [ ] CSS Styling
-- [ ] React Bootstraps
-- [ ] footer
-- [ ] blank Navbar
+- [x] CSS Styling
+- [x] React Bootstraps
+- [x] blank Navbar
 
 ## Phase 7: Navbar (1day w9d1)
 - [x] backend setup
@@ -196,20 +195,30 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 
 
 ## Phase 8: add Test feature (2day w9d3)
-- [ ] test_record model
-- [ ] Test React component
-- [ ] Test Scores
-- [ ] ProgressByStudent & ProgressByStudySet
+- [x] test_record model
+- [x] Test React component
+- [x] submit test api
+
+- [x] back-end api for fetching test scores by users and klasses
+
+- [ ] todo as of W8D7
+  - [ ] TestIndex/TestIndexItem/TestCollection component
+  - [ ] css style test form
 
 ## Phase 9: add Search feature (0.5 day)
+- [x] backend, single-word, case-sensitive search functional
 
 ## Phase 10: Final Touch (1.5day w9d4)
 - [ ] thorough styling
 - [ ] invalid/unauthorized navigation redirected
 - [ ] fix redirect to Klass page after adding new study sets
 - [ ] add filter to add-study-set page
+- [ ] Klass Student page (Student Index)
 
-- [ ] details
+- [ ] welcome page
+- [ ] about page
+
+- [ ] brush up the details
   - [ ] standardize font sizes and colors
     - [ ] form input text colors
     - [ ] header text color and sizes
@@ -219,4 +228,7 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
   - [ ] pick font
   - [ ] seed data
 
+- [ ] use stores instead of passing info as props
+
 ## Phase 11: Bonus
+- [ ] flashcard feature

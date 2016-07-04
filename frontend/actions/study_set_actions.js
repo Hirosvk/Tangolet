@@ -25,6 +25,11 @@ const StudySetActions = {
 
   deleteStudySet(id, successCallback){
     StudySetUtils.deleteStudySet(id, successCallback, ErrorActions.updateError);
+  },
+
+  submitTest(testData, successCallback){
+    StudySetUtils.submitTest(testData, successCallback, ErrorActions.updateError);
+    // no action required for successful submission.
   }
 
 };

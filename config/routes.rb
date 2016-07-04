@@ -8,9 +8,13 @@ Rails.application.routes.draw do
       get 'user/my_klasses_created' => 'users#my_klasses_created'
       get 'user/my_study_sets' => 'users#my_study_sets'
     resources :study_sets
+      post 'study_sets/:id/submit_test' => 'study_sets#submit_test'
     resources :klasses
       patch 'klasses/:id/update_study_sets' => 'klasses#update_study_sets'
     resources :languages, only: [:index]
+    resources :tests, only:[:index]
+      get 'tests/collection/' => 'tests#collection'
+    resource :search, only: [:show]
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

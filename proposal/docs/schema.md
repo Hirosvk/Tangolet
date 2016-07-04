@@ -40,7 +40,7 @@ word_foreign    | string    | null: false, study_set_id/word_foreign unique: tru
 - study_set_word belongs to
   - study_set
 
-## test_records
+## test
 column names    | Data Type | Details
 ----------------|-----------|---------------------
 id              | integer   |

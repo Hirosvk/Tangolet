@@ -22,6 +22,8 @@ class User < ActiveRecord::Base
 
   has_many :klasses, through: :enrollments
 
+  has_many :tests
+
   def ensure_session_token
     self.session_token ||= SecureRandom::urlsafe_base64(16)
   end

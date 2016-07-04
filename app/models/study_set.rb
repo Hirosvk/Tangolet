@@ -20,6 +20,8 @@ class StudySet < ActiveRecord::Base
 
   has_many :klasses, through: :klass_set_joins
 
+  has_many :tests
+
   private
   def check_unique
     if self.words.map{|word| word[:word_english]}.uniq.length != self.words.length

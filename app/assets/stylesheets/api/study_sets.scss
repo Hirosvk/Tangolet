@@ -155,3 +155,17 @@ th, td {
 td input{
   border: none;
 }
+
+.correct {
+  color: green;
+}
+
+.wrong {
+  color: red;
+}
+
+strong .correction {
+  font: inherit;
+  background: inherit;
+  color: red;
+}

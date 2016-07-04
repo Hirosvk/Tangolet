@@ -68,6 +68,13 @@ Klass.second.study_set_ids = [one]
 Klass.third.study_set_ids = [two,three]
 Klass.fourth.study_set_ids = [four]
 
+t1 = User.first.tests.new(study_set_id: four, score: 40)
+t1.save!
+t2 = User.second.tests.new(study_set_id: four, score: 60)
+t2.save!
+t3 = User.first.tests.new(study_set_id: three, score: 80)
+t3.save!
+
 one = Klass.first.id
 two = Klass.second.id
 three = Klass.third.id

@@ -183,14 +183,14 @@ const StudySetForm = React.createClass({
       return (
         <tr className="word_row" key={`${idx}row`}>
             <td><input type="text"
-                   key={`${idx}_english`}
+                   key={`english`}
                    id={`${idx}_word_english`}
                    value={_words[idx].word_english}
                    onChange={this.updateWord}
                    /></td>
 
             <td><input type="text"
-                   key={`${idx}_foreign`}
+                   key={`foreign`}
                    id={`${idx}_word_foreign`}
                    value={_words[idx].word_foreign}
                    onChange={this.updateWord}
