@@ -33715,6 +33715,15 @@
 	      actionType: receiveOption,
 	      klasses: klasses
 	    });
+	  },
+	  search: function search(searchText) {
+	    IndexUtils.search(searchText, this.receiveSearchResult);
+	  },
+	  receiveSearchResult: function receiveSearchResult(searchResult) {
+	    AppDispatcher.dispatch({
+	      actionType: IndexConstants.RECEIVE_SEARCH_RESULT,
+	      searchResult: searchResult
+	    });
 	  }
 	};
 	
@@ -33775,6 +33784,14 @@
 	      success: successCallback,
 	      error: errorCallback
 	    });
+	  },
+	  search: function search(searchText, successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/search?search=" + searchText,
+	      type: "GET",
+	      success: successCallback,
+	      error: errorCallback
+	    });
 	  }
 	};
 
@@ -33788,7 +33805,8 @@
 	  RECEIVE_ALL_KLASS_INDEX: "RECEIVE_ALL_KLASS_INDEX",
 	  RECEIVE_CREATED_KLASS_INDEX: "RECEIVE_CREATED_KLASS_INDEX",
 	  RECEIVE_ENROLLED_KLASS_INDEX: "RECEIVE_ENROLLED_KLASS_INDEX",
-	  RECEIVE_STUDY_SET_INDEX: "RECEIVE_STUDY_SET_INDEX"
+	  RECEIVE_STUDY_SET_INDEX: "RECEIVE_STUDY_SET_INDEX",
+	  RECEIVE_SEARCH_RESULT: "RECEIVE_SEARCH_RESULT"
 	
 	};
 
@@ -33808,7 +33826,12 @@
 	  studySets: [],
 	  allKlasses: [],
 	  createdKlasses: [],
-	  enrolledKlasses: []
+	  enrolledKlasses: [],
+	  languages: []
+	};
+	
+	IndexStore.getWholeObject = function () {
+	  return indices;
 	};
 	
 	IndexStore.getStudySets = function () {
@@ -33816,31 +33839,37 @@
 	};
 	
 	IndexStore.getKlasses = function (option) {
-	  if (!option) {
-	    option = "allKlasses";
+	  if (option === "createdKlasses" || option === "enrolledKlasses") {
+	    return indices[option];
+	  } else {
+	    return indices["allKlasses"];
 	  }
-	  return indices[option];
 	};
 	
 	IndexStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case IndexConstants.RECEIVE_STUDY_SET_INDEX:
-	      indices.studySets = payload.studySets;
+	      indices.studySets = payload.studySets || [];
 	      this.__emitChange();
 	      break;
 	    case IndexConstants.RECEIVE_ALL_KLASS_INDEX:
-	      indices.allKlasses = payload.klasses;
+	      indices.allKlasses = payload.klasses || [];
 	      this.__emitChange();
 	      break;
 	    case IndexConstants.RECEIVE_CREATED_KLASS_INDEX:
-	      indices.createdKlasses = payload.klasses;
+	      indices.createdKlasses = payload.klasses || [];
 	      this.__emitChange();
 	      break;
 	    case IndexConstants.RECEIVE_ENROLLED_KLASS_INDEX:
-	      indices.enrolledKlasses = payload.klasses;
+	      indices.enrolledKlasses = payload.klasses || [];
 	      this.__emitChange();
 	      break;
-	
+	    case IndexConstants.RECEIVE_SEARCH_RESULT:
+	      indices.allKlasses = payload.searchResult.klasses || [];
+	      indices.studySets = payload.searchResult.study_sets || [];
+	      indices.languages = payload.searchResult.languages || [];
+	      this.__emitChange();
+	      break;
 	  }
 	};
 	
@@ -34230,6 +34259,9 @@
 	    return { error: ErrorStore.full_errors() };
 	  },
 	  componentDidMount: function componentDidMount() {
+	    if (this.props.demo) {
+	      this.loginDemo(this.props.demo);
+	    }
 	    this.currentUserStoreListener = CurrentUserStore.addListener(this.closeModal);
 	    this.errorStoreListener = ErrorStore.addListener(this.receiveErrors);
 	  },
@@ -34254,6 +34286,9 @@
 	      password: this.refs.password.value
 	    };
 	    SessionActions.login(credentials);
+	  },
+	  loginDemo: function loginDemo(demo) {
+	    SessionActions.login(demo);
 	  },
 	  showErrors: function showErrors() {
 	    if (this.state.error.responseText) {
@@ -53628,6 +53663,7 @@
 	var Modal = __webpack_require__(280).Modal;
 	var LoginForm = __webpack_require__(278);
 	var SignupForm = __webpack_require__(543);
+	var SearchBar = __webpack_require__(564);
 	
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -53648,6 +53684,16 @@
 	  openLogin: function openLogin() {
 	    // hashHistory.push("/login");
 	    this.setState({ showLogin: true });
+	  },
+	  loginDemo: function loginDemo() {
+	    var demoCredentials = {
+	      username: "Hiro",
+	      password: "hirohiro"
+	    };
+	    this.setState({
+	      showLogin: true,
+	      demoCredentials: demoCredentials
+	    });
 	  },
 	  openSignup: function openSignup() {
 	    this.setState({ showSignup: true });
@@ -53685,6 +53731,11 @@
 	        ),
 	        React.createElement(
 	          Button,
+	          { bsClass: 'btn', bsSize: 'xsmall', onClick: this.loginDemo },
+	          'Demo Login'
+	        ),
+	        React.createElement(
+	          Button,
 	          { bsClass: 'btn', bsSize: 'xsmall', onClick: this.openSignup },
 	          'Sign up'
 	        )
@@ -53702,7 +53753,8 @@
 	      Modal,
 	      { show: this.state.showLogin, onHide: this.closeLogin },
 	      React.createElement(Modal.Header, { closeButton: true }),
-	      React.createElement(LoginForm, { closeModal: this.closeLogin })
+	      React.createElement(LoginForm, { closeModal: this.closeLogin,
+	        demo: this.state.demoCredentials })
 	    );
 	  },
 	  modalSignup: function modalSignup() {
@@ -53717,6 +53769,7 @@
 	    return React.createElement(
 	      'header',
 	      { className: 'top-header' },
+	      React.createElement(SearchBar, null),
 	      this.userAccount(),
 	      this.modalLogin(),
 	      this.modalSignup()
@@ -54011,6 +54064,46 @@
 	          closeModal: this.closeModal })
 	      ),
 	      React.createElement(
+	        'span',
+	        null,
+	        React.createElement(
+	          'ul',
+	          null,
+	          React.createElement(
+	            'h2',
+	            null,
+	            'Test Guidelines'
+	          ),
+	          React.createElement(
+	            'li',
+	            null,
+	            React.createElement(
+	              'h3',
+	              null,
+	              'Test will be randomly generated from the Study Set'
+	            )
+	          ),
+	          React.createElement(
+	            'li',
+	            null,
+	            React.createElement(
+	              'h3',
+	              null,
+	              'When you click \'Begin Test\', Test will start immediately'
+	            )
+	          ),
+	          React.createElement(
+	            'li',
+	            null,
+	            React.createElement(
+	              'h3',
+	              null,
+	              'When the time runs out, Test will be submitted automatically'
+	            )
+	          )
+	        )
+	      ),
+	      React.createElement(
 	        Button,
 	        { onClick: this.generateTest },
 	        'Begin Test'
@@ -54044,13 +54137,50 @@
 	var TestForm = React.createClass({
 	  displayName: 'TestForm',
 	  getInitialState: function getInitialState() {
-	    return { completed: false };
+	    return {
+	      completed: false,
+	      sent: false,
+	      timeRem: this.props.words.length * 30,
+	      min: "",
+	      sec: "" };
 	  },
 	  componentWillMount: function componentWillMount() {
 	    this.words = this.props.words;
 	  },
+	  componentDidMount: function componentDidMount() {
+	    this.clock = setInterval(this.tick, 1000);
+	  },
 	  componentWillUnmount: function componentWillUnmount() {
 	    ErrorStore.resetErrors();
+	    if (this.errorListener) {
+	      this.errorListener.remove();
+	    }
+	    clearInterval(this.clock);
+	  },
+	  tick: function tick() {
+	    if (this.state.timeRem > 0) {
+	      this.setState({ timeRem: this.state.timeRem - 1 });
+	    } else {
+	      this.submit();
+	    }
+	  },
+	  timer: function timer() {
+	    var time = this.state.timeRem;
+	    var min = parseInt(time / 60).toString();
+	    var sec = parseInt(time % 60);
+	    if (sec < 10) {
+	      sec = "0" + sec.toString();
+	    } else {
+	      sec = sec.toString();
+	    }
+	
+	    if (!this.state.completed) {
+	      return React.createElement(
+	        'h3',
+	        null,
+	        'Time Remaining ' + min + ':' + sec
+	      );
+	    }
 	  },
 	  testBody: function testBody() {
 	    var testRows = this.testRows;
@@ -54187,40 +54317,81 @@
 	    });
 	  },
 	  submitScore: function submitScore() {
-	    if (this.score) {
+	    if (this.score !== undefined) {
 	      clearInterval(this.scorePending);
 	      var testData = {};
 	      testData.score = parseInt(this.score / this.words.length * 100);
 	      testData.studySetId = StudySetStore.getStudySet().id;
+	      this.errorListener = ErrorStore.addListener(this.setServerResp);
 	      StudySetActions.submitTest(testData);
 	    }
 	  },
 	  submit: function submit() {
 	    this.setState({ completed: true });
 	    this.scorePending = setInterval(this.submitScore, 500);
+	    clearInterval(this.clock);
 	  },
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      { className: 'test-form' },
-	      React.createElement(
+	  topMessage: function topMessage() {
+	    if (this.state.sent) {
+	      return React.createElement(
+	        'h2',
+	        null,
+	        'Score: ' + parseInt(this.score / this.words.length * 100)
+	      );
+	    } else {
+	      return React.createElement(
 	        'h2',
 	        null,
 	        'Fill in the blank spaces with the correct word'
-	      ),
+	      );
+	    }
+	  },
+	  setServerResp: function setServerResp() {
+	    var message = ErrorStore.full_errors().responseText;
+	    var status = ErrorStore.full_errors().status;
+	    if (message) {
+	      this.serverResp = React.createElement(
+	        'h2',
+	        null,
+	        message
+	      );
+	      if (status >= 200 && status < 400) {
+	        this.setState({ sent: true });
+	      } else {
+	        this.setState({ completed: false });
+	      }
+	    }
+	  },
+	  exitButton: function exitButton() {
+	    var text = void 0;
+	    if (this.state.sent) {
+	      text = "Exit";
+	    } else {
+	      text = "Quit";
+	    }
+	    return React.createElement(
+	      Button,
+	      { bsStyle: 'btn', onClick: this.props.closeModal },
+	      text
+	    );
+	  },
+	  render: function render() {
+	    console.log(this.state.timeRem);
+	    return React.createElement(
+	      'div',
+	      { className: 'test-form' },
+	      this.topMessage(),
+	      this.serverResp,
+	      this.timer(),
 	      this.testBody(),
 	      React.createElement(
 	        Button,
 	        { bsStyle: 'btn',
 	          onClick: this.submit,
-	          disabled: this.state.graded },
+	          disabled: this.state.completed },
 	        'Submit'
 	      ),
-	      React.createElement(
-	        Button,
-	        { bsStyle: 'btn', onClick: this.props.closeModal },
-	        'Close'
-	      )
+	      this.exitButton()
 	    );
 	  }
 	});
@@ -54236,6 +54407,7 @@
 	var React = __webpack_require__(164);
 	var KlassIndex = __webpack_require__(552);
 	var StudySetIndex = __webpack_require__(554);
+	var IndexActions = __webpack_require__(265);
 	
 	var Index = React.createClass({
 	  displayName: 'Index',
@@ -54250,6 +54422,13 @@
 	        React.createElement(KlassIndex, { title: 'Classes I teach', option: 'createdKlasses' }),
 	        React.createElement(KlassIndex, { title: 'Classes I\'m enrolled in ', option: 'enrolledKlasses' })
 	      );
+	    } else if (option === "search") {
+	      return React.createElement(
+	        'div',
+	        null,
+	        React.createElement(KlassIndex, { title: 'Classes', option: 'search' }),
+	        React.createElement(StudySetIndex, { title: 'Study Sets', option: 'search' })
+	      );
 	    } else {
 	      return React.createElement(
 	        'div',
@@ -54257,6 +54436,18 @@
 	        React.createElement(KlassIndex, { title: 'Classes' }),
 	        React.createElement(StudySetIndex, { title: 'Study Sets' })
 	      );
+	    }
+	  },
+	  componentDidMount: function componentDidMount() {
+	    this.doSearch();
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
+	    this.doSearch(newProps);
+	  },
+	  doSearch: function doSearch(newProps) {
+	    var props = newProps || this.props;
+	    if (props.location.query.option === "search") {
+	      IndexActions.search(props.location.query.for);
 	    }
 	  },
 	  studySetOption: function studySetOption() {
@@ -54313,6 +54504,9 @@
 	      IndexActions.getMyKlassCreatedIndex();
 	    } else if (option === "enrolledKlasses") {
 	      IndexActions.getMyKlassIndex();
+	    } else if (option === "search") {
+	      console.log("option search");
+	      // does not fetch
 	    } else {
 	      IndexActions.getKlassIndex();
 	    }
@@ -54405,6 +54599,7 @@
 	var Button = __webpack_require__(280).Button;
 	var hashHistory = __webpack_require__(170).hashHistory;
 	var ListGroup = __webpack_require__(280).ListGroup;
+	var KlassStore = __webpack_require__(270);
 	
 	var StudySetIndex = React.createClass({
 	  displayName: 'StudySetIndex',
@@ -54412,22 +54607,38 @@
 	    return { studySets: [] };
 	  },
 	  componentDidMount: function componentDidMount() {
-	    if (this.props.klassId) {
+	    this.fetchBasedOnProps();
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
+	    this.fetchBasedOnProps(newProps);
+	  },
+	  fetchBasedOnProps: function fetchBasedOnProps(newProps) {
+	    var props = newProps || this.props;
+	    if (props.klassId) {
 	      this.setState({ studySets: KlassStore.getStudySets() });
 	      this.klassListener = KlassStore.addListener(this.updateState);
+	      if (this.indexListener) {
+	        this.indexListener.remove();
+	      }
 	    } else {
-	      if (this.props.option === "myStudySets") {
+	      if (props.option === "myStudySets") {
 	        IndexActions.getMyStudySetIndex();
+	      } else if (props.option === "search") {
+	        // do not fetch
 	      } else {
 	        IndexActions.getStudySetIndex();
 	      }
 	      this.indexListener = IndexStore.addListener(this.updateState);
+	      if (this.klassListener) {
+	        this.klassListener.remove();
+	      }
 	    }
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
 	    if (this.klassListener) {
 	      this.klassListener.remove();
-	    } else {
+	    }
+	    if (this.indexListener) {
 	      this.indexListener.remove();
 	    }
 	  },
@@ -55764,6 +55975,44 @@
 	});
 	
 	module.exports = SideNavbar;
+
+/***/ },
+/* 564 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(164);
+	var CurrentUserStore = __webpack_require__(269);
+	var SessionActions = __webpack_require__(259);
+	var hashHistory = __webpack_require__(170).hashHistory;
+	var Glyphicon = __webpack_require__(280).Glyphicon;
+	
+	var SearchBar = React.createClass({
+	  displayName: 'SearchBar',
+	  search: function search() {
+	    var searchText = this.refs.searchText.value;
+	    hashHistory.push('?option=search&for=' + searchText);
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'search-bar' },
+	      React.createElement(
+	        'h3',
+	        null,
+	        React.createElement('input', { type: 'text', ref: 'searchText', placeholder: 'Search...' }),
+	        React.createElement(
+	          'button',
+	          { className: 'btn', onClick: this.search },
+	          React.createElement(Glyphicon, { glyph: 'search' })
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = SearchBar;
 
 /***/ }
 /******/ ]);

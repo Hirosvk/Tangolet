@@ -6,6 +6,10 @@
   padding-bottom: 20px;
 }
 
+.tab-content {
+  padding: 15px;
+}
+
 .study_set_header {
   background: #D66700;
   padding: 4px;
@@ -160,8 +164,20 @@ td input{
   color: red;
 }
 
-strong .correction {
+.wrong .correction {
   font: inherit;
   background: inherit;
   color: red;
+  text-decoration: underline;
+}
+
+
+
+.study_set .test ul{
+  list-style-position: inside;
+  list-style-type: disc;
+}
+
+.study_set .test li {
+  margin: 5px;
 }

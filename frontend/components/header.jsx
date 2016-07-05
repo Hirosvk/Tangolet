@@ -6,6 +6,7 @@ const Button = require('react-bootstrap').Button;
 const Modal = require('react-bootstrap').Modal;
 const LoginForm = require('./login_form');
 const SignupForm = require('./signup_form');
+const SearchBar = require('./search_bar');
 
 const Header = React.createClass({
   getInitialState(){
@@ -31,6 +32,17 @@ const Header = React.createClass({
     this.setState({showLogin: true});
   },
 
+  loginDemo(){
+    let demoCredentials = {
+      username: "Hiro",
+      password: "hirohiro"
+    };
+    this.setState({
+      showLogin: true,
+      demoCredentials: demoCredentials
+    });
+  },
+
   openSignup(){
     this.setState({showSignup: true});
   },
@@ -48,6 +60,7 @@ const Header = React.createClass({
         <div className="user_account">
           <h3 className="item">You are not logged in</h3>
           <Button bsClass="btn" bsSize="xsmall" onClick={this.openLogin}>Login</Button>
+          <Button bsClass="btn" bsSize="xsmall" onClick={this.loginDemo}>Demo Login</Button>
           <Button bsClass="btn" bsSize="xsmall" onClick={this.openSignup}>Sign up</Button>
         </div>
       );
@@ -66,9 +79,10 @@ const Header = React.createClass({
     return (
       <Modal show={this.state.showLogin} onHide={this.closeLogin}>
         <Modal.Header closeButton />
-        <LoginForm closeModal={this.closeLogin}/>
+        <LoginForm closeModal={this.closeLogin}
+                    demo={this.state.demoCredentials}/>
       </Modal>
-    )
+    );
   },
 
   modalSignup(){
@@ -77,12 +91,13 @@ const Header = React.createClass({
         <Modal.Header closeButton />
         <SignupForm closeModal={this.closeSignup}/>
       </Modal>
-    )
+    );
   },
 
   render(){
     return (
       <header className="top-header">
+      <SearchBar />
       {this.userAccount()}
 
       {this.modalLogin()}

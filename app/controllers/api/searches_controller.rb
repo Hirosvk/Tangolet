@@ -1,6 +1,5 @@
 class Api::SearchesController < ApplicationController
   def show
-    debugger
     search_text = params[:search]
     @languages = Language.where("name ILIKE ?", "%#{search_text}%")
     @study_sets = StudySet.find_by_sql([STUDYSETS_QUERY,
@@ -10,10 +9,11 @@ class Api::SearchesController < ApplicationController
   end
 
   STUDYSETS_QUERY = <<-SQL
-    SELECT *
+    SELECT
+      DISTINCT study_sets.*
     FROM
       study_sets JOIN study_set_words
-      ON study_sets.id = study_set_words.id
+      ON study_sets.id = study_set_words.study_set_id
     WHERE
       study_sets.name ILIKE ? OR
       study_set_words.word_english ILIKE ? OR

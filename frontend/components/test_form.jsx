@@ -14,15 +14,53 @@ const ErrorStore = require('../stores/error_store');
 
 const TestForm = React.createClass({
   getInitialState(){
-    return({completed: false});
+    return({
+      completed: false,
+      sent: false,
+      timeRem: (this.props.words.length * 30),
+      min: "",
+      sec: ""});
   },
 
   componentWillMount(){
     this.words = this.props.words;
   },
 
+  componentDidMount(){
+    this.clock = setInterval(this.tick, 1000);
+  },
+
   componentWillUnmount(){
     ErrorStore.resetErrors();
+    if (this.errorListener){
+      this.errorListener.remove();
+    }
+    clearInterval(this.clock);
+  },
+
+  tick(){
+    if (this.state.timeRem > 0){
+      this.setState({ timeRem: this.state.timeRem - 1 });
+    } else {
+      this.submit();
+    }
+  },
+
+  timer(){
+    const time = this.state.timeRem;
+    let min = parseInt(time / 60).toString();
+    let sec = parseInt(time % 60);
+    if (sec < 10){
+      sec = "0" + sec.toString();
+    } else {
+      sec = sec.toString();
+    }
+
+    if (!this.state.completed){
+      return <h3>
+        {`Time Remaining ${min}:${sec}`}
+      </h3>;
+    }
   },
 
   testBody(){
@@ -42,11 +80,11 @@ const TestForm = React.createClass({
           {testRows()}
         </tbody>
       </table>
-    )
+    );
   },
 
   testRowsGraded(){
-    if (this.gradedTable) { return this.gradedTable }
+    if (this.gradedTable) { return this.gradedTable; }
 
     let score = 0;
     let rows = this.words.map( (word, idx) =>{
@@ -122,11 +160,12 @@ const TestForm = React.createClass({
   },
 
   submitScore(){
-    if (this.score){
+    if (this.score !== undefined){
       clearInterval(this.scorePending);
       let testData = {};
       testData.score = parseInt((this.score / this.words.length) * 100);
       testData.studySetId = StudySetStore.getStudySet().id;
+      this.errorListener = ErrorStore.addListener(this.setServerResp);
       StudySetActions.submitTest(testData);
     }
   },
@@ -134,21 +173,56 @@ const TestForm = React.createClass({
   submit(){
     this.setState({completed: true});
     this.scorePending = setInterval(this.submitScore, 500);
+    clearInterval(this.clock);
+  },
+
+  topMessage(){
+    if (this.state.sent){
+      return <h2>{`Score: ${parseInt((this.score / this.words.length) * 100)}`}</h2>;
+    } else {
+      return <h2>Fill in the blank spaces with the correct word</h2>;
+    }
+  },
+
+  setServerResp(){
+    const message = ErrorStore.full_errors().responseText;
+    const status = ErrorStore.full_errors().status;
+    if (message){
+      this.serverResp = <h2>{message}</h2>;
+      if (status >= 200 && status < 400) {
+        this.setState({sent: true});
+      } else {
+        this.setState({completed: false });
+      }
+    }
+  },
+
+  exitButton(){
+    let text;
+    if (this.state.sent) {
+      text = "Exit";
+    } else {
+      text = "Quit";
+    }
+    return (<Button bsStyle="btn" onClick={this.props.closeModal}>
+      {text}
+    </Button>);
   },
 
   render(){
+    console.log(this.state.timeRem);
     return(
       <div className="test-form">
-        <h2>Fill in the blank spaces with the correct word</h2>
+        {this.topMessage()}
+        {this.serverResp}
+        {this.timer()}
         {this.testBody()}
         <Button bsStyle="btn"
           onClick={this.submit}
-          disabled={this.state.graded}>
+          disabled={this.state.completed}>
           Submit
         </Button>
-        <Button bsStyle="btn" onClick={this.props.closeModal}>
-          Close
-        </Button>
+        {this.exitButton()}
 
       </div>
     );

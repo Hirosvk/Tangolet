@@ -1,6 +1,7 @@
 const React = require('react');
 const KlassIndex = require('./klass_index');
 const StudySetIndex = require('./study_set_index');
+const IndexActions = require('../actions/index_actions');
 
 const Index = React.createClass({
 
@@ -15,11 +16,31 @@ const Index = React.createClass({
           <KlassIndex title="Classes I'm enrolled in " option="enrolledKlasses" />
         </div>
       );
+    } else if (option === "search") {
+      return (<div>
+        <KlassIndex title="Classes" option="search"/ >
+        <StudySetIndex title="Study Sets" option="search"/>
+      </div>);
     } else {
       return (<div>
         <KlassIndex title="Classes"/>
         <StudySetIndex title="Study Sets"/>
       </div>);
+    }
+  },
+
+  componentDidMount(){
+    this.doSearch();
+  },
+
+  componentWillReceiveProps(newProps){
+    this.doSearch(newProps);
+  },
+
+  doSearch(newProps){
+    const props = newProps || this.props;
+    if (props.location.query.option === "search") {
+      IndexActions.search(props.location.query.for);
     }
   },
 

@@ -37,6 +37,17 @@ const IndexActions = {
       actionType: receiveOption,
       klasses: klasses
     });
+  },
+
+  search(searchText){
+    IndexUtils.search(searchText, this.receiveSearchResult);
+  },
+
+  receiveSearchResult(searchResult){
+    AppDispatcher.dispatch({
+      actionType: IndexConstants.RECEIVE_SEARCH_RESULT,
+      searchResult: searchResult
+    });
   }
 
 };

@@ -51,6 +51,15 @@ module.exports = {
       success: successCallback,
       error: errorCallback
     });
+  },
+
+  search(searchText, successCallback, errorCallback){
+    $.ajax({
+      url: `api/search?search=${searchText}`,
+      type: "GET",
+      success: successCallback,
+      error: errorCallback
+    });
   }
 
 };

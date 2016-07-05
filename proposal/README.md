@@ -204,14 +204,13 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 
 ## Phase 9: add Search feature (0.5 day)
 
-- [ ] write instructions for the quiz
-- [ ] add clock feature to the test
+- [x] write instructions for the quiz
+- [x] add clock feature to the test
 
 
 - [x] backend, single-word, case-sensitive search functional
 - [ ] language index for showing search result
 - [ ] students index
-
 
 ## Phase 11: Final Touch (1.5day w9d4)
 - [ ] invalid/unauthorized navigation redirected
@@ -234,6 +233,9 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 - [ ] when you log out while visiting page that require authorization, user is redirected
 - [ ] tell user if she is enrolled in the class on Klass page
 - [ ] edit klass_form CSS
+- [ ] demo sign-up
+
+- [ ] Search Result title
 
 ## Phase 12: Refactor
 - [ ] use stores instead of passing info as props
@@ -252,5 +254,4 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 
 
 ## Phase12: bonus
-- [ ] Klass Student page (Student Index)
 - [ ] add filter to add-study-set page

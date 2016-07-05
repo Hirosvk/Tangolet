@@ -10,6 +10,9 @@ const LoginForm = React.createClass({
   },
 
   componentDidMount(){
+    if (this.props.demo) {
+      this.loginDemo(this.props.demo);
+    }
     this.currentUserStoreListener = CurrentUserStore.addListener(this.closeModal);
     this.errorStoreListener = ErrorStore.addListener(this.receiveErrors);
   },
@@ -19,6 +22,8 @@ const LoginForm = React.createClass({
     this.errorStoreListener.remove();
     ErrorStore.resetErrors();
   },
+
+
 
   closeModal(){
     this.props.closeModal();
@@ -38,6 +43,10 @@ const LoginForm = React.createClass({
       password: this.refs.password.value
     };
     SessionActions.login(credentials);
+  },
+
+  loginDemo(demo){
+    SessionActions.login(demo);
   },
 
   showErrors(){

@@ -5,6 +5,7 @@ const StudySetIndexItem = require('./study_set_index_item');
 const Button = require('react-bootstrap').Button;
 const hashHistory = require('react-router').hashHistory;
 const ListGroup = require('react-bootstrap').ListGroup;
+const KlassStore = require('../stores/klass_store');
 
 const StudySetIndex = React.createClass({
 
@@ -13,23 +14,37 @@ const StudySetIndex = React.createClass({
   },
 
   componentDidMount(){
-    if (this.props.klassId){
+    this.fetchBasedOnProps();
+  },
+
+  componentWillReceiveProps(newProps){
+    this.fetchBasedOnProps(newProps);
+  },
+
+  fetchBasedOnProps(newProps){
+    const props = newProps || this.props;
+    if (props.klassId){
       this.setState({studySets: KlassStore.getStudySets()});
       this.klassListener = KlassStore.addListener(this.updateState);
+      if (this.indexListener){ this.indexListener.remove(); }
     } else {
-      if (this.props.option === "myStudySets") {
+      if (props.option === "myStudySets") {
         IndexActions.getMyStudySetIndex();
+      } else if (props.option === "search") {
+        // do not fetch
       } else {
         IndexActions.getStudySetIndex();
       }
       this.indexListener = IndexStore.addListener(this.updateState);
+      if (this.klassListener){ this.klassListener.remove(); }
     }
   },
 
   componentWillUnmount(){
     if (this.klassListener) {
       this.klassListener.remove();
-    } else {
+    }
+    if (this.indexListener) {
       this.indexListener.remove();
     }
   },
