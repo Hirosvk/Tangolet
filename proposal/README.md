@@ -203,6 +203,11 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 - [x] Navbar styling
 
 ## Phase 9: add Search feature (0.5 day)
+
+- [ ] write instructions for the quiz
+- [ ] add clock feature to the test
+
+
 - [x] backend, single-word, case-sensitive search functional
 - [ ] language index for showing search result
 - [ ] students index

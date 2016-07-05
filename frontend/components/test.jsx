@@ -20,13 +20,13 @@ const TestForm = require('./test_form');
 function shuffleWords(words){
   let shuffled = [];
   let _words = words.map( word => {
-    let blank = (Math.random() > 0.5 ? "word_english" : "word_foreign" )
+    let blank = (Math.random() > 0.5 ? "word_english" : "word_foreign" );
     return {
       word_english: word.word_english,
       word_foreign: word.word_foreign,
       blank: blank
-    }
-  })
+    };
+  });
   while (_words.length > 0){
     let rand = Math.floor(Math.random() * _words.length - 1);
     shuffled.push(_words.splice(rand, 1)[0]);

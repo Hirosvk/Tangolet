@@ -9,14 +9,14 @@ const ListGroup = require('react-bootstrap').ListGroup;
 const KlassIndex = React.createClass({
 
   getInitialState(){
-    return ({klasses: IndexStore.getKlasses()});
+    return ({klasses: IndexStore.getKlasses(this.props.option)});
   },
 
   fetchBasedOnProps(newProps){
     const option = newProps ? newProps.option : this.props.option;
-    if (option === "myKlassesCreated") {
+    if (option === "createdKlasses") {
       IndexActions.getMyKlassCreatedIndex();
-    } else if (option === "myKlasses") {
+    } else if (option === "enrolledKlasses") {
       IndexActions.getMyKlassIndex();
     } else {
       IndexActions.getKlassIndex();
@@ -29,7 +29,7 @@ const KlassIndex = React.createClass({
   },
 
   updateState(){
-    this.setState({klasses: IndexStore.getKlasses()});
+    this.setState({klasses: IndexStore.getKlasses(this.props.option)});
   },
 
   componentWillUnmount(){

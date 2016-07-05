@@ -6,17 +6,19 @@ const IndexStore = new Store(AppDispatcher);
 
 let indices = {
               studySets: [],
-              klasses: []
+              allKlasses: [],
+              createdKlasses: [],
+              enrolledKlasses: []
             };
 
 IndexStore.getStudySets = function(){
   return indices.studySets;
 };
 
-IndexStore.getKlasses = function(){
-  return indices.klasses;
+IndexStore.getKlasses = function(option){
+  if (!option) { option = "allKlasses"; }
+  return indices[option];
 };
-
 
 IndexStore.__onDispatch = function(payload){
   switch(payload.actionType){
@@ -24,8 +26,16 @@ IndexStore.__onDispatch = function(payload){
       indices.studySets = payload.studySets;
       this.__emitChange();
       break;
-    case IndexConstants.RECEIVE_KLASS_INDEX:
-      indices.klasses = payload.klasses;
+    case IndexConstants.RECEIVE_ALL_KLASS_INDEX:
+      indices.allKlasses = payload.klasses;
+      this.__emitChange();
+      break;
+    case IndexConstants.RECEIVE_CREATED_KLASS_INDEX:
+      indices.createdKlasses = payload.klasses;
+      this.__emitChange();
+      break;
+    case IndexConstants.RECEIVE_ENROLLED_KLASS_INDEX:
+      indices.enrolledKlasses = payload.klasses;
       this.__emitChange();
       break;
 

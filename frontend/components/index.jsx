@@ -8,10 +8,13 @@ const Index = React.createClass({
     const option = this.props.location.query.option;
     if (option === "my_study_sets"){
       return <StudySetIndex title="Study Sets I created" option="myStudySets" />;
-    } else if (option === "my_classes_created") {
-      return <KlassIndex title="Classes I created" option="myKlassesCreated" />;
-    } else if (option === "my_classes_enrolled") {
-      return <KlassIndex title="Classes I'm enrolled in " option="myKlasses" />;
+    } else if (option === "my_classes") {
+      return (
+        <div>
+          <KlassIndex title="Classes I teach" option="createdKlasses" />
+          <KlassIndex title="Classes I'm enrolled in " option="enrolledKlasses" />
+        </div>
+      );
     } else {
       return (<div>
         <KlassIndex title="Classes"/>

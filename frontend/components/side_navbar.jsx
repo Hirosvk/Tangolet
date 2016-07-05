@@ -12,17 +12,20 @@ const SideNavbar = React.createClass({
   },
 
   toMyKlasses(){
-    hashHistory.push("?option=my_classes_enrolled");
-  },
-
-  toMyKlassesCreated(){
-    hashHistory.push("?option=my_classes_created");
+    hashHistory.push("?option=my_classes");
   },
 
   toMyTestScores(){
     hashHistory.push("my_test_scores");
   },
 
+  toCreateStudySet(){
+    hashHistory.push("study_set_form");
+  },
+
+  toCreateClass(){
+    hashHistory.push("class_form");
+  },
 
   toIndex(){
     hashHistory.push("/");
@@ -31,13 +34,13 @@ const SideNavbar = React.createClass({
   render(){
     return (
       <aside className="side-navbar">
-        <button className="btn pink-btn" >Welcome</button>
-        <button className="btn pink-btn" onClick={this.toIndex}>Browse</button>
-        <button className="btn lightgreen-btn" onClick={this.toMyKlassesCreated}>Classes I Teach</button>
-        <button className="btn lightgreen-btn" onClick={this.toMyKlasses}>Classes I Take</button>
-        <button className="btn lightgreen-btn" onClick={this.toMyStudySets}>Study Sets I Created</button>
+        <button className="btn green-btn" onClick={this.toIndex}>Home</button>
+        <button className="btn blue-btn" onClick={this.toMyKlasses}>My Classes</button>
+        <button className="btn blue-btn" onClick={this.toMyStudySets}>My Study Sets </button>
         <button className="btn yellow-btn" onClick={this.toMyTestScores}>My Test Scores</button>
-        <button className="btn green-btn" >About</button>
+        <button className="btn orange-btn" onClick={this.toCreateClass}>Create Class</button>
+        <button className="btn orange-btn" onClick={this.toCreateStudySet}>Create Study Set</button>
+        <button className="btn pink-btn" >About</button>
       </aside>
     );
   }

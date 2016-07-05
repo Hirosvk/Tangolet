@@ -23,7 +23,6 @@ const LoginForm = require('./components/login_form');
 const SignupForm = require('./components/signup_form');
 const Header = require('./components/header');
 const Main = require('./components/main');
-const Content = require('./components/content');
 const StudySet = require('./components/study_set');
 const StudySetList = require('./components/study_set_list');
 const Index = require('./components/index.jsx');
@@ -35,15 +34,14 @@ const KlassIndex = require('./components/klass_index');
 const TestScoreIndex = require('./components/test_score_index');
 const SideNavbar = require('./components/side_navbar');
 
-
 const App = React.createClass({
   render(){
     return (
       <div className='app group'>
         <Header/>
-          <SideNavbar />
 
         <main className="main">
+          <SideNavbar />
           {this.props.children}
         </main>
       </div>
