@@ -7,24 +7,48 @@ const hashHistory = require('react-router').hashHistory;
 
 const SideNavbar = React.createClass({
 
+  loggedIn(){
+    return Boolean(CurrentUserStore.getCurrentUser().id);
+  },
+
   toMyStudySets(){
-    hashHistory.push("?option=my_study_sets");
+    if (this.loggedIn()){
+      hashHistory.push("?option=my_study_sets");
+    } else {
+      alert("Login is require for this feature.");
+    }
   },
 
   toMyKlasses(){
-    hashHistory.push("?option=my_classes");
+    if (this.loggedIn()){
+      hashHistory.push("?option=my_classes");
+    } else {
+      alert("Login is require for this feature.");
+    }
   },
 
   toMyTestScores(){
-    hashHistory.push("my_test_scores");
+    if (this.loggedIn()){
+      hashHistory.push("my_test_scores");
+    } else {
+      alert("Login is require for this feature.");
+    }
   },
 
   toCreateStudySet(){
-    hashHistory.push("study_set_form");
+    if (this.loggedIn()){
+      hashHistory.push("study_set_form");
+    } else {
+      alert("Login is require for this feature.");
+    }
   },
 
   toCreateClass(){
-    hashHistory.push("class_form");
+    if (this.loggedIn()){
+      hashHistory.push("class_form");
+    } else {
+      alert("Login is require for this feature.");
+    }
   },
 
   toIndex(){
