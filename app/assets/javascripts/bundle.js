@@ -110,11 +110,7 @@
 	      { component: Content },
 	      React.createElement(IndexRoute, { component: Index }),
 	      React.createElement(Route, { path: 'class/:klassId', component: Klass }),
-	      React.createElement(
-	        Route,
-	        { path: 'study_set/:id', component: StudySet },
-	        React.createElement(IndexRoute, { component: StudySetList })
-	      ),
+	      React.createElement(Route, { path: 'study_set/:id', component: StudySet }),
 	      React.createElement(Route, { path: 'study_set_form(/:action)', component: StudySetForm }),
 	      React.createElement(Route, { path: 'class_form(/:action)', component: KlassForm }),
 	      React.createElement(Route, { path: 'my_test_scores', component: TestScoreIndex })
@@ -53650,41 +53646,41 @@
 	  },
 	  render: function render() {
 	    return React.createElement(
-	      'div',
+	      'aside',
 	      { className: 'side-navbar' },
 	      React.createElement(
 	        'button',
-	        { className: 'btn' },
+	        { className: 'btn pink-btn' },
 	        'Welcome'
 	      ),
 	      React.createElement(
 	        'button',
-	        { className: 'btn', onClick: this.toIndex },
+	        { className: 'btn pink-btn', onClick: this.toIndex },
 	        'Browse'
 	      ),
 	      React.createElement(
 	        'button',
-	        { className: 'btn', onClick: this.toMyKlassesCreated },
+	        { className: 'btn lightgreen-btn', onClick: this.toMyKlassesCreated },
 	        'Classes I Teach'
 	      ),
 	      React.createElement(
 	        'button',
-	        { className: 'btn', onClick: this.toMyKlasses },
+	        { className: 'btn lightgreen-btn', onClick: this.toMyKlasses },
 	        'Classes I Take'
 	      ),
 	      React.createElement(
 	        'button',
-	        { className: 'btn', onClick: this.toMyStudySets },
+	        { className: 'btn lightgreen-btn', onClick: this.toMyStudySets },
 	        'Study Sets I Created'
 	      ),
 	      React.createElement(
 	        'button',
-	        { className: 'btn', onClick: this.toMyTestScores },
+	        { className: 'btn yellow-btn', onClick: this.toMyTestScores },
 	        'My Test Scores'
 	      ),
 	      React.createElement(
 	        'button',
-	        { className: 'btn' },
+	        { className: 'btn green-btn' },
 	        'About'
 	      )
 	    );
@@ -54167,7 +54163,7 @@
 	      { className: 'test' },
 	      React.createElement(
 	        Modal,
-	        { show: this.state.testOpen },
+	        { show: this.state.testOpen, bsStyle: 'test-modal' },
 	        React.createElement(TestForm, { words: this.testWords,
 	          language_name: this.props.language_name,
 	          closeModal: this.closeModal })
@@ -54364,7 +54360,7 @@
 	  render: function render() {
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'test-form' },
 	      React.createElement(
 	        'h2',
 	        null,
@@ -54689,73 +54685,77 @@
 	  },
 	  render: function render() {
 	    return React.createElement(
-	      'form',
-	      { className: 'study_set_form' },
+	      'div',
+	      null,
 	      React.createElement(
-	        'header',
-	        { className: 'study_set_header' },
+	        'form',
+	        { className: 'study_set_form' },
 	        React.createElement(
-	          'h4',
-	          { className: 'title' },
-	          this.title()
-	        ),
-	        this.showErrors(),
-	        React.createElement(
-	          'label',
-	          { className: 'title' },
+	          'header',
+	          { className: 'study_set_header' },
 	          React.createElement(
-	            'h1',
-	            null,
-	            'Enter name',
-	            React.createElement('input', { type: 'text', className: 'input_study_set_name',
-	              ref: 'studySetName', value: this.state.name, onChange: this.nameChange })
-	          )
-	        ),
-	        React.createElement(
-	          'h3',
-	          null,
-	          this.languageChoices()
-	        )
-	      ),
-	      React.createElement(
-	        'table',
-	        null,
-	        React.createElement(
-	          'thead',
-	          null,
+	            'h4',
+	            { className: 'title' },
+	            this.title()
+	          ),
+	          this.showErrors(),
 	          React.createElement(
-	            'tr',
-	            null,
+	            'label',
+	            { className: 'title' },
 	            React.createElement(
-	              'th',
+	              'h1',
 	              null,
-	              'English'
-	            ),
-	            React.createElement(
-	              'th',
-	              null,
-	              this.pickedLanguage()
+	              'Enter name',
+	              React.createElement('input', { type: 'text', className: 'input_study_set_name',
+	                ref: 'studySetName', value: this.state.name, onChange: this.nameChange })
 	            )
+	          ),
+	          React.createElement(
+	            'h3',
+	            null,
+	            this.languageChoices()
 	          )
 	        ),
 	        React.createElement(
-	          'tbody',
+	          'table',
 	          null,
-	          this.newWordInput()
-	        )
-	      ),
-	      React.createElement(
-	        ButtonGroup,
-	        null,
-	        React.createElement(
-	          Button,
-	          { onClick: this.addMoreWords },
-	          'Add more words'
+	          React.createElement(
+	            'thead',
+	            null,
+	            React.createElement(
+	              'tr',
+	              null,
+	              React.createElement(
+	                'th',
+	                null,
+	                'English'
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                this.pickedLanguage()
+	              )
+	            )
+	          ),
+	          React.createElement(
+	            'tbody',
+	            null,
+	            this.newWordInput()
+	          )
 	        ),
 	        React.createElement(
-	          Button,
-	          { onClick: this.sendStudySet },
-	          this.submitButton()
+	          ButtonGroup,
+	          null,
+	          React.createElement(
+	            Button,
+	            { onClick: this.addMoreWords },
+	            'Add more words'
+	          ),
+	          React.createElement(
+	            Button,
+	            { onClick: this.sendStudySet },
+	            this.submitButton()
+	          )
 	        )
 	      )
 	    );
@@ -54935,50 +54935,54 @@
 	  },
 	  render: function render() {
 	    return React.createElement(
-	      'form',
-	      { className: 'klass_form' },
+	      'div',
+	      null,
 	      React.createElement(
-	        'header',
-	        { className: 'klass_header' },
+	        'form',
+	        { className: 'klass_form' },
 	        React.createElement(
-	          'h4',
-	          { className: 'title' },
-	          this.title()
-	        ),
-	        this.showErrors(),
-	        React.createElement(
-	          'label',
-	          null,
-	          React.createElement(
-	            'h1',
-	            null,
-	            'Class Name',
-	            React.createElement('input', { className: 'input_klass_name',
-	              type: 'text',
-	              id: 'name',
-	              value: this.state.name,
-	              onChange: this.updateState })
-	          )
-	        )
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'details' },
-	        React.createElement(
-	          'label',
-	          { className: 'item' },
+	          'header',
+	          { className: 'klass_header' },
 	          React.createElement(
 	            'h4',
+	            { className: 'title' },
+	            this.title()
+	          ),
+	          this.showErrors(),
+	          React.createElement(
+	            'label',
 	            null,
-	            'Description',
-	            React.createElement('textarea', { id: 'description', value: this.state.description, onChange: this.updateState })
+	            React.createElement(
+	              'h1',
+	              null,
+	              'Class Name',
+	              React.createElement('input', { className: 'input_klass_name',
+	                type: 'text',
+	                id: 'name',
+	                value: this.state.name,
+	                onChange: this.updateState })
+	            )
 	          )
 	        ),
-	        this.languageChoices(),
 	        React.createElement(
-	          Button,
-	          { bsClass: 'item btn', onClick: this.sendKlass },
-	          this.submitButton()
+	          'div',
+	          { className: 'details' },
+	          React.createElement(
+	            'label',
+	            { className: 'item' },
+	            React.createElement(
+	              'h4',
+	              null,
+	              'Description',
+	              React.createElement('textarea', { id: 'description', value: this.state.description, onChange: this.updateState })
+	            )
+	          ),
+	          this.languageChoices(),
+	          React.createElement(
+	            Button,
+	            { bsClass: 'item btn', onClick: this.sendKlass },
+	            this.submitButton()
+	          )
 	        )
 	      )
 	    );

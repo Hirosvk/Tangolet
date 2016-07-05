@@ -138,7 +138,7 @@ const TestForm = React.createClass({
 
   render(){
     return(
-      <div>
+      <div className="test-form">
         <h2>Fill in the blank spaces with the correct word</h2>
         {this.testBody()}
         <Button bsStyle="btn"
@@ -151,7 +151,7 @@ const TestForm = React.createClass({
         </Button>
 
       </div>
-    )
+    );
   }
 
 });

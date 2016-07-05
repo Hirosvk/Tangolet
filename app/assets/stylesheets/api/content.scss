@@ -1,0 +1,67 @@
+.app {
+}
+
+
+.main {
+  position: absolute;
+  top: 38px;
+  width: 100%;
+  color: #5C5C5C;
+  background: #FFFFFF;
+  min-height: 200px;
+}
+
+
+.content {
+  display: flex;
+}
+
+.content>div{
+  width: auto;
+  padding: 20px;
+  flex-grow: 1;
+}
+
+.content>aside{
+  width: 350px;
+  padding: 20px;
+}
+
+.side-navbar .btn{
+  width: 100%;
+  margin: 5px;
+  height: 100px;
+
+/* same as h2 */
+  font-weight: bold;
+  font-size: x-large;
+/**************/
+}
+
+.green-btn {
+  background: #02B960;
+  color: #FFFFFF;
+}
+
+.yellow-btn {
+  background: #F9CE1C;
+  color: #5C5C5C;
+}
+
+.btn .yellow_btn:hover{
+  color: #FFFFFF;
+}
+
+.orange-btn {
+  background: #D66700;
+}
+
+.lightgreen-btn {
+  background: #26A6B8;
+  color: #FFFFFF;
+}
+
+.pink-btn {
+  background: #D7005F;
+  color: #FFFFFF;
+}

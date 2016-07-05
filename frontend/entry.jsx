@@ -55,9 +55,7 @@ const appRouter = (
       <Route component={Content}>
         <IndexRoute component={Index}/>
         <Route path="class/:klassId" component={Klass} />
-        <Route path="study_set/:id" component={StudySet}>
-          <IndexRoute component={StudySetList} />
-        </Route>
+        <Route path="study_set/:id" component={StudySet} />
         <Route path="study_set_form(/:action)" component={StudySetForm} />
         <Route path="class_form(/:action)" component={KlassForm} />
         <Route path="my_test_scores" component={TestScoreIndex} />

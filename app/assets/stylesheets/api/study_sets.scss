@@ -7,13 +7,13 @@
 }
 
 .study_set_header {
-  background: #BC1818;
+  background: #D66700;
   padding: 4px;
   text-align: right;
 }
 
 .study_set_header .title{
-  color: #E3D5C3;
+  color: #FFFFFF;
   margin: 10px;
 }
 
@@ -32,39 +32,35 @@
 }
 
 .study_set_header .btn {
-  background: #E3D5C3;
+  background: #FFFFFF;
   font-weight: bold;
   font-size: large;
 
 }
 
-.study_set_header .btn:hover{
-  background: #DEBB0D;
-}
-
-.study_set .nav-tabs {
-  margin: 15px;
-  font-size: large;
-  border-bottom: 4px dashed #4A280E;
-}
-
-.study_set .nav-tabs>li {
-  margin-bottom: -4px;
-}
-
-.study_set .nav-tabs>li.active>a {
-  background-color: #FAF3EB;
-}
+// .study_set_header .btn:hover{
+//   background: #F9CE1C;
+// }
+//
+// .study_set .nav-tabs {
+//   margin: 15px;
+//   font-size: large;
+//   border-bottom: 4px dashed #5C5C5C;
+// }
+//
+// .study_set .nav-tabs>li {
+//   margin-bottom: -4px;
+// }
+//
+// .study_set .nav-tabs>li.active>a {
+//   background-color: #FFFFFF;
+// }
 
 
 
 
 
 /* FORM */
-
-.study_set_form {
-  background-color: #E3D5C3;
-}
 
 .study_set_form .study_set_header {
   display: flex;
@@ -79,14 +75,14 @@
 }
 
 .input_study_set_name {
-  border: 2px solid #4A280E;
+  border: 2px solid #5C5C5C;
   border-radius: 0.3em;
   font-weight: bolder;
   font-size: xx-large;
   padding: 0.3em;
   margin: 0px 0px 0px 7px;
-  background-color: #E3D5C3;
-  color: #4A280E;
+  background-color: #FFFFFF;
+  color: #5C5C5C;
   text-align: left;
 }
 
@@ -96,7 +92,7 @@
 
 .study_set_form select{
   margin: 0px 0px 0px 5px;
-  background-color: #E3D5C3;
+  background-color: #FFFFFF;
 }
 
 .study_set_form .btn-group {
@@ -107,16 +103,16 @@
 }
 
 .study_set_form .btn {
-  background-color: #BC1818;
+  background-color: #D66700;
   margin: 15px;
   font-weight: bold;
   font-size: large;
-  color: #E3D5C3;
+  color: #FFFFFF;
 }
 
 .study_set_form .btn:hover{
-  background-color: #DEBB0D;
-  color: #4A280E;
+  background-color: #F9CE1C;
+  color: #5C5C5C;
 }
 
 
@@ -135,17 +131,16 @@ tr {
 }
 
 th {
-  background: #DEBB0D;
+  background: #F9CE1C;
 }
 
 td {
-  background: #E3D5C3;
 }
 
 th, td {
   padding: 2rem;
   text-align: left;
-  border: 1px solid #4A280E;
+  border: 1px solid #5C5C5C;
   width: 50%;
   min-height: 40px;
   font-size: xx-large;

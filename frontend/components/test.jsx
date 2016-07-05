@@ -59,7 +59,7 @@ const Test = React.createClass({
   render(){
     return(
       <div className="test">
-        <Modal show={this.state.testOpen}>
+        <Modal show={this.state.testOpen} bsStyle="test-modal">
           <TestForm words={this.testWords}
                     language_name={this.props.language_name}
                     closeModal={this.closeModal}/>

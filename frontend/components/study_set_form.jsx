@@ -235,6 +235,7 @@ const StudySetForm = React.createClass({
 
   render(){
     return(
+      <div>
       <form className="study_set_form">
         <header className="study_set_header">
 
@@ -269,6 +270,7 @@ const StudySetForm = React.createClass({
         <Button onClick={this.sendStudySet}>{this.submitButton()}</Button>
       </ButtonGroup>
     </form>
+    </div>
     );
   },
 

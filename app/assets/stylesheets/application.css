@@ -16,13 +16,14 @@
 
 header, body, ul, li, div,
 form, input, textarea, footer, p
-h1, h2, h3, h4, strong {
+h1, h2, h3, h4, strong, span, aside,
+select {
   margin: 0;
   padding: 0;
   border: 0;
   outline: 0;
   font: inherit;
-  color: inherit;
+  color: #5C5C5C;
   text-align: inherit;
   text-decoration: inherit;
   vertical-align: inherit;
@@ -30,6 +31,9 @@ h1, h2, h3, h4, strong {
   background: transparent;
 }
 
+.btn-default{
+  color: inherit;
+}
 
 ul {
   list-style: none;
@@ -46,21 +50,6 @@ input[type="submit"], a {
   content: "";
   display: block;
   clear: both;
-}
-
-
-body {
-  background: #E3D5C3;
-}
-
-
-.main {
-  position: absolute;
-  top: 38px;
-  width: 100%;
-  color: #4A280E;
-  background: #E3D5C3;
-  min-height: 200px;
 }
 
 

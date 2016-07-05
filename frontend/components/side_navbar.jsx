@@ -30,16 +30,16 @@ const SideNavbar = React.createClass({
 
   render(){
     return (
-      <div className="side-navbar">
-        <button className="btn" >Welcome</button>
-        <button className="btn" onClick={this.toIndex}>Browse</button>
-        <button className="btn" onClick={this.toMyKlassesCreated}>Classes I Teach</button>
-        <button className="btn" onClick={this.toMyKlasses}>Classes I Take</button>
-        <button className="btn" onClick={this.toMyStudySets}>Study Sets I Created</button>
-        <button className="btn" onClick={this.toMyTestScores}>My Test Scores</button>
-        <button className="btn" >About</button>
-      </div>
-    )
+      <aside className="side-navbar">
+        <button className="btn pink-btn" >Welcome</button>
+        <button className="btn pink-btn" onClick={this.toIndex}>Browse</button>
+        <button className="btn lightgreen-btn" onClick={this.toMyKlassesCreated}>Classes I Teach</button>
+        <button className="btn lightgreen-btn" onClick={this.toMyKlasses}>Classes I Take</button>
+        <button className="btn lightgreen-btn" onClick={this.toMyStudySets}>Study Sets I Created</button>
+        <button className="btn yellow-btn" onClick={this.toMyTestScores}>My Test Scores</button>
+        <button className="btn green-btn" >About</button>
+      </aside>
+    );
   }
 });
 

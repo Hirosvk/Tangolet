@@ -136,6 +136,7 @@ const KlassForm = React.createClass({
 
   render(){
     return(
+      <div>
       <form className="klass_form">
         <header className="klass_header" >
         <h4 className="title">{this.title()}</h4>
@@ -160,6 +161,7 @@ const KlassForm = React.createClass({
           <Button bsClass="item btn" onClick={this.sendKlass}>{this.submitButton()}</Button>
         </div>
       </form>
+    </div>
     );
   },
 
