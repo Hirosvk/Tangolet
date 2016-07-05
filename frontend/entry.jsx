@@ -33,12 +33,16 @@ const Klass = require('./components/klass');
 const StudySetIndex = require('./components/study_set_index');
 const KlassIndex = require('./components/klass_index');
 const TestScoreIndex = require('./components/test_score_index');
+const SideNavbar = require('./components/side_navbar');
+
 
 const App = React.createClass({
   render(){
     return (
       <div className='app group'>
         <Header/>
+          <SideNavbar />
+
         <main className="main">
           {this.props.children}
         </main>
@@ -52,14 +56,12 @@ const App = React.createClass({
 const appRouter = (
   <Router history={hashHistory}>
     <Route path="/" component={App}>
-      <Route component={Content}>
-        <IndexRoute component={Index}/>
-        <Route path="class/:klassId" component={Klass} />
-        <Route path="study_set/:id" component={StudySet} />
-        <Route path="study_set_form(/:action)" component={StudySetForm} />
-        <Route path="class_form(/:action)" component={KlassForm} />
-        <Route path="my_test_scores" component={TestScoreIndex} />
-      </Route>
+      <IndexRoute component={Index}/>
+      <Route path="class/:klassId" component={Klass} />
+      <Route path="study_set/:id" component={StudySet} />
+      <Route path="study_set_form(/:action)" component={StudySetForm} />
+      <Route path="class_form(/:action)" component={KlassForm} />
+      <Route path="my_test_scores" component={TestScoreIndex} />
     </Route>
   </Router>
 );

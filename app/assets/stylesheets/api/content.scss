@@ -1,28 +1,32 @@
+
 .app {
+  position: relative;
+  max-width: 1200px;
 }
 
+.top-header {
+  width: 100%;
+}
 
 .main {
   position: absolute;
   top: 38px;
-  width: 100%;
+  left: 350px;
   color: #5C5C5C;
   background: #FFFFFF;
   min-height: 200px;
-}
-
-
-.content {
-  display: flex;
-}
-
-.content>div{
-  width: auto;
   padding: 20px;
-  flex-grow: 1;
+  width: 850px;
 }
 
-.content>aside{
+.main > div{
+  width: 100%;
+}
+
+.app>aside{
+  position: fixed;
+  top: 38px;
+  left: 0px;
   width: 350px;
   padding: 20px;
 }

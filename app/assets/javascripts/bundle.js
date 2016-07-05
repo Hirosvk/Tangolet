@@ -81,6 +81,7 @@
 	var StudySetIndex = __webpack_require__(544);
 	var KlassIndex = __webpack_require__(546);
 	var TestScoreIndex = __webpack_require__(562);
+	var SideNavbar = __webpack_require__(543);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -89,6 +90,7 @@
 	      'div',
 	      { className: 'app group' },
 	      React.createElement(Header, null),
+	      React.createElement(SideNavbar, null),
 	      React.createElement(
 	        'main',
 	        { className: 'main' },
@@ -105,16 +107,12 @@
 	  React.createElement(
 	    Route,
 	    { path: '/', component: App },
-	    React.createElement(
-	      Route,
-	      { component: Content },
-	      React.createElement(IndexRoute, { component: Index }),
-	      React.createElement(Route, { path: 'class/:klassId', component: Klass }),
-	      React.createElement(Route, { path: 'study_set/:id', component: StudySet }),
-	      React.createElement(Route, { path: 'study_set_form(/:action)', component: StudySetForm }),
-	      React.createElement(Route, { path: 'class_form(/:action)', component: KlassForm }),
-	      React.createElement(Route, { path: 'my_test_scores', component: TestScoreIndex })
-	    )
+	    React.createElement(IndexRoute, { component: Index }),
+	    React.createElement(Route, { path: 'class/:klassId', component: Klass }),
+	    React.createElement(Route, { path: 'study_set/:id', component: StudySet }),
+	    React.createElement(Route, { path: 'study_set_form(/:action)', component: StudySetForm }),
+	    React.createElement(Route, { path: 'class_form(/:action)', component: KlassForm }),
+	    React.createElement(Route, { path: 'my_test_scores', component: TestScoreIndex })
 	  )
 	);
 	
@@ -53595,18 +53593,16 @@
 /* 542 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 	
 	var React = __webpack_require__(164);
-	var SideNavbar = __webpack_require__(543);
 	
 	var Content = React.createClass({
-	  displayName: 'Content',
+	  displayName: "Content",
 	  render: function render() {
 	    return React.createElement(
-	      'div',
-	      { className: 'content' },
-	      React.createElement(SideNavbar, null),
+	      "div",
+	      { className: "content" },
 	      this.props.children
 	    );
 	  }
