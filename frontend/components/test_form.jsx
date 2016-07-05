@@ -32,7 +32,7 @@ const TestForm = React.createClass({
 
   componentWillUnmount(){
     ErrorStore.resetErrors();
-    if (this.errorListener){
+    if (!this.errorListener === undefined){
       this.errorListener.remove();
     }
     clearInterval(this.clock);
@@ -210,7 +210,6 @@ const TestForm = React.createClass({
   },
 
   render(){
-    console.log(this.state.timeRem);
     return(
       <div className="test-form">
         {this.topMessage()}

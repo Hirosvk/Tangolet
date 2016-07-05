@@ -54151,7 +54151,7 @@
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
 	    ErrorStore.resetErrors();
-	    if (this.errorListener) {
+	    if (!this.errorListener === undefined) {
 	      this.errorListener.remove();
 	    }
 	    clearInterval(this.clock);
@@ -54375,7 +54375,6 @@
 	    );
 	  },
 	  render: function render() {
-	    console.log(this.state.timeRem);
 	    return React.createElement(
 	      'div',
 	      { className: 'test-form' },
