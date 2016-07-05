@@ -53682,8 +53682,7 @@
 	    SessionActions.logout();
 	  },
 	  openLogin: function openLogin() {
-	    // hashHistory.push("/login");
-	    this.setState({ showLogin: true });
+	    this.setState({ showLogin: true, demoCredentials: false });
 	  },
 	  loginDemo: function loginDemo() {
 	    var demoCredentials = {

@@ -214,6 +214,7 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 
 ## Phase 11: Final Touch (1.5day w9d4)
 - [ ] invalid/unauthorized navigation redirected
+- [ ] improve current alerts
 
 - [ ] welcome page
 - [ ] about page
@@ -232,8 +233,7 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 - [ ] add error message display function in test form
 - [ ] when you log out while visiting page that require authorization, user is redirected
 - [ ] tell user if she is enrolled in the class on Klass page
-- [ ] edit klass_form CSS
-- [ ] demo sign-up
+- [ ] improve demo sign-up
 
 - [ ] Search Result title
 

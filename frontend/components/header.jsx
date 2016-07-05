@@ -28,8 +28,7 @@ const Header = React.createClass({
   },
 
   openLogin(){
-    // hashHistory.push("/login");
-    this.setState({showLogin: true});
+    this.setState({showLogin: true, demoCredentials: false});
   },
 
   loginDemo(){
@@ -60,7 +59,9 @@ const Header = React.createClass({
         <div className="user_account">
           <h3 className="item">You are not logged in</h3>
           <Button bsClass="btn" bsSize="xsmall" onClick={this.openLogin}>Login</Button>
+
           <Button bsClass="btn" bsSize="xsmall" onClick={this.loginDemo}>Demo Login</Button>
+
           <Button bsClass="btn" bsSize="xsmall" onClick={this.openSignup}>Sign up</Button>
         </div>
       );
