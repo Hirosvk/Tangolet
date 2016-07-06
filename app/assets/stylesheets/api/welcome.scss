@@ -1,0 +1,40 @@
+.welcome {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.welcome h1{
+  background: #26A6B8;
+  width: 100%;
+  text-align: center;
+  color: #FFFFFF;
+  padding: 5px;
+}
+
+.welcome .row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+}
+
+.welcome .pane{
+  width: 50%;
+  max-width: 400px;
+  border: 6px solid #D7005F;
+  border-radius: 1em;
+  padding: 15px;
+  text-align: center;
+  margin: 20px;
+}
+
+.welcome .pane h2 {
+  margin: 20px;
+}
+
+.welcome .pane li {
+  margin: 5px;
+  font-size: small;
+}

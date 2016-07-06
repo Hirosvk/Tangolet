@@ -3,6 +3,7 @@ const KlassIndex = require('./klass_index');
 const StudySetIndex = require('./study_set_index');
 const IndexActions = require('../actions/index_actions');
 const LanguageIndex = require('./language_index');
+const Welcome = require('./welcome');
 
 const Index = React.createClass({
 
@@ -88,10 +89,16 @@ const Index = React.createClass({
     }
   },
 
+  welcome(){
+    if (this.state.option === undefined){
+      return <Welcome />;
+    }
+  },
 
   render(){
     return (
       <div className="index">
+        {this.welcome()}
         <h1>{this.state.title}</h1>
         {this.indexContent()}
       </div>

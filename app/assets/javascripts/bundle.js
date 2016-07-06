@@ -54485,6 +54485,7 @@
 	var StudySetIndex = __webpack_require__(554);
 	var IndexActions = __webpack_require__(265);
 	var LanguageIndex = __webpack_require__(564);
+	var Welcome = __webpack_require__(570);
 	
 	var Index = React.createClass({
 	  displayName: 'Index',
@@ -54564,10 +54565,16 @@
 	      return "myStudySets";
 	    }
 	  },
+	  welcome: function welcome() {
+	    if (this.state.option === undefined) {
+	      return React.createElement(Welcome, null);
+	    }
+	  },
 	  render: function render() {
 	    return React.createElement(
 	      'div',
 	      { className: 'index' },
+	      this.welcome(),
 	      React.createElement(
 	        'h1',
 	        null,
@@ -55107,7 +55114,7 @@
 	            React.createElement(
 	              'h1',
 	              null,
-	              'Enter name',
+	              'Study Set name',
 	              React.createElement('input', { type: 'text', className: 'input_study_set_name',
 	                ref: 'studySetName', value: this.state.name, onChange: this.nameChange })
 	            )
@@ -56512,6 +56519,156 @@
 	});
 	
 	module.exports = LanguageIndexItem;
+
+/***/ },
+/* 570 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var React = __webpack_require__(164);
+	
+	var Welcome = React.createClass({
+	  displayName: "Welcome",
+	  render: function render() {
+	    return React.createElement(
+	      "div",
+	      { className: "welcome" },
+	      React.createElement(
+	        "h1",
+	        null,
+	        "Welcome to Tangolet!"
+	      ),
+	      React.createElement(
+	        "h2",
+	        null,
+	        "Tangolet helps you memorize vocabularies in foreign languages."
+	      ),
+	      React.createElement(
+	        "h2",
+	        null,
+	        "You can... "
+	      ),
+	      React.createElement(
+	        "div",
+	        { className: "row" },
+	        React.createElement(
+	          "div",
+	          { className: "pane one" },
+	          React.createElement(
+	            "h2",
+	            null,
+	            "Study with Study Sets"
+	          ),
+	          React.createElement(
+	            "ul",
+	            null,
+	            React.createElement(
+	              "li",
+	              null,
+	              "Create your custom Study Sets."
+	            ),
+	            React.createElement(
+	              "li",
+	              null,
+	              "Learn the words through List, Flashcards, and Test features."
+	            ),
+	            React.createElement(
+	              "li",
+	              null,
+	              "Test scores will be saved so that you can keep track for your progress."
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          "div",
+	          { className: "pane two" },
+	          React.createElement(
+	            "h2",
+	            null,
+	            "Teach Classes"
+	          ),
+	          React.createElement(
+	            "ul",
+	            null,
+	            React.createElement(
+	              "li",
+	              null,
+	              "Create new Class."
+	            ),
+	            React.createElement(
+	              "li",
+	              null,
+	              "Add Study Sets to your Class for students to study."
+	            ),
+	            React.createElement(
+	              "li",
+	              null,
+	              "You can veiw your students test scores and statistics."
+	            )
+	          )
+	        )
+	      ),
+	      React.createElement(
+	        "div",
+	        { className: "row" },
+	        React.createElement(
+	          "div",
+	          { className: "pane three" },
+	          React.createElement(
+	            "h2",
+	            null,
+	            "Enroll in Class"
+	          ),
+	          React.createElement(
+	            "ul",
+	            null,
+	            React.createElement(
+	              "li",
+	              null,
+	              "Find the Enroll/Unenroll button to change your enrollment status."
+	            ),
+	            React.createElement(
+	              "li",
+	              null,
+	              "Teacher will make available Study Sets for you to study."
+	            ),
+	            React.createElement(
+	              "li",
+	              null,
+	              "Students test scores will be available to the teacher."
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          "div",
+	          { className: "pane four" },
+	          React.createElement(
+	            "h2",
+	            null,
+	            "Browse Classes/Study Sets"
+	          ),
+	          React.createElement(
+	            "ul",
+	            null,
+	            React.createElement(
+	              "li",
+	              null,
+	              "Use search bar to find the right classes study sets."
+	            ),
+	            React.createElement(
+	              "li",
+	              null,
+	              "Browse by Language."
+	            )
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = Welcome;
 
 /***/ }
 /******/ ]);

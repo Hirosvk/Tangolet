@@ -252,7 +252,7 @@ const StudySetForm = React.createClass({
 
           {this.showErrors()}
 
-          <label className="title"><h1>Enter name
+          <label className="title"><h1>Study Set name
             <input type="text" className="input_study_set_name"
                   ref="studySetName" value={this.state.name} onChange={this.nameChange}/>
           </h1></label>

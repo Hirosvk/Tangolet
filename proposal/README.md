@@ -226,7 +226,7 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 
 - [ ] pick font
 - [ ] seed data
-- [ ] when you log out while visiting page that require authorization, user is redirected
+- [x] when you log out while visiting page that require authorization, user is redirected
 - [x] tell user if she is enrolled in the class on Klass page
 - [x] improve demo sign-up
 - [x] language select dropdown --> add default select "pick new"
