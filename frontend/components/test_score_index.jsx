@@ -15,23 +15,21 @@ const TestScoreIndex = React.createClass({
 
   componentDidMount(){
     this.testListener = TestStore.addListener(this.updateState);
+    this.userListener = CurrentUserStore.addListener(this.redirectToIndex);
 
     if (this.props.klassId){
       let data = {klassId: this.props.klassId};
 
       if (this.props.studentId) {
-        console.log("bystudentId");
         data.studentId = this.props.studentId;
         TestActions.fetchScoresByStudents(data);
 
       } else if (this.props.studySetId){
-        console.log("by studysets");
         data.studySetId = this.props.studySetId;
         TestActions.fetchScoresByStudySets(data);
       }
 
     } else if (CurrentUserStore.getCurrentUser().id){
-      console.log("current_user");
       TestActions.fetchScoresCurrentUser();
     }
 
@@ -39,10 +37,27 @@ const TestScoreIndex = React.createClass({
 
   componentWillUnmount(){
     this.testListener.remove();
+    this.userListener.remove();
   },
 
   updateState(){
     this.setState({testScores: TestStore.getTestScores()});
+  },
+
+  redirectToIndex(){
+    if (CurrentUserStore.getCurrentUser().id === undefined) {
+      hashHistory.push('/');
+    }
+  },
+
+  items(){
+    if (this.state.testScores.length > 0) {
+      return this.state.testScores.map( testScore => {
+        return <TestScoreIndexItem testScore={testScore} link="true" key={testScore.id} />;
+      });
+    } else {
+      return <h2>No Test Scores</h2>;
+    }
   },
 
   render(){
@@ -57,11 +72,7 @@ const TestScoreIndex = React.createClass({
       <div className="study_set_index">
         <h1 className="title">{title}</h1>
         <ListGroup>
-        {
-          this.state.testScores.map( testScore => {
-            return <TestScoreIndexItem testScore={testScore} link="true" key={testScore.id} />;
-          })
-        }
+        { this.items() }
       </ListGroup>
       </div>
     );

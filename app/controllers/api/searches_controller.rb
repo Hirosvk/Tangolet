@@ -1,10 +1,29 @@
 class Api::SearchesController < ApplicationController
+
+  def all
+    @languages = Language.all
+    @study_sets = StudySet.all
+    @klasses = Klass.all
+    render :show
+  end
+
   def show
     search_text = params[:search]
-    @languages = Language.where("name ILIKE ?", "%#{search_text}%")
-    @study_sets = StudySet.find_by_sql([STUDYSETS_QUERY,
-                  "%#{search_text}%","%#{search_text}%","%#{search_text}%"])
-    @klasses = Klass.where("name ILIKE ? OR description ILIKE ?", "%#{search_text}%", "%#{search_text}%")
+    search_words = search_text.split(/\W+/)
+    @languages, @study_sets, @klasses = [], [], []
+    debugger
+    search_words.each do |word|
+      languages = Language.where("name ILIKE ?", "%#{word}%")
+      study_sets = StudySet.find_by_sql([STUDYSETS_QUERY,
+                    "%#{word}%","%#{word}%","%#{word}%"])
+      klasses = Klass.where("name ILIKE ? OR description ILIKE ?", "%#{word}%", "%#{word}%")
+      @languages += languages unless languages.nil?
+      @study_sets += study_sets unless study_sets.nil?
+      @klasses += klasses unless klasses.nil?
+    end
+    @languages.uniq!
+    @study_sets.uniq!
+    @klasses.uniq!
     render :show
   end
 

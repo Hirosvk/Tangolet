@@ -5,16 +5,16 @@ Rails.application.routes.draw do
     resource :user, only: [:create, :show]
       patch 'user/enroll' => 'users#enroll'
       get 'user/my_klasses' => 'users#my_klasses'
-      get 'user/my_klasses_created' => 'users#my_klasses_created'
       get 'user/my_study_sets' => 'users#my_study_sets'
     resources :study_sets
       post 'study_sets/:id/submit_test' => 'study_sets#submit_test'
     resources :klasses
       patch 'klasses/:id/update_study_sets' => 'klasses#update_study_sets'
-    resources :languages, only: [:index]
+    resources :languages, only: [:index, :show]
     resources :tests, only:[:index]
       get 'tests/collection/' => 'tests#collection'
     resource :search, only: [:show]
+      get 'index_all' => 'searches#all'
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

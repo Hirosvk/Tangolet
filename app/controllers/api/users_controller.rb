@@ -38,14 +38,15 @@ class Api::UsersController < ApplicationController
   end
 
   def my_klasses
+    @klasses_created = current_user.klasses_created
     @klasses = current_user.klasses
-    render "api/klasses/index.json.jbuilder"
+    render :my_klasses
   end
 
-  def my_klasses_created
-    @klasses = current_user.klasses_created
-    render "api/klasses/index.json.jbuilder"
-  end
+  # def my_klasses_created
+  #   @klasses = current_user.klasses_created
+  #   render "api/klasses/index.json.jbuilder"
+  # end
 
   def my_study_sets
     @study_sets = current_user.study_sets

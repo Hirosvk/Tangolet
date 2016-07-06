@@ -9,14 +9,11 @@ const KlassActions = {
     KlassUtils.fetchKlass(id, this.receiveKlass, errorCallback);
   },
 
-  // getStudySetIndexforKlass(klassId, errorCallback){
-  //   IndexUtils.getStudySetIndexforKlass(klassId, this.receiveKlass, errorCallback);
-  // },
-
   receiveKlass(klass){
     AppDispatcher.dispatch({
       actionType: KlassConstants.RECEIVE_KLASS,
-      klass: klass
+      klass: klass,
+      studySets: klass.study_sets
     });
   },
 

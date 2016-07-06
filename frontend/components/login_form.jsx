@@ -7,7 +7,7 @@ const Button = require('react-bootstrap').Button;
 const LoginForm = React.createClass({
   getInitialState(){
     return ({error: ErrorStore.full_errors(),
-      demoLoginMessage: false});
+      demo: false});
   },
 
   componentDidMount(){
@@ -47,7 +47,7 @@ const LoginForm = React.createClass({
   },
 
   loginDemo(demo){
-    this.setState({demoLoginMessage: true});
+    this.setState({demo: true});
     setTimeout(SessionActions.login.bind(SessionActions, demo), 1500);
   },
 
@@ -62,7 +62,7 @@ const LoginForm = React.createClass({
   },
 
   welcomeMessage(){
-    if (this.state.demoLoginMessage){
+    if (this.state.demo){
       return "Loggin in as Hiro .....";
     } else {
       return "Welcome Back";
@@ -75,12 +75,13 @@ const LoginForm = React.createClass({
         <h2 className="title">{this.welcomeMessage()}</h2>
         {this.showErrors()}
         <label className="item"><h2>Username
-        <input type="text" ref="username" /></h2></label>
+        <input type="text" ref="username" disabled={this.state.demo}/></h2></label>
 
         <label className="item"><h2>Password
-        <input type="password" ref="password" /></h2></label>
+        <input type="password" ref="password" disabled={this.state.demo}/></h2></label>
 
-        <Button bsClass='btn' size='medium' onClick={this.login} >Login</Button>
+        <Button bsClass='btn' size='medium' onClick={this.login}
+          disabled={this.state.demo}>Login</Button>
       </form>
     );
   }

@@ -72,16 +72,20 @@ const TestCollection = React.createClass({
           />;
       }
     } else {
-      return this.state.testCollections.map((testCollection, idx) => {
-        return (
-          <ListGroupItem key={testCollection.id}
-            id={idx}
-            header={testCollection.name}
-            onClick={this.goToTestScoreIndex}>
-            Average Score: {testCollection.average_score} | Num of Tests Taken: {testCollection.num_of_tests_taken}
-          </ListGroupItem>
-        );
-      });
+      if (this.state.testCollections.length === 0){
+        return <h2>No one has taken tests yet</h2>;
+      } else {
+        return this.state.testCollections.map((testCollection, idx) => {
+          return (
+            <ListGroupItem key={testCollection.id}
+              id={idx}
+              header={testCollection.name}
+              onClick={this.goToTestScoreIndex}>
+              Average Score: {testCollection.average_score} | Num of Tests Taken: {testCollection.num_of_tests_taken}
+            </ListGroupItem>
+          );
+        });
+      }
     }
   },
 

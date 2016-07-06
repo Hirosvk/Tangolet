@@ -87,18 +87,26 @@ const StudySetForm = React.createClass({
     this.errorStoreListener = ErrorStore.addListener(this.receiveErrors);
     this.languageStoreListener = LanguageStore.addListener(this.receiveLanguages);
     this.studySetStoreListener = StudySetStore.addListener(this.redirectToShow);
+    this.userListener = CurrentUserStore.addListener(this.redirectToIndex);
   },
 
   componentWillUnmount(){
     this.errorStoreListener.remove();
     this.studySetStoreListener.remove();
     this.languageStoreListener.remove();
+    this.userListener.remove();
     resetWords();
     ErrorStore.resetErrors();
   },
 
 // ---------------
 // Store listeners
+
+  redirectToIndex(){
+    if (CurrentUserStore.getCurrentUser().id === undefined) {
+      hashHistory.push('/');
+    }
+  },
 
   redirectToShow(){
     const id = StudySetStore.getStudySet().id;

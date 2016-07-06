@@ -18,7 +18,7 @@ const KlassForm = React.createClass({
       name: "",
       description: "",
       languages: LanguageStore.all(),
-      language_id: undefined
+      language_id: 0,
     });
   },
 
@@ -44,18 +44,26 @@ const KlassForm = React.createClass({
     LanguageActions.fetchAllLanguages();
     this.languageStoreListener = LanguageStore.addListener(this.receiveLanguages);
     this.errorStoreListener = ErrorStore.addListener(this.receiveErrors);
-    this.studySetStoreListener = KlassStore.addListener(this.redirectToShow);
+    this.KlassStoreListener = KlassStore.addListener(this.redirectToShow);
+    this.userListener = CurrentUserStore.addListener(this.redirectToIndex);
   },
 
   componentWillUnmount(){
     this.languageStoreListener.remove();
     this.errorStoreListener.remove();
-    this.studySetStoreListener.remove();
+    this.KlassStoreListener.remove();
+    this.userListener.remove();
     ErrorStore.resetErrors();
   },
 
 // --------------
 // Store listeners
+
+  redirectToIndex(){
+    if (CurrentUserStore.getCurrentUser().id === undefined) {
+      hashHistory.push('/');
+    }
+  },
 
   redirectToShow(){
     const id = KlassStore.getKlass().id;
@@ -123,6 +131,7 @@ const KlassForm = React.createClass({
     <label className="item"><h4>Choose language<select
       defaultValue={this.state.language_id}
       onChange={this.languageChange}>
+      <option value={0} key={0} ref={0} disabled></option>
       {
         this.state.languages.map( language => {
           return (<option value={language.id}
@@ -176,10 +185,8 @@ const KlassForm = React.createClass({
 
     if (this.edit){
       klassData.id = this.id;
-      console.log(klassData);
       KlassActions.editKlass(klassData);
     } else {
-      console.log(klassData);
       KlassActions.createKlass(klassData);
     }
   }

@@ -9,6 +9,7 @@ const Index = React.createClass({
   getInitialState(){
     return ({
       title: "All Classes and Study Sets",
+      languageId: this.props.location.query.lanId,
       option: this.props.location.query.option,
       searchFor: this.props.location.query.for
     });
@@ -26,7 +27,7 @@ const Index = React.createClass({
       );
     } else if (this.state.option === "search") {
       return (<div>
-        <LanguageIndex option="search" />
+        <LanguageIndex title="Languages" option="search" />
         <KlassIndex title="Classes" option="search"/ >
         <StudySetIndex title="Study Sets" option="search"/>
       </div>);
@@ -38,34 +39,45 @@ const Index = React.createClass({
     }
   },
 
-  componentDidMount(){
-    this.setTitle(this.doSearch);
-    // this.doSearch();
+  componentWillMount(){
+    this.setTitle(this.fetchContent);
+    // this.fetchContent();
   },
 
   componentWillReceiveProps(newProps){
     this.setState({
       option: newProps.location.query.option,
-      searchFor: newProps.location.query.for
-    }, this.setTitle.bind(this, this.doSearch));
+      searchFor: newProps.location.query.for,
+      languageId: newProps.location.query.lanId
+    }, this.setTitle.bind(this, this.fetchContent));
   },
 
   setTitle(callback){
     if (this.state.option === "search") {
-      this.setState({title: `Search result for "${this.state.searchFor}"`,
-      }, callback);
+      this.setState({title: `Search result for "${this.state.searchFor}"`}, callback);
     } else if (this.state.option === undefined) {
       this.setState({title: `All Classes and Study Sets`}, callback);
-    } else {
+    } else if (this.state.option === "my_classes" || this.state.option === "my_study_sets") {
       this.setState({title: undefined}, callback);
+    }
+    else {
+      this.setState({title: `${this.state.option} Classes and Study Sets`}, callback);
     }
   },
 
 
 
-  doSearch(){
-      if (this.state.option === "search") {
+  fetchContent(){
+    if (this.state.option === "search") {
       IndexActions.search(this.state.searchFor);
+    } else if (this.state.option === "my_classes") {
+      IndexActions.fetchMyKlasses();
+    } else if (this.state.option === "my_study_sets") {
+      IndexActions.fetchMyStudySets();
+    } else if (this.state.option === undefined){
+      IndexActions.fetchAllIndex();
+    } else {
+      IndexActions.fetchByLanguage(this.state.languageId);
     }
   },
 

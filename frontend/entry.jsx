@@ -5,6 +5,7 @@ const Router = ReactRouter.Router;
 const Route = ReactRouter.Route;
 const IndexRoute = ReactRouter.IndexRoute;
 const hashHistory = ReactRouter.hashHistory;
+const Redirect = ReactRouter.Redirect;
 
 const StudySetActions = require('./actions/study_set_actions');
 const StudySetStore = require('./stores/study_set_store');
@@ -12,7 +13,9 @@ const SessionActions = require('./actions/session_actions');
 const LanguageStore = require('./stores/language_store');
 const LanguageActions = require('./actions/language_actions');
 const IndexActions = require('./actions/index_actions');
-const IndexStores = require('./stores/index_store');
+const KlassIndexStores = require('./stores/klass_index_store');
+const StudySetIndexStores = require('./stores/study_set_index_store');
+
 const CurrentUserStore = require('./stores/current_user_store');
 const KlassStore = require('./stores/klass_store');
 const KlassActions = require('./actions/klass_actions');

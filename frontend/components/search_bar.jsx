@@ -15,7 +15,8 @@ const SearchBar = React.createClass({
     return (
       <div className="search-bar">
         <h3>
-        <input type="text" ref="searchText" placeholder="Search..."></input>
+        <input type="text" ref="searchText"
+          placeholder="Search..... "></input>
         <button className="btn" onClick={this.search}>
           <Glyphicon glyph="search" />
         </button>

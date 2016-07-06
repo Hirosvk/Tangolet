@@ -1,7 +1,8 @@
 
 .study_set_index .title,
 .klass_index .title,
-.test_score_index .title {
+.test_score_index .title,
+.language-index .title {
   background: #D66700;
   color: #FFFFFF;
   padding: 0.2em 0.5em;

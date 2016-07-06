@@ -8,17 +8,12 @@ let _klass = {
           teacher: {},
           language:{},
           study_set_ids: [],
-          study_sets: []
         };
 // properties are pre-defined here, so that the view files
 // don't throw errors with undefined objects.
 
 KlassStore.getKlass = function(){
   return _klass;
-};
-
-KlassStore.getStudySets = function(){
-  return _klass.study_sets;
 };
 
 KlassStore.__onDispatch = function(payload){

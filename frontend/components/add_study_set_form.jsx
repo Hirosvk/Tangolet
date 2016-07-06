@@ -1,5 +1,5 @@
 const React = require('react');
-const IndexStore = require('../stores/index_store');
+const StudySetPoolStore = require('../stores/study_set_pool_store');
 const IndexActions = require('../actions/index_actions');
 const KlassStore = require('../stores/klass_store');
 const KlassActions = require('../actions/klass_actions');
@@ -17,13 +17,14 @@ const AddStudySetForm = React.createClass({
       klassName: klass.name,
       klassId: klass.id,
       studySetIds: klass.study_set_ids,
-      studySets: IndexStore.getStudySets()
+      showOtherUsersSets: false,
+      studySets: StudySetPoolStore.getStudySets()
     });
   },
 
   componentDidMount(){
-    IndexActions.getStudySetIndex();
-    this.indexListener = IndexStore.addListener(this.updateStudySets);
+    IndexActions.fillStudySetPool();
+    this.poolListener = StudySetPoolStore.addListener(this.updateStudySets);
     this.klassListener = KlassStore.addListener(this.updateKlass);
     //  by the time AddStudySetForm mounts, the new Klass info has not reached
     //  KlassStore. So, AddStudySetForm initializes with the old klass info.
@@ -32,9 +33,8 @@ const AddStudySetForm = React.createClass({
   },
 
   componentWillUnmount(){
-    this.indexListener.remove();
+    this.poolListener.remove();
     this.klassListener.remove();
-    // this.studySetIdListener.remove();
   },
 
   updateKlass(){
@@ -43,17 +43,16 @@ const AddStudySetForm = React.createClass({
       klassName: klass.name,
       klassId: klass.id,
       studySetIds: klass.study_set_ids,
-      studySets: IndexStore.getStudySets()
+      studySets: StudySetPoolStore.getStudySets()
     });
   },
 
   redirect(){
     this.props.backToStudySets();
-    // alert("successfully updated");
   },
 
   updateStudySets(){
-    this.setState({studySets: IndexStore.getStudySets()});
+    this.setState({studySets: StudySetPoolStore.getStudySets()});
   },
 
 
@@ -83,19 +82,6 @@ const AddStudySetForm = React.createClass({
     });
   },
 
-  // <label key={`label${studySet.id}`}>
-  // <input type="checkbox"
-  //       id={studySet.id}
-  //       defaultChecked={this.checked(studySet.id)}
-  //       key={studySet.id}
-  //       onClick={this.updateStudySetIds}/>
-  //     <ul>
-  //     <li>{studySet.name}</li>
-  //     <li>created by {studySet.creator.username}</li>
-  //     <li>language: {studySet.language.name}</li>
-  //     </ul>
-  // </label>
-
   updateStudySetIds(event){
     let id = parseInt(event.currentTarget.id);
     let idx = this.state.studySetIds.indexOf(id);
@@ -124,12 +110,40 @@ const AddStudySetForm = React.createClass({
     KlassActions.updateStudySets(data);
   },
 
+  loadMoreStudySets(){
+    this.setState({showOtherUsersSets: true},
+      IndexActions.fillStudySetPool.bind(IndexActions, "all"));
+    // IndexActions.fillStudySetPool("all");
+  },
+
+  loadLessStudySets(){
+    this.setState({showOtherUsersSets: false},
+      IndexActions.fillStudySetPool.bind(IndexActions));
+  },
+
+  toggleSelections(){
+    if (this.state.showOtherUsersSets){
+      return (
+        <Button onClick={this.loadLessStudySets}>
+          Select only from your Study Sets
+        </Button>
+      );
+    } else {
+      return (
+        <Button onClick={this.loadMoreStudySets}>
+          Select Study Sets created by other users
+        </Button>
+      );
+    }
+  },
+
   render(){
     return(
       <div className="add_study_set_form">
         <h2>Select or unselect study sets for this class.</h2>
         <ListGroup>
           {this.checkboxes()}
+          {this.toggleSelections()}
           <Button onClick={this.sendNewIds}>Update</Button>
         </ListGroup>
       </div>

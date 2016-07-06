@@ -32,7 +32,7 @@ const TestForm = React.createClass({
 
   componentWillUnmount(){
     ErrorStore.resetErrors();
-    if (this.errorListener.subscriber){
+    if (this.errorListener){
       this.errorListener.remove();
     }
     clearInterval(this.clock);

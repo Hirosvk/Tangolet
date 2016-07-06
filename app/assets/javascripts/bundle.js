@@ -53,6 +53,7 @@
 	var Route = ReactRouter.Route;
 	var IndexRoute = ReactRouter.IndexRoute;
 	var hashHistory = ReactRouter.hashHistory;
+	var Redirect = ReactRouter.Redirect;
 	
 	var StudySetActions = __webpack_require__(232);
 	var StudySetStore = __webpack_require__(241);
@@ -60,7 +61,9 @@
 	var LanguageStore = __webpack_require__(261);
 	var LanguageActions = __webpack_require__(263);
 	var IndexActions = __webpack_require__(265);
-	var IndexStores = __webpack_require__(268);
+	var KlassIndexStores = __webpack_require__(566);
+	var StudySetIndexStores = __webpack_require__(565);
+	
 	var CurrentUserStore = __webpack_require__(269);
 	var KlassStore = __webpack_require__(270);
 	var KlassActions = __webpack_require__(272);
@@ -33689,40 +33692,47 @@
 	var IndexConstants = __webpack_require__(267);
 	
 	var IndexActions = {
-	  getStudySetIndex: function getStudySetIndex(errorCallback) {
-	    IndexUtils.getStudySetIndex(this.receiveStudySetIndex, errorCallback);
+	  fetchAllIndex: function fetchAllIndex() {
+	    IndexUtils.fetchAllIndex(this.receiveAllIndex);
 	  },
-	  getLanguageIndex: function getLanguageIndex(errorCallback) {
-	    IndexUtils.getLanguageIndex(this.receiveLanguageIndex, errorCallback);
-	  },
-	  getKlassIndex: function getKlassIndex(errorCallback) {
-	    IndexUtils.getKlassIndex(this.receiveKlassIndex.bind(null, IndexConstants.RECEIVE_ALL_KLASS_INDEX), errorCallback);
-	  },
-	  getMyKlassIndex: function getMyKlassIndex(errorCallback) {
-	    IndexUtils.getMyKlassIndex(this.receiveKlassIndex.bind(null, IndexConstants.RECEIVE_ENROLLED_KLASS_INDEX), errorCallback);
-	  },
-	  getMyKlassCreatedIndex: function getMyKlassCreatedIndex(errorCallback) {
-	    IndexUtils.getMyKlassCreatedIndex(this.receiveKlassIndex.bind(null, IndexConstants.RECEIVE_CREATED_KLASS_INDEX), errorCallback);
-	  },
-	  getMyStudySetIndex: function getMyStudySetIndex(errorCallback) {
-	    IndexUtils.getMyStudySetIndex(this.receiveStudySetIndex, errorCallback);
-	  },
-	  receiveStudySetIndex: function receiveStudySetIndex(studySets) {
+	  receiveAllIndex: function receiveAllIndex(allIndex) {
 	    AppDispatcher.dispatch({
-	      actionType: IndexConstants.RECEIVE_STUDY_SET_INDEX,
+	      actionType: IndexConstants.RECEIVE_ALL_INDEX,
+	      languages: allIndex.languages,
+	      studySets: allIndex.study_sets,
+	      klasses: allIndex.klasses
+	    });
+	  },
+	  fetchMyKlasses: function fetchMyKlasses() {
+	    IndexUtils.fetchMyKlasses(this.receiveMyKlasses);
+	  },
+	  receiveMyKlasses: function receiveMyKlasses(myKlasses) {
+	    AppDispatcher.dispatch({
+	      actionType: IndexConstants.RECEIVE_MY_KLASSES,
+	      createdKlasses: myKlasses.my_created_klasses,
+	      enrolledKlasses: myKlasses.my_klasses
+	    });
+	  },
+	  fetchMyStudySets: function fetchMyStudySets() {
+	    IndexUtils.fetchMyStudySets(this.receiveStudySets);
+	  },
+	  receiveStudySets: function receiveStudySets(studySets) {
+	    AppDispatcher.dispatch({
+	      actionType: IndexConstants.RECEIVE_STUDY_SETS,
 	      studySets: studySets
 	    });
 	  },
-	  receiveLanguageIndex: function receiveLanguageIndex(languages) {
-	    AppDispatcher.dispatch({
-	      actionType: IndexConstants.RECEIVE_LANGUAGE_INDEX,
-	      languages: languages
-	    });
+	  fillStudySetPool: function fillStudySetPool(option) {
+	    if (option === "all") {
+	      IndexUtils.fetchStudySets(this._fillStudySetPool);
+	    } else {
+	      IndexUtils.fetchMyStudySets(this._fillStudySetPool);
+	    }
 	  },
-	  receiveKlassIndex: function receiveKlassIndex(receiveOption, klasses) {
+	  _fillStudySetPool: function _fillStudySetPool(studySets) {
 	    AppDispatcher.dispatch({
-	      actionType: receiveOption,
-	      klasses: klasses
+	      actionType: IndexConstants.FILL_STUDY_SET_POOL,
+	      studySets: studySets
 	    });
 	  },
 	  search: function search(searchText) {
@@ -33731,9 +33741,63 @@
 	  receiveSearchResult: function receiveSearchResult(searchResult) {
 	    AppDispatcher.dispatch({
 	      actionType: IndexConstants.RECEIVE_SEARCH_RESULT,
-	      searchResult: searchResult
+	      languages: searchResult.languages,
+	      studySets: searchResult.study_sets,
+	      klasses: searchResult.klasses
+	    });
+	  },
+	  fetchByLanguage: function fetchByLanguage(id) {
+	    IndexUtils.fetchByLanguage(id, this.receiveByLanguage);
+	  },
+	  receiveByLanguage: function receiveByLanguage(searchResult) {
+	    AppDispatcher.dispatch({
+	      actionType: IndexConstants.RECEIVE_BY_LANGUAGE,
+	      studySets: searchResult.study_sets,
+	      klasses: searchResult.klasses
 	    });
 	  }
+	
+	  // getStudySetIndex(errorCallback){
+	  //   IndexUtils.getStudySetIndex(this.receiveStudySetIndex, errorCallback);
+	  // },
+	  //
+	  // getLanguageIndex(errorCallback){
+	  //   IndexUtils.getLanguageIndex(this.receiveLanguageIndex, errorCallback);
+	  // },
+	  //
+	  // getKlassIndex(errorCallback){
+	  //   IndexUtils.getKlassIndex(this.receiveKlassIndex.bind(null, IndexConstants.RECEIVE_ALL_KLASS_INDEX)
+	  //   , errorCallback);
+	  // },
+	  //
+	  // getMyKlassIndex(errorCallback){
+	  //   IndexUtils.getMyKlassIndex(this.receiveKlassIndex.bind(null, IndexConstants.RECEIVE_ENROLLED_KLASS_INDEX), errorCallback);
+	  // },
+	  //
+	  // getMyKlassCreatedIndex(errorCallback){
+	  //   IndexUtils.getMyKlassCreatedIndex(this.receiveKlassIndex.bind(null, IndexConstants.RECEIVE_CREATED_KLASS_INDEX), errorCallback);
+	  // },
+	  //
+	  // getMyStudySetIndex(errorCallback){
+	  //   IndexUtils.getMyStudySetIndex(this.receiveStudySetIndex, errorCallback);
+	  // },
+	  //
+	  //
+	  // receiveLanguageIndex(languages){
+	  //   AppDispatcher.dispatch({
+	  //     actionType: IndexConstants.RECEIVE_LANGUAGE_INDEX,
+	  //     languages: languages
+	  //   });
+	  // },
+	  //
+	  // receiveKlassIndex(receiveOption, klasses){
+	  //   AppDispatcher.dispatch({
+	  //     actionType: receiveOption,
+	  //     klasses: klasses
+	  //   });
+	  // },
+	  //
+	
 	};
 	
 	module.exports = IndexActions;
@@ -33743,20 +33807,56 @@
 /* 266 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 	
 	module.exports = {
-	  getStudySetIndex: function getStudySetIndex(successCallback, errorCallback) {
+	  fetchAllIndex: function fetchAllIndex(successCallback, errorCallback) {
 	    $.ajax({
-	      url: "api/study_sets",
+	      url: 'api/index_all',
 	      type: "GET",
 	      success: successCallback,
 	      error: errorCallback
 	    });
 	  },
+	  fetchMyKlasses: function fetchMyKlasses(successCallback, errorCallback) {
+	    $.ajax({
+	      url: 'api/user/my_klasses',
+	      type: "GET",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  fetchMyStudySets: function fetchMyStudySets(successCallback, errorCallback) {
+	    $.ajax({
+	      url: 'api/user/my_study_sets',
+	      type: "GET",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  fetchStudySets: function fetchStudySets(successCallback, errorCallback) {
+	    $.ajax({
+	      url: 'api/study_sets',
+	      type: "GET",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  fetchByLanguage: function fetchByLanguage(id, successCallback, errorCallback) {
+	    $.ajax({
+	      url: 'api/languages/' + id,
+	      type: "GET",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	
+	
+	  ///////////
+	
 	  getLanguageIndex: function getLanguageIndex(successCallback, errorCallback) {
 	    $.ajax({
-	      url: "api/languages",
+	      url: 'api/languages',
 	      type: "GET",
 	      success: successCallback,
 	      error: errorCallback
@@ -33764,7 +33864,7 @@
 	  },
 	  getStudySetIndexforKlass: function getStudySetIndexforKlass(klassId, successCallback, errorCallback) {
 	    $.ajax({
-	      url: "api/study_sets?class=" + klassId,
+	      url: 'api/study_sets?class=' + klassId,
 	      type: "GET",
 	      success: successCallback,
 	      error: errorCallback
@@ -33778,17 +33878,9 @@
 	      error: errorCallback
 	    });
 	  },
-	  getMyStudySetIndex: function getMyStudySetIndex(successCallback, errorCallback) {
-	    $.ajax({
-	      url: "api/user/my_study_sets",
-	      type: "GET",
-	      success: successCallback,
-	      error: errorCallback
-	    });
-	  },
 	  getMyKlassIndex: function getMyKlassIndex(successCallback, errorCallback) {
 	    $.ajax({
-	      url: "api/user/my_klasses",
+	      url: 'api/user/my_klasses',
 	      type: "GET",
 	      success: successCallback,
 	      error: errorCallback
@@ -33796,7 +33888,7 @@
 	  },
 	  getMyKlassCreatedIndex: function getMyKlassCreatedIndex(successCallback, errorCallback) {
 	    $.ajax({
-	      url: "api/user/my_klasses_created",
+	      url: 'api/user/my_klasses_created',
 	      type: "GET",
 	      success: successCallback,
 	      error: errorCallback
@@ -33804,7 +33896,7 @@
 	  },
 	  search: function search(searchText, successCallback, errorCallback) {
 	    $.ajax({
-	      url: "api/search?search=" + searchText,
+	      url: 'api/search?search=' + searchText,
 	      type: "GET",
 	      success: successCallback,
 	      error: errorCallback
@@ -33819,90 +33911,20 @@
 	"use strict";
 	
 	module.exports = {
+	  RECEIVE_ALL_INDEX: "RECEIVE_ALL_INDEX",
 	  RECEIVE_ALL_KLASS_INDEX: "RECEIVE_ALL_KLASS_INDEX",
-	  RECEIVE_CREATED_KLASS_INDEX: "RECEIVE_CREATED_KLASS_INDEX",
-	  RECEIVE_ENROLLED_KLASS_INDEX: "RECEIVE_ENROLLED_KLASS_INDEX",
-	  RECEIVE_STUDY_SET_INDEX: "RECEIVE_STUDY_SET_INDEX",
+	  RECEIVE_MY_KLASSES: "RECEIVE_MY_KLASSES",
+	  RECEIVE_STUDY_SETS: "RECEIVE_STUDY_SETS",
+	  FILL_STUDY_SET_POOL: "FILL_STUDY_SET_POOL",
+	  RECEIVE_BY_LANGUAGE: "RECEIVE_BY_LANGUAGE",
+	
 	  RECEIVE_LANGUAGE_INDEX: "RECEIVE_LANGUAGE_INDEX",
 	  RECEIVE_SEARCH_RESULT: "RECEIVE_SEARCH_RESULT"
 	
 	};
 
 /***/ },
-/* 268 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Store = __webpack_require__(242).Store;
-	var AppDispatcher = __webpack_require__(233);
-	var IndexConstants = __webpack_require__(267);
-	
-	var IndexStore = new Store(AppDispatcher);
-	
-	var indices = {
-	  studySets: [],
-	  allKlasses: [],
-	  createdKlasses: [],
-	  enrolledKlasses: [],
-	  languages: []
-	};
-	
-	IndexStore.getWholeObject = function () {
-	  return indices;
-	};
-	
-	IndexStore.getStudySets = function () {
-	  return indices.studySets;
-	};
-	
-	IndexStore.getLanguages = function () {
-	  return indices.languages;
-	};
-	
-	IndexStore.getKlasses = function (option) {
-	  if (option === "createdKlasses" || option === "enrolledKlasses") {
-	    return indices[option];
-	  } else {
-	    return indices["allKlasses"];
-	  }
-	};
-	
-	IndexStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case IndexConstants.RECEIVE_STUDY_SET_INDEX:
-	      indices.studySets = payload.studySets || [];
-	      this.__emitChange();
-	      break;
-	    case IndexConstants.RECEIVE_ALL_KLASS_INDEX:
-	      indices.allKlasses = payload.klasses || [];
-	      this.__emitChange();
-	      break;
-	    case IndexConstants.RECEIVE_CREATED_KLASS_INDEX:
-	      indices.createdKlasses = payload.klasses || [];
-	      this.__emitChange();
-	      break;
-	    case IndexConstants.RECEIVE_ENROLLED_KLASS_INDEX:
-	      indices.enrolledKlasses = payload.klasses || [];
-	      this.__emitChange();
-	      break;
-	    case IndexConstants.RECEIVE_LANGUAGE_INDEX:
-	      indices.languages = payload.languages || [];
-	      this.__emitChange();
-	      break;
-	    case IndexConstants.RECEIVE_SEARCH_RESULT:
-	      indices.allKlasses = payload.searchResult.klasses || [];
-	      indices.studySets = payload.searchResult.study_sets || [];
-	      indices.languages = payload.searchResult.languages || [];
-	      this.__emitChange();
-	      break;
-	  }
-	};
-	
-	module.exports = IndexStore;
-	window.IndexStore = IndexStore;
-
-/***/ },
+/* 268 */,
 /* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -33956,18 +33978,13 @@
 	var _klass = {
 	  teacher: {},
 	  language: {},
-	  study_set_ids: [],
-	  study_sets: []
+	  study_set_ids: []
 	};
 	// properties are pre-defined here, so that the view files
 	// don't throw errors with undefined objects.
 	
 	KlassStore.getKlass = function () {
 	  return _klass;
-	};
-	
-	KlassStore.getStudySets = function () {
-	  return _klass.study_sets;
 	};
 	
 	KlassStore.__onDispatch = function (payload) {
@@ -34009,16 +34026,11 @@
 	  fetchKlass: function fetchKlass(id, errorCallback) {
 	    KlassUtils.fetchKlass(id, this.receiveKlass, errorCallback);
 	  },
-	
-	
-	  // getStudySetIndexforKlass(klassId, errorCallback){
-	  //   IndexUtils.getStudySetIndexforKlass(klassId, this.receiveKlass, errorCallback);
-	  // },
-	
 	  receiveKlass: function receiveKlass(klass) {
 	    AppDispatcher.dispatch({
 	      actionType: KlassConstants.RECEIVE_KLASS,
-	      klass: klass
+	      klass: klass,
+	      studySets: klass.study_sets
 	    });
 	  },
 	  updateStudySets: function updateStudySets(data, errorCallback) {
@@ -34283,7 +34295,7 @@
 	  displayName: 'LoginForm',
 	  getInitialState: function getInitialState() {
 	    return { error: ErrorStore.full_errors(),
-	      demoLoginMessage: false };
+	      demo: false };
 	  },
 	  componentDidMount: function componentDidMount() {
 	    if (this.props.demo) {
@@ -34315,7 +34327,7 @@
 	    SessionActions.login(credentials);
 	  },
 	  loginDemo: function loginDemo(demo) {
-	    this.setState({ demoLoginMessage: true });
+	    this.setState({ demo: true });
 	    setTimeout(SessionActions.login.bind(SessionActions, demo), 1500);
 	  },
 	  showErrors: function showErrors() {
@@ -34332,7 +34344,7 @@
 	    }
 	  },
 	  welcomeMessage: function welcomeMessage() {
-	    if (this.state.demoLoginMessage) {
+	    if (this.state.demo) {
 	      return "Loggin in as Hiro .....";
 	    } else {
 	      return "Welcome Back";
@@ -34355,7 +34367,7 @@
 	          'h2',
 	          null,
 	          'Username',
-	          React.createElement('input', { type: 'text', ref: 'username' })
+	          React.createElement('input', { type: 'text', ref: 'username', disabled: this.state.demo })
 	        )
 	      ),
 	      React.createElement(
@@ -34365,12 +34377,13 @@
 	          'h2',
 	          null,
 	          'Password',
-	          React.createElement('input', { type: 'password', ref: 'password' })
+	          React.createElement('input', { type: 'password', ref: 'password', disabled: this.state.demo })
 	        )
 	      ),
 	      React.createElement(
 	        Button,
-	        { bsClass: 'btn', size: 'medium', onClick: this.login },
+	        { bsClass: 'btn', size: 'medium', onClick: this.login,
+	          disabled: this.state.demo },
 	        'Login'
 	      )
 	    );
@@ -53838,7 +53851,8 @@
 	      React.createElement(
 	        'h3',
 	        null,
-	        React.createElement('input', { type: 'text', ref: 'searchText', placeholder: 'Search...' }),
+	        React.createElement('input', { type: 'text', ref: 'searchText',
+	          placeholder: 'Search..... ' }),
 	        React.createElement(
 	          'button',
 	          { className: 'btn', onClick: this.search },
@@ -54214,7 +54228,7 @@
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
 	    ErrorStore.resetErrors();
-	    if (this.errorListener.subscriber) {
+	    if (this.errorListener) {
 	      this.errorListener.remove();
 	    }
 	    clearInterval(this.clock);
@@ -54477,6 +54491,7 @@
 	  getInitialState: function getInitialState() {
 	    return {
 	      title: "All Classes and Study Sets",
+	      languageId: this.props.location.query.lanId,
 	      option: this.props.location.query.option,
 	      searchFor: this.props.location.query.for
 	    };
@@ -54495,7 +54510,7 @@
 	      return React.createElement(
 	        'div',
 	        null,
-	        React.createElement(LanguageIndex, { option: 'search' }),
+	        React.createElement(LanguageIndex, { title: 'Languages', option: 'search' }),
 	        React.createElement(KlassIndex, { title: 'Classes', option: 'search' }),
 	        React.createElement(StudySetIndex, { title: 'Study Sets', option: 'search' })
 	      );
@@ -54508,29 +54523,39 @@
 	      );
 	    }
 	  },
-	  componentDidMount: function componentDidMount() {
-	    this.setTitle(this.doSearch);
-	    // this.doSearch();
+	  componentWillMount: function componentWillMount() {
+	    this.setTitle(this.fetchContent);
+	    // this.fetchContent();
 	  },
 	  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
 	    this.setState({
 	      option: newProps.location.query.option,
-	      searchFor: newProps.location.query.for
-	    }, this.setTitle.bind(this, this.doSearch));
+	      searchFor: newProps.location.query.for,
+	      languageId: newProps.location.query.lanId
+	    }, this.setTitle.bind(this, this.fetchContent));
 	  },
 	  setTitle: function setTitle(callback) {
 	    if (this.state.option === "search") {
-	      this.setState({ title: 'Search result for "' + this.state.searchFor + '"'
-	      }, callback);
+	      this.setState({ title: 'Search result for "' + this.state.searchFor + '"' }, callback);
 	    } else if (this.state.option === undefined) {
 	      this.setState({ title: 'All Classes and Study Sets' }, callback);
-	    } else {
+	    } else if (this.state.option === "my_classes" || this.state.option === "my_study_sets") {
 	      this.setState({ title: undefined }, callback);
+	    } else {
+	      this.setState({ title: this.state.option + ' Classes and Study Sets' }, callback);
 	    }
 	  },
-	  doSearch: function doSearch() {
+	  fetchContent: function fetchContent() {
 	    if (this.state.option === "search") {
 	      IndexActions.search(this.state.searchFor);
+	    } else if (this.state.option === "my_classes") {
+	      IndexActions.fetchMyKlasses();
+	    } else if (this.state.option === "my_study_sets") {
+	      IndexActions.fetchMyStudySets();
+	    } else if (this.state.option === undefined) {
+	      IndexActions.fetchAllIndex();
+	    } else {
+	      IndexActions.fetchByLanguage(this.state.languageId);
 	    }
 	  },
 	  studySetOption: function studySetOption() {
@@ -54562,7 +54587,7 @@
 	'use strict';
 	
 	var React = __webpack_require__(164);
-	var IndexStore = __webpack_require__(268);
+	var KlassIndexStore = __webpack_require__(566);
 	var IndexActions = __webpack_require__(265);
 	var KlassIndexItem = __webpack_require__(553);
 	var Button = __webpack_require__(280).Button;
@@ -54572,36 +54597,55 @@
 	var KlassIndex = React.createClass({
 	  displayName: 'KlassIndex',
 	  getInitialState: function getInitialState() {
-	    return { klasses: IndexStore.getKlasses(this.props.option) };
+	    return { klasses: KlassIndexStore.getKlasses(this.props.option) };
 	  },
-	  fetchBasedOnProps: function fetchBasedOnProps(newProps) {
-	    var option = newProps ? newProps.option : this.props.option;
-	    if (option === "createdKlasses") {
-	      IndexActions.getMyKlassCreatedIndex();
-	    } else if (option === "enrolledKlasses") {
-	      IndexActions.getMyKlassIndex();
-	    } else if (option === "search") {
-	      // does not fetch
-	    } else {
-	      IndexActions.getKlassIndex();
-	    }
-	  },
+	
+	
+	  // fetchBasedOnProps(newProps){
+	  //   const option = newProps ? newProps.option : this.props.option;
+	  //   if (option === "createdKlasses") {
+	  //     IndexActions.getMyKlassCreatedIndex();
+	  //   } else if (option === "enrolledKlasses") {
+	  //     IndexActions.getMyKlassIndex();
+	  //   } else if (option === "search") {
+	  //     // does not fetch
+	  //   } else {
+	  //     IndexActions.getKlassIndex();
+	  //   }
+	  // },
+	
 	  componentDidMount: function componentDidMount() {
-	    this.fetchBasedOnProps();
-	    this.indexListener = IndexStore.addListener(this.updateState);
+	    // this.fetchBasedOnProps();
+	    this.indexListener = KlassIndexStore.addListener(this.updateState);
 	  },
 	  updateState: function updateState() {
-	    this.setState({ klasses: IndexStore.getKlasses(this.props.option) });
+	    this.setState({ klasses: KlassIndexStore.getKlasses(this.props.option) });
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.indexListener.remove();
 	  },
-	  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
-	    this.fetchBasedOnProps(newProps);
-	  },
+	
+	
+	  // componentWillReceiveProps(newProps){
+	  //   this.fetchBasedOnProps(newProps);
+	  // },
+	
 	  createKlass: function createKlass(event) {
 	    event.preventDefault();
 	    hashHistory.push("/class_form");
+	  },
+	  items: function items() {
+	    if (this.state.klasses.length > 0) {
+	      return this.state.klasses.map(function (klass) {
+	        return React.createElement(KlassIndexItem, { klass: klass, key: klass.id });
+	      });
+	    } else {
+	      return React.createElement(
+	        'h2',
+	        null,
+	        'No Classes'
+	      );
+	    }
 	  },
 	  render: function render() {
 	    return React.createElement(
@@ -54615,9 +54659,7 @@
 	      React.createElement(
 	        ListGroup,
 	        null,
-	        this.state.klasses.map(function (klass) {
-	          return React.createElement(KlassIndexItem, { klass: klass, key: klass.id });
-	        })
+	        this.items()
 	      ),
 	      React.createElement(
 	        Button,
@@ -54668,58 +54710,66 @@
 	'use strict';
 	
 	var React = __webpack_require__(164);
-	var IndexStore = __webpack_require__(268);
 	var IndexActions = __webpack_require__(265);
 	var StudySetIndexItem = __webpack_require__(555);
 	var Button = __webpack_require__(280).Button;
 	var hashHistory = __webpack_require__(170).hashHistory;
 	var ListGroup = __webpack_require__(280).ListGroup;
-	var KlassStore = __webpack_require__(270);
+	var StudySetIndexStore = __webpack_require__(565);
 	
 	var StudySetIndex = React.createClass({
 	  displayName: 'StudySetIndex',
-	
-	
-	  // debugger(){
-	  //   console.log("setState");
-	  // },
-	
 	  getInitialState: function getInitialState() {
-	    return { studySets: [] };
+	    return { studySets: StudySetIndexStore.getStudySets() };
 	  },
 	  componentDidMount: function componentDidMount() {
-	    this.fetchBasedOnProps();
+	    this.storeListener = StudySetIndexStore.addListener(this.updateState);
 	  },
-	  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
-	    this.fetchBasedOnProps(newProps);
-	  },
-	  fetchBasedOnProps: function fetchBasedOnProps(newProps) {
-	    var props = newProps || this.props;
-	    if (props.klassId) {
-	      this.setState({ studySets: KlassStore.getStudySets() });
-	    } else {
-	      if (props.option === "myStudySets") {
-	        IndexActions.getMyStudySetIndex();
-	      } else if (props.option === "search") {
-	        // do not fetch
-	      } else {
-	        IndexActions.getStudySetIndex();
-	      }
-	      this.indexListener = IndexStore.addListener(this.updateState);
-	    }
-	  },
+	
+	
+	  // componentWillReceiveProps(newProps){
+	  //   this.fetchBasedOnProps(newProps);
+	  // },
+	
+	  // fetchBasedOnProps(newProps){
+	  //   const props = newProps || this.props;
+	  //   if (props.klassId){
+	  //     this.setState({studySets: KlassStore.getStudySets()});
+	  //   } else {
+	  //     if (props.option === "myStudySets") {
+	  //       IndexActions.getMyStudySetIndex();
+	  //     } else if (props.option === "search") {
+	  //       // do not fetch
+	  //     } else {
+	  //       IndexActions.getStudySetIndex();
+	  //     }
+	  //     this.indexListener = IndexStore.addListener(this.updateState);
+	  //   }
+	  // },
+	
 	  componentWillUnmount: function componentWillUnmount() {
-	    this.indexListener.remove();
-	    this.indexListener = undefined;
+	    this.storeListener.remove();
+	    this.storeListener = undefined;
 	  },
 	  updateState: function updateState() {
-	    if (this.indexListener) {
-	      this.setState({ studySets: IndexStore.getStudySets() });
-	    }
+	    this.setState({ studySets: StudySetIndexStore.getStudySets() });
 	  },
 	  createStudySet: function createStudySet(event) {
 	    event.preventDefault();
 	    hashHistory.push("/study_set_form");
+	  },
+	  items: function items() {
+	    if (this.state.studySets.length > 0) {
+	      return this.state.studySets.map(function (studySet) {
+	        return React.createElement(StudySetIndexItem, { studySet: studySet, key: studySet.id });
+	      });
+	    } else {
+	      return React.createElement(
+	        'h2',
+	        null,
+	        'No Study Sets'
+	      );
+	    }
 	  },
 	  render: function render() {
 	    var title = void 0;
@@ -54737,9 +54787,7 @@
 	      React.createElement(
 	        ListGroup,
 	        null,
-	        this.state.studySets.map(function (studySet) {
-	          return React.createElement(StudySetIndexItem, { studySet: studySet, key: studySet.id });
-	        })
+	        this.items()
 	      ),
 	      React.createElement(
 	        Button,
@@ -54876,11 +54924,13 @@
 	    this.errorStoreListener = ErrorStore.addListener(this.receiveErrors);
 	    this.languageStoreListener = LanguageStore.addListener(this.receiveLanguages);
 	    this.studySetStoreListener = StudySetStore.addListener(this.redirectToShow);
+	    this.userListener = CurrentUserStore.addListener(this.redirectToIndex);
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.errorStoreListener.remove();
 	    this.studySetStoreListener.remove();
 	    this.languageStoreListener.remove();
+	    this.userListener.remove();
 	    resetWords();
 	    ErrorStore.resetErrors();
 	  },
@@ -54889,6 +54939,11 @@
 	  // ---------------
 	  // Store listeners
 	
+	  redirectToIndex: function redirectToIndex() {
+	    if (CurrentUserStore.getCurrentUser().id === undefined) {
+	      hashHistory.push('/');
+	    }
+	  },
 	  redirectToShow: function redirectToShow() {
 	    var id = StudySetStore.getStudySet().id;
 	    hashHistory.push('/study_set/' + id);
@@ -55159,7 +55214,7 @@
 	      name: "",
 	      description: "",
 	      languages: LanguageStore.all(),
-	      language_id: undefined
+	      language_id: 0
 	    };
 	  },
 	  setupEdit: function setupEdit() {
@@ -55182,12 +55237,14 @@
 	    LanguageActions.fetchAllLanguages();
 	    this.languageStoreListener = LanguageStore.addListener(this.receiveLanguages);
 	    this.errorStoreListener = ErrorStore.addListener(this.receiveErrors);
-	    this.studySetStoreListener = KlassStore.addListener(this.redirectToShow);
+	    this.KlassStoreListener = KlassStore.addListener(this.redirectToShow);
+	    this.userListener = CurrentUserStore.addListener(this.redirectToIndex);
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.languageStoreListener.remove();
 	    this.errorStoreListener.remove();
-	    this.studySetStoreListener.remove();
+	    this.KlassStoreListener.remove();
+	    this.userListener.remove();
 	    ErrorStore.resetErrors();
 	  },
 	
@@ -55195,6 +55252,11 @@
 	  // --------------
 	  // Store listeners
 	
+	  redirectToIndex: function redirectToIndex() {
+	    if (CurrentUserStore.getCurrentUser().id === undefined) {
+	      hashHistory.push('/');
+	    }
+	  },
 	  redirectToShow: function redirectToShow() {
 	    var id = KlassStore.getKlass().id;
 	    hashHistory.push('/class/' + id);
@@ -55267,6 +55329,7 @@
 	          {
 	            defaultValue: this.state.language_id,
 	            onChange: this.languageChange },
+	          React.createElement('option', { value: 0, key: 0, ref: 0, disabled: true }),
 	          this.state.languages.map(function (language) {
 	            return React.createElement(
 	              'option',
@@ -55343,10 +55406,8 @@
 	
 	    if (this.edit) {
 	      klassData.id = this.id;
-	      console.log(klassData);
 	      KlassActions.editKlass(klassData);
 	    } else {
-	      console.log(klassData);
 	      KlassActions.createKlass(klassData);
 	    }
 	  }
@@ -55607,7 +55668,7 @@
 	'use strict';
 	
 	var React = __webpack_require__(164);
-	var IndexStore = __webpack_require__(268);
+	var StudySetPoolStore = __webpack_require__(568);
 	var IndexActions = __webpack_require__(265);
 	var KlassStore = __webpack_require__(270);
 	var KlassActions = __webpack_require__(272);
@@ -55626,12 +55687,13 @@
 	      klassName: klass.name,
 	      klassId: klass.id,
 	      studySetIds: klass.study_set_ids,
-	      studySets: IndexStore.getStudySets()
+	      showOtherUsersSets: false,
+	      studySets: StudySetPoolStore.getStudySets()
 	    };
 	  },
 	  componentDidMount: function componentDidMount() {
-	    IndexActions.getStudySetIndex();
-	    this.indexListener = IndexStore.addListener(this.updateStudySets);
+	    IndexActions.fillStudySetPool();
+	    this.poolListener = StudySetPoolStore.addListener(this.updateStudySets);
 	    this.klassListener = KlassStore.addListener(this.updateKlass);
 	    //  by the time AddStudySetForm mounts, the new Klass info has not reached
 	    //  KlassStore. So, AddStudySetForm initializes with the old klass info.
@@ -55639,9 +55701,8 @@
 	    //  state with the new klass info.
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
-	    this.indexListener.remove();
+	    this.poolListener.remove();
 	    this.klassListener.remove();
-	    // this.studySetIdListener.remove();
 	  },
 	  updateKlass: function updateKlass() {
 	    var klass = KlassStore.getKlass();
@@ -55649,15 +55710,14 @@
 	      klassName: klass.name,
 	      klassId: klass.id,
 	      studySetIds: klass.study_set_ids,
-	      studySets: IndexStore.getStudySets()
+	      studySets: StudySetPoolStore.getStudySets()
 	    });
 	  },
 	  redirect: function redirect() {
 	    this.props.backToStudySets();
-	    // alert("successfully updated");
 	  },
 	  updateStudySets: function updateStudySets() {
-	    this.setState({ studySets: IndexStore.getStudySets() });
+	    this.setState({ studySets: StudySetPoolStore.getStudySets() });
 	  },
 	  checked: function checked(id) {
 	    if (this.state.studySetIds.indexOf(id) >= 0) {
@@ -55688,21 +55748,6 @@
 	      );
 	    });
 	  },
-	
-	
-	  // <label key={`label${studySet.id}`}>
-	  // <input type="checkbox"
-	  //       id={studySet.id}
-	  //       defaultChecked={this.checked(studySet.id)}
-	  //       key={studySet.id}
-	  //       onClick={this.updateStudySetIds}/>
-	  //     <ul>
-	  //     <li>{studySet.name}</li>
-	  //     <li>created by {studySet.creator.username}</li>
-	  //     <li>language: {studySet.language.name}</li>
-	  //     </ul>
-	  // </label>
-	
 	  updateStudySetIds: function updateStudySetIds(event) {
 	    var id = parseInt(event.currentTarget.id);
 	    var idx = this.state.studySetIds.indexOf(id);
@@ -55729,6 +55774,28 @@
 	    this.klassListener = KlassStore.addListener(this.redirect);
 	    KlassActions.updateStudySets(data);
 	  },
+	  loadMoreStudySets: function loadMoreStudySets() {
+	    this.setState({ showOtherUsersSets: true }, IndexActions.fillStudySetPool.bind(IndexActions, "all"));
+	    // IndexActions.fillStudySetPool("all");
+	  },
+	  loadLessStudySets: function loadLessStudySets() {
+	    this.setState({ showOtherUsersSets: false }, IndexActions.fillStudySetPool.bind(IndexActions));
+	  },
+	  toggleSelections: function toggleSelections() {
+	    if (this.state.showOtherUsersSets) {
+	      return React.createElement(
+	        Button,
+	        { onClick: this.loadLessStudySets },
+	        'Select only from your Study Sets'
+	      );
+	    } else {
+	      return React.createElement(
+	        Button,
+	        { onClick: this.loadMoreStudySets },
+	        'Select Study Sets created by other users'
+	      );
+	    }
+	  },
 	  render: function render() {
 	    return React.createElement(
 	      'div',
@@ -55742,6 +55809,7 @@
 	        ListGroup,
 	        null,
 	        this.checkboxes(),
+	        this.toggleSelections(),
 	        React.createElement(
 	          Button,
 	          { onClick: this.sendNewIds },
@@ -55831,19 +55899,27 @@
 	        });
 	      }
 	    } else {
-	      return this.state.testCollections.map(function (testCollection, idx) {
+	      if (this.state.testCollections.length === 0) {
 	        return React.createElement(
-	          ListGroupItem,
-	          { key: testCollection.id,
-	            id: idx,
-	            header: testCollection.name,
-	            onClick: _this.goToTestScoreIndex },
-	          'Average Score: ',
-	          testCollection.average_score,
-	          ' | Num of Tests Taken: ',
-	          testCollection.num_of_tests_taken
+	          'h2',
+	          null,
+	          'No one has taken tests yet'
 	        );
-	      });
+	      } else {
+	        return this.state.testCollections.map(function (testCollection, idx) {
+	          return React.createElement(
+	            ListGroupItem,
+	            { key: testCollection.id,
+	              id: idx,
+	              header: testCollection.name,
+	              onClick: _this.goToTestScoreIndex },
+	            'Average Score: ',
+	            testCollection.average_score,
+	            ' | Num of Tests Taken: ',
+	            testCollection.num_of_tests_taken
+	          );
+	        });
+	      }
 	    }
 	  },
 	  backToCollection: function backToCollection() {
@@ -55892,29 +55968,46 @@
 	  },
 	  componentDidMount: function componentDidMount() {
 	    this.testListener = TestStore.addListener(this.updateState);
+	    this.userListener = CurrentUserStore.addListener(this.redirectToIndex);
 	
 	    if (this.props.klassId) {
 	      var data = { klassId: this.props.klassId };
 	
 	      if (this.props.studentId) {
-	        console.log("bystudentId");
 	        data.studentId = this.props.studentId;
 	        TestActions.fetchScoresByStudents(data);
 	      } else if (this.props.studySetId) {
-	        console.log("by studysets");
 	        data.studySetId = this.props.studySetId;
 	        TestActions.fetchScoresByStudySets(data);
 	      }
 	    } else if (CurrentUserStore.getCurrentUser().id) {
-	      console.log("current_user");
 	      TestActions.fetchScoresCurrentUser();
 	    }
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.testListener.remove();
+	    this.userListener.remove();
 	  },
 	  updateState: function updateState() {
 	    this.setState({ testScores: TestStore.getTestScores() });
+	  },
+	  redirectToIndex: function redirectToIndex() {
+	    if (CurrentUserStore.getCurrentUser().id === undefined) {
+	      hashHistory.push('/');
+	    }
+	  },
+	  items: function items() {
+	    if (this.state.testScores.length > 0) {
+	      return this.state.testScores.map(function (testScore) {
+	        return React.createElement(TestScoreIndexItem, { testScore: testScore, link: 'true', key: testScore.id });
+	      });
+	    } else {
+	      return React.createElement(
+	        'h2',
+	        null,
+	        'No Test Scores'
+	      );
+	    }
 	  },
 	  render: function render() {
 	    var title = void 0;
@@ -55935,9 +56028,7 @@
 	      React.createElement(
 	        ListGroup,
 	        null,
-	        this.state.testScores.map(function (testScore) {
-	          return React.createElement(TestScoreIndexItem, { testScore: testScore, link: 'true', key: testScore.id });
-	        })
+	        this.items()
 	      )
 	    );
 	  }
@@ -56178,40 +56269,64 @@
 	'use strict';
 	
 	var React = __webpack_require__(164);
-	var IndexStore = __webpack_require__(268);
 	var IndexActions = __webpack_require__(265);
+	var LanguageIndexStore = __webpack_require__(567);
 	var Button = __webpack_require__(280).Button;
 	var hashHistory = __webpack_require__(170).hashHistory;
 	var ListGroup = __webpack_require__(280).ListGroup;
+	var LanguageIndexItem = __webpack_require__(569);
 	
 	var LanguageIndex = React.createClass({
 	  displayName: 'LanguageIndex',
 	  getInitialState: function getInitialState() {
-	    return { languages: IndexStore.getLanguages() };
-	  },
-	  componentWillMount: function componentWillMount() {
-	    this.indexListener = IndexStore.addListener(this.updateState);
+	    return { languages: LanguageIndexStore.getLanguages() };
 	  },
 	  componentDidMount: function componentDidMount() {
-	    this.fetchBasedOnProps();
+	    this.indexListener = LanguageIndexStore.addListener(this.updateState);
 	  },
-	  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
-	    this.fetchBasedOnProps(newProps);
+	  updateState: function updateState() {
+	    this.setState({ languages: LanguageIndexStore.getLanguages() });
 	  },
+	
+	
+	  // componentWillReceiveProps(newProps){
+	  //   this.fetchBasedOnProps(newProps);
+	  // },
+	
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.indexListener.remove();
 	    this.indexListener = undefined;
 	  },
-	  fetchBasedOnProps: function fetchBasedOnProps(newProps) {
-	    var option = newProps ? newProps.option : this.props.option;
-	    if (option === "search") {
-	      // does not fetch
+	
+	
+	  // fetchBasedOnProps(newProps){
+	  //   const option = newProps ? newProps.option : this.props.option;
+	  //   if (option === "search") {
+	  //     // does not fetch
+	  //   } else {
+	  //     IndexActions.getLanguageIndex();
+	  //   }
+	  // },
+	
+	  items: function items() {
+	    if (this.state.languages.length > 0) {
+	      return this.state.languages.map(function (language) {
+	        return React.createElement(LanguageIndexItem, { language: language });
+	      });
 	    } else {
-	      IndexActions.getLanguageIndex();
+	      return React.createElement(
+	        'h2',
+	        null,
+	        'No Languages'
+	      );
 	    }
 	  },
 	  render: function render() {
-	    var title = "Languages";
+	    var title = React.createElement(
+	      'h1',
+	      { className: 'title' },
+	      this.props.title
+	    );
 	    console.log(this.state.languages);
 	    return React.createElement(
 	      'div',
@@ -56220,19 +56335,183 @@
 	      React.createElement(
 	        ListGroup,
 	        null,
-	        this.state.languages.map(function (language) {
-	          return React.createElement(
-	            'p',
-	            null,
-	            language.name
-	          );
-	        })
+	        this.items()
 	      )
 	    );
 	  }
 	});
 	
 	module.exports = LanguageIndex;
+
+/***/ },
+/* 565 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Store = __webpack_require__(242).Store;
+	var AppDispatcher = __webpack_require__(233);
+	var IndexConstants = __webpack_require__(267);
+	var KlassConstants = __webpack_require__(271);
+	
+	var StudySetIndexStore = new Store(AppDispatcher);
+	
+	var _studySets = [];
+	
+	StudySetIndexStore.getStudySets = function () {
+	  return _studySets;
+	};
+	
+	StudySetIndexStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case IndexConstants.RECEIVE_ALL_INDEX:
+	    case IndexConstants.RECEIVE_SEARCH_RESULT:
+	    case IndexConstants.RECEIVE_STUDY_SETS:
+	    case KlassConstants.RECEIVE_KLASS:
+	    case IndexConstants.RECEIVE_BY_LANGUAGE:
+	      _studySets = payload.studySets;
+	      this.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = StudySetIndexStore;
+	window.StudySetIndexStore = StudySetIndexStore;
+
+/***/ },
+/* 566 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Store = __webpack_require__(242).Store;
+	var AppDispatcher = __webpack_require__(233);
+	var IndexConstants = __webpack_require__(267);
+	
+	var KlassIndexStore = new Store(AppDispatcher);
+	
+	var _klassIndices = {
+	  allKlasses: [],
+	  createdKlasses: [],
+	  enrolledKlasses: []
+	};
+	
+	KlassIndexStore.getKlasses = function (option) {
+	  if (option === "createdKlasses" || option === "enrolledKlasses") {
+	    return _klassIndices[option];
+	  } else {
+	    return _klassIndices["allKlasses"];
+	  }
+	};
+	
+	KlassIndexStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case IndexConstants.RECEIVE_ALL_INDEX:
+	    case IndexConstants.RECEIVE_SEARCH_RESULT:
+	    case IndexConstants.RECEIVE_BY_LANGUAGE:
+	      _klassIndices.allKlasses = payload.klasses;
+	      this.__emitChange();
+	      break;
+	    case IndexConstants.RECEIVE_MY_KLASSES:
+	      _klassIndices.createdKlasses = payload.createdKlasses;
+	      _klassIndices.enrolledKlasses = payload.enrolledKlasses;
+	      this.__emitChange();
+	      break;
+	
+	  }
+	};
+	
+	module.exports = KlassIndexStore;
+	window.KlassIndexStore = KlassIndexStore;
+
+/***/ },
+/* 567 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Store = __webpack_require__(242).Store;
+	var AppDispatcher = __webpack_require__(233);
+	var IndexConstants = __webpack_require__(267);
+	
+	var LanguageIndexStore = new Store(AppDispatcher);
+	
+	var _languages = [];
+	
+	LanguageIndexStore.getLanguages = function () {
+	  return _languages;
+	};
+	
+	LanguageIndexStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case IndexConstants.RECEIVE_ALL_INDEX:
+	    case IndexConstants.RECEIVE_SEARCH_RESULT:
+	      _languages = payload.languages;
+	      this.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = LanguageIndexStore;
+	window.LanguageIndexStore = LanguageIndexStore;
+
+/***/ },
+/* 568 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Store = __webpack_require__(242).Store;
+	var AppDispatcher = __webpack_require__(233);
+	var IndexConstants = __webpack_require__(267);
+	
+	var StudySetPoolStore = new Store(AppDispatcher);
+	
+	var _studySets = [];
+	
+	StudySetPoolStore.getStudySets = function () {
+	  return _studySets;
+	};
+	
+	StudySetPoolStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case IndexConstants.FILL_STUDY_SET_POOL:
+	      _studySets = payload.studySets;
+	      this.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = StudySetPoolStore;
+	window.StudySetPoolStore = StudySetPoolStore;
+
+/***/ },
+/* 569 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(164);
+	var ListGroupItem = __webpack_require__(280).ListGroupItem;
+	var hashHistory = __webpack_require__(170).hashHistory;
+	
+	var LanguageIndexItem = React.createClass({
+	  displayName: 'LanguageIndexItem',
+	  toIndex: function toIndex() {
+	    hashHistory.push('?option=' + this.props.language.name + '&lanId=' + this.props.language.id);
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      ListGroupItem,
+	      {
+	        onClick: this.toIndex,
+	        header: this.props.language.name },
+	      this.props.language.num_of_study_sets + ' Study Set(s) | ' + this.props.language.num_of_klasses + ' Class(es)'
+	    );
+	  }
+	});
+	
+	module.exports = LanguageIndexItem;
 
 /***/ }
 /******/ ]);

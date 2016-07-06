@@ -1,5 +1,5 @@
 class Api::StudySetsController < ApplicationController
-  before_action :require_login, except: [:show, :index]
+  before_action :require_login, except: [:show, :index, :submit_test]
 
   def show
     @study_set = StudySet.find(params[:id])
@@ -59,14 +59,18 @@ class Api::StudySetsController < ApplicationController
   end
 
   def submit_test
-    @test = current_user.tests.new(
-              study_set_id: params[:id],
-              score: score_params
-            )
-    if @test.save
-      render json: "successfully submitted", status: 200
+    if current_user.nil?
+      render json: "Log-in is required to save your scores"
     else
-      render json: @test.errors.full_messages, status: 406
+      @test = current_user.tests.new(
+                study_set_id: params[:id],
+                score: score_params
+              )
+      if @test.save
+        render json: "successfully submitted", status: 200
+      else
+        render json: @test.errors.full_messages, status: 406
+      end
     end
   end
 

@@ -1,60 +1,63 @@
 const React = require('react');
-const IndexStore = require('../stores/index_store');
 const IndexActions = require('../actions/index_actions');
 const StudySetIndexItem = require('./study_set_index_item');
 const Button = require('react-bootstrap').Button;
 const hashHistory = require('react-router').hashHistory;
 const ListGroup = require('react-bootstrap').ListGroup;
-const KlassStore = require('../stores/klass_store');
+const StudySetIndexStore = require('../stores/study_set_index_store');
 
 const StudySetIndex = React.createClass({
 
-  // debugger(){
-  //   console.log("setState");
-  // },
-
   getInitialState(){
-    return ({studySets: []});
+    return ({studySets: StudySetIndexStore.getStudySets()});
   },
 
   componentDidMount(){
-    this.fetchBasedOnProps();
+    this.storeListener = StudySetIndexStore.addListener(this.updateState);
   },
 
-  componentWillReceiveProps(newProps){
-    this.fetchBasedOnProps(newProps);
-  },
+  // componentWillReceiveProps(newProps){
+  //   this.fetchBasedOnProps(newProps);
+  // },
 
-  fetchBasedOnProps(newProps){
-    const props = newProps || this.props;
-    if (props.klassId){
-      this.setState({studySets: KlassStore.getStudySets()});
-    } else {
-      if (props.option === "myStudySets") {
-        IndexActions.getMyStudySetIndex();
-      } else if (props.option === "search") {
-        // do not fetch
-      } else {
-        IndexActions.getStudySetIndex();
-      }
-      this.indexListener = IndexStore.addListener(this.updateState);
-    }
-  },
+  // fetchBasedOnProps(newProps){
+  //   const props = newProps || this.props;
+  //   if (props.klassId){
+  //     this.setState({studySets: KlassStore.getStudySets()});
+  //   } else {
+  //     if (props.option === "myStudySets") {
+  //       IndexActions.getMyStudySetIndex();
+  //     } else if (props.option === "search") {
+  //       // do not fetch
+  //     } else {
+  //       IndexActions.getStudySetIndex();
+  //     }
+  //     this.indexListener = IndexStore.addListener(this.updateState);
+  //   }
+  // },
 
   componentWillUnmount(){
-    this.indexListener.remove();
-    this.indexListener = undefined;
+    this.storeListener.remove();
+    this.storeListener = undefined;
   },
 
   updateState(){
-    if (this.indexListener) {
-      this.setState({studySets: IndexStore.getStudySets()});
-    }
+    this.setState({studySets: StudySetIndexStore.getStudySets()});
   },
 
   createStudySet(event){
     event.preventDefault();
     hashHistory.push("/study_set_form");
+  },
+
+  items(){
+    if (this.state.studySets.length > 0){
+      return this.state.studySets.map( studySet => {
+        return <StudySetIndexItem studySet={studySet} key={studySet.id}/>;
+      });
+    } else {
+      return <h2>No Study Sets</h2>
+    }
   },
 
   render(){
@@ -66,11 +69,7 @@ const StudySetIndex = React.createClass({
       <div className="study_set_index">
         {title}
         <ListGroup>
-        {
-          this.state.studySets.map( studySet => {
-            return <StudySetIndexItem studySet={studySet} key={studySet.id}/>;
-          })
-        }
+        { this.items() }
         </ListGroup>
         <Button onClick={this.createStudySet}>+ Create New Study Set(dev.)</Button>
       </div>

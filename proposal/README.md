@@ -209,12 +209,12 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 
 
 - [x] backend, single-word, case-sensitive search functional
-- [ ] language index for showing search result
+- [x] language index for showing search result
 - [ ] students index
 
 ## Phase 11: Final Touch (1.5day w9d4)
-- [ ] invalid/unauthorized navigation redirected
-- [ ] improve alerts
+- [x] invalid/unauthorized navigation redirected
+- [x] improve alerts
   - [ ] server errors
 
 - [ ] welcome page
@@ -222,7 +222,6 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 - [ ] logo
 
 - [ ] standardize font sizes and colors
-  - [ ] form input text colors
   - [ ] button colors and sizes
 
 - [ ] pick font
@@ -231,36 +230,24 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 - [x] tell user if she is enrolled in the class on Klass page
 - [x] improve demo sign-up
 - [x] language select dropdown --> add default select "pick new"
-
+- [ ] disable buttons after click
+- [x] when there is not search result, say so
 - [x] Search Result title
+- [x] Search feature handles multiple words separated by non-word characters
 
 ## Phase 12: Refactor
-- [ ] use stores instead of passing info as props
-- [ ] refactor controllers based on design patterns: use presenters
-- [ ] disable buttons after click
+- [x] use stores instead of passing info as props
 - [ ] refactor JavaScript code to minimize file size
 - [ ] consolidate data parsing
 - [ ] standardize name conventions
 - [ ] check 'state' of each view file and evaluate the necessity
 - [ ] check controlled values of each form and evaluate necessity
-- [ ] check for unmounting
-- [ ] CSS
-- [ ] Views: get info from store instead of from props whenever possible
-
-Index ->
-
-KlassIndexStore
--> KlassIndex
-
-LanguageIndexStore
--> LanguageIndex
-
-StudySetIndexStore
-TestScoreIndexStore
+- [x] check for unmounting
+- [x] reorganize flux cycles
 
 ## Phase 10: Flashcards
 - [ ] flashcard feature
 
 
 ## Phase12: bonus
-- [ ] add filter to add-study-set page
+- [x] add filter to add-study-set page

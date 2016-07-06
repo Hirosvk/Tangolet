@@ -1,5 +1,33 @@
 module.exports = {
-  getStudySetIndex(successCallback, errorCallback){
+  fetchAllIndex(successCallback, errorCallback){
+    $.ajax({
+      url: 'api/index_all',
+      type: "GET",
+      success: successCallback,
+      error: errorCallback
+    });
+  },
+
+  fetchMyKlasses(successCallback, errorCallback){
+    $.ajax({
+      url: 'api/user/my_klasses',
+      type: "GET",
+      success: successCallback,
+      error: errorCallback
+    });
+  },
+
+
+  fetchMyStudySets(successCallback, errorCallback){
+    $.ajax({
+      url: `api/user/my_study_sets`,
+      type: "GET",
+      success: successCallback,
+      error: errorCallback
+    });
+  },
+
+  fetchStudySets(successCallback, errorCallback){
     $.ajax({
       url: `api/study_sets`,
       type: "GET",
@@ -7,6 +35,21 @@ module.exports = {
       error: errorCallback
     });
   },
+
+  fetchByLanguage(id, successCallback, errorCallback){
+    $.ajax({
+      url: `api/languages/${id}`,
+      type: "GET",
+      success: successCallback,
+      error: errorCallback
+    });
+  },
+
+///////////
+
+
+
+
 
   getLanguageIndex(successCallback, errorCallback){
     $.ajax({
@@ -35,14 +78,6 @@ module.exports = {
     });
   },
 
-  getMyStudySetIndex(successCallback, errorCallback){
-    $.ajax({
-      url: `api/user/my_study_sets`,
-      type: "GET",
-      success: successCallback,
-      error: errorCallback
-    });
-  },
 
   getMyKlassIndex(successCallback, errorCallback){
     $.ajax({
