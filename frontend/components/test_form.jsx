@@ -190,9 +190,7 @@ const TestForm = React.createClass({
     const status = ErrorStore.full_errors().status;
     if (message){
       this.serverResp = <h2>{message}</h2>;
-      if (status >= 200 && status < 400) {
         this.setState({sent: true});
-      }
       // } else {
       //   this.setState({completed: false });
       // }
@@ -211,7 +209,9 @@ const TestForm = React.createClass({
     </Button>);
   },
 
+
   render(){
+    // this.serverResp is an instance var set by setServerResp()
     return(
       <div className="test-form">
         {this.topMessage()}

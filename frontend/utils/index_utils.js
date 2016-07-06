@@ -1,7 +1,16 @@
 module.exports = {
   getStudySetIndex(successCallback, errorCallback){
     $.ajax({
-      url: `api/study_sets/`,
+      url: `api/study_sets`,
+      type: "GET",
+      success: successCallback,
+      error: errorCallback
+    });
+  },
+
+  getLanguageIndex(successCallback, errorCallback){
+    $.ajax({
+      url: `api/languages`,
       type: "GET",
       success: successCallback,
       error: errorCallback
@@ -19,7 +28,7 @@ module.exports = {
 
   getKlassIndex(successCallback, errorCallback){
     $.ajax({
-      url: "api/klasses/",
+      url: "api/klasses",
       type: "GEt",
       success: successCallback,
       error: errorCallback
@@ -28,7 +37,7 @@ module.exports = {
 
   getMyStudySetIndex(successCallback, errorCallback){
     $.ajax({
-      url: `api/user/my_study_sets/`,
+      url: `api/user/my_study_sets`,
       type: "GET",
       success: successCallback,
       error: errorCallback
@@ -37,7 +46,7 @@ module.exports = {
 
   getMyKlassIndex(successCallback, errorCallback){
     $.ajax({
-      url: `api/user/my_klasses/`,
+      url: `api/user/my_klasses`,
       type: "GET",
       success: successCallback,
       error: errorCallback
@@ -46,7 +55,7 @@ module.exports = {
 
   getMyKlassCreatedIndex(successCallback, errorCallback){
     $.ajax({
-      url: `api/user/my_klasses_created/`,
+      url: `api/user/my_klasses_created`,
       type: "GET",
       success: successCallback,
       error: errorCallback

@@ -19,7 +19,6 @@ const KlassIndex = React.createClass({
     } else if (option === "enrolledKlasses") {
       IndexActions.getMyKlassIndex();
     } else if (option === "search") {
-      console.log("option search");
       // does not fetch
     } else {
       IndexActions.getKlassIndex();

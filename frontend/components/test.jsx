@@ -55,7 +55,7 @@ const Test = React.createClass({
   closeModal(){
     this.setState({testOpen: false});
   },
-
+  
   render(){
     return(
       <div className="test">
@@ -67,11 +67,11 @@ const Test = React.createClass({
         <span>
           <ul>
             <h2>Test Guidelines</h2>
-            <li><h3>Test will be randomly generated from the Study Set</h3></li>
-            <li><h3>When you click 'Begin Test', Test will start immediately</h3></li>
+            <li><h3>Test will be randomly generated</h3></li>
             <li><h3>
               When the time runs out, Test will be submitted automatically
             </h3></li>
+
           </ul>
         </span>
         <Button onClick={this.generateTest}>Begin Test</Button>

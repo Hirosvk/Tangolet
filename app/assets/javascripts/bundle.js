@@ -70,7 +70,7 @@
 	var LoginForm = __webpack_require__(278);
 	var SignupForm = __webpack_require__(543);
 	var Header = __webpack_require__(544);
-	var Main = __webpack_require__(545);
+	var Main = __webpack_require__(546);
 	var StudySet = __webpack_require__(547);
 	var StudySetList = __webpack_require__(548);
 	var Index = __webpack_require__(551);
@@ -33692,6 +33692,9 @@
 	  getStudySetIndex: function getStudySetIndex(errorCallback) {
 	    IndexUtils.getStudySetIndex(this.receiveStudySetIndex, errorCallback);
 	  },
+	  getLanguageIndex: function getLanguageIndex(errorCallback) {
+	    IndexUtils.getLanguageIndex(this.receiveLanguageIndex, errorCallback);
+	  },
 	  getKlassIndex: function getKlassIndex(errorCallback) {
 	    IndexUtils.getKlassIndex(this.receiveKlassIndex.bind(null, IndexConstants.RECEIVE_ALL_KLASS_INDEX), errorCallback);
 	  },
@@ -33708,6 +33711,12 @@
 	    AppDispatcher.dispatch({
 	      actionType: IndexConstants.RECEIVE_STUDY_SET_INDEX,
 	      studySets: studySets
+	    });
+	  },
+	  receiveLanguageIndex: function receiveLanguageIndex(languages) {
+	    AppDispatcher.dispatch({
+	      actionType: IndexConstants.RECEIVE_LANGUAGE_INDEX,
+	      languages: languages
 	    });
 	  },
 	  receiveKlassIndex: function receiveKlassIndex(receiveOption, klasses) {
@@ -33739,7 +33748,15 @@
 	module.exports = {
 	  getStudySetIndex: function getStudySetIndex(successCallback, errorCallback) {
 	    $.ajax({
-	      url: "api/study_sets/",
+	      url: "api/study_sets",
+	      type: "GET",
+	      success: successCallback,
+	      error: errorCallback
+	    });
+	  },
+	  getLanguageIndex: function getLanguageIndex(successCallback, errorCallback) {
+	    $.ajax({
+	      url: "api/languages",
 	      type: "GET",
 	      success: successCallback,
 	      error: errorCallback
@@ -33755,7 +33772,7 @@
 	  },
 	  getKlassIndex: function getKlassIndex(successCallback, errorCallback) {
 	    $.ajax({
-	      url: "api/klasses/",
+	      url: "api/klasses",
 	      type: "GEt",
 	      success: successCallback,
 	      error: errorCallback
@@ -33763,7 +33780,7 @@
 	  },
 	  getMyStudySetIndex: function getMyStudySetIndex(successCallback, errorCallback) {
 	    $.ajax({
-	      url: "api/user/my_study_sets/",
+	      url: "api/user/my_study_sets",
 	      type: "GET",
 	      success: successCallback,
 	      error: errorCallback
@@ -33771,7 +33788,7 @@
 	  },
 	  getMyKlassIndex: function getMyKlassIndex(successCallback, errorCallback) {
 	    $.ajax({
-	      url: "api/user/my_klasses/",
+	      url: "api/user/my_klasses",
 	      type: "GET",
 	      success: successCallback,
 	      error: errorCallback
@@ -33779,7 +33796,7 @@
 	  },
 	  getMyKlassCreatedIndex: function getMyKlassCreatedIndex(successCallback, errorCallback) {
 	    $.ajax({
-	      url: "api/user/my_klasses_created/",
+	      url: "api/user/my_klasses_created",
 	      type: "GET",
 	      success: successCallback,
 	      error: errorCallback
@@ -33806,6 +33823,7 @@
 	  RECEIVE_CREATED_KLASS_INDEX: "RECEIVE_CREATED_KLASS_INDEX",
 	  RECEIVE_ENROLLED_KLASS_INDEX: "RECEIVE_ENROLLED_KLASS_INDEX",
 	  RECEIVE_STUDY_SET_INDEX: "RECEIVE_STUDY_SET_INDEX",
+	  RECEIVE_LANGUAGE_INDEX: "RECEIVE_LANGUAGE_INDEX",
 	  RECEIVE_SEARCH_RESULT: "RECEIVE_SEARCH_RESULT"
 	
 	};
@@ -33838,6 +33856,10 @@
 	  return indices.studySets;
 	};
 	
+	IndexStore.getLanguages = function () {
+	  return indices.languages;
+	};
+	
 	IndexStore.getKlasses = function (option) {
 	  if (option === "createdKlasses" || option === "enrolledKlasses") {
 	    return indices[option];
@@ -33862,6 +33884,10 @@
 	      break;
 	    case IndexConstants.RECEIVE_ENROLLED_KLASS_INDEX:
 	      indices.enrolledKlasses = payload.klasses || [];
+	      this.__emitChange();
+	      break;
+	    case IndexConstants.RECEIVE_LANGUAGE_INDEX:
+	      indices.languages = payload.languages || [];
 	      this.__emitChange();
 	      break;
 	    case IndexConstants.RECEIVE_SEARCH_RESULT:
@@ -34256,7 +34282,8 @@
 	var LoginForm = React.createClass({
 	  displayName: 'LoginForm',
 	  getInitialState: function getInitialState() {
-	    return { error: ErrorStore.full_errors() };
+	    return { error: ErrorStore.full_errors(),
+	      demoLoginMessage: false };
 	  },
 	  componentDidMount: function componentDidMount() {
 	    if (this.props.demo) {
@@ -34288,7 +34315,8 @@
 	    SessionActions.login(credentials);
 	  },
 	  loginDemo: function loginDemo(demo) {
-	    SessionActions.login(demo);
+	    this.setState({ demoLoginMessage: true });
+	    setTimeout(SessionActions.login.bind(SessionActions, demo), 1500);
 	  },
 	  showErrors: function showErrors() {
 	    if (this.state.error.responseText) {
@@ -34303,6 +34331,13 @@
 	      );
 	    }
 	  },
+	  welcomeMessage: function welcomeMessage() {
+	    if (this.state.demoLoginMessage) {
+	      return "Loggin in as Hiro .....";
+	    } else {
+	      return "Welcome Back";
+	    }
+	  },
 	  render: function render() {
 	    return React.createElement(
 	      'form',
@@ -34310,7 +34345,7 @@
 	      React.createElement(
 	        'h2',
 	        { className: 'title' },
-	        'Welcome Back'
+	        this.welcomeMessage()
 	      ),
 	      this.showErrors(),
 	      React.createElement(
@@ -53663,7 +53698,7 @@
 	var Modal = __webpack_require__(280).Modal;
 	var LoginForm = __webpack_require__(278);
 	var SignupForm = __webpack_require__(543);
-	var SearchBar = __webpack_require__(564);
+	var SearchBar = __webpack_require__(545);
 	
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -53785,6 +53820,44 @@
 	'use strict';
 	
 	var React = __webpack_require__(164);
+	var CurrentUserStore = __webpack_require__(269);
+	var SessionActions = __webpack_require__(259);
+	var hashHistory = __webpack_require__(170).hashHistory;
+	var Glyphicon = __webpack_require__(280).Glyphicon;
+	
+	var SearchBar = React.createClass({
+	  displayName: 'SearchBar',
+	  search: function search() {
+	    var searchText = this.refs.searchText.value;
+	    hashHistory.push('?option=search&for=' + searchText);
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'search-bar' },
+	      React.createElement(
+	        'h3',
+	        null,
+	        React.createElement('input', { type: 'text', ref: 'searchText', placeholder: 'Search...' }),
+	        React.createElement(
+	          'button',
+	          { className: 'btn', onClick: this.search },
+	          React.createElement(Glyphicon, { glyph: 'search' })
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = SearchBar;
+
+/***/ },
+/* 546 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(164);
 	
 	var Main = React.createClass({
 	  displayName: 'Main',
@@ -53805,7 +53878,6 @@
 	module.exports = Main;
 
 /***/ },
-/* 546 */,
 /* 547 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -54079,16 +54151,7 @@
 	            React.createElement(
 	              'h3',
 	              null,
-	              'Test will be randomly generated from the Study Set'
-	            )
-	          ),
-	          React.createElement(
-	            'li',
-	            null,
-	            React.createElement(
-	              'h3',
-	              null,
-	              'When you click \'Begin Test\', Test will start immediately'
+	              'Test will be randomly generated'
 	            )
 	          ),
 	          React.createElement(
@@ -54355,9 +54418,7 @@
 	        null,
 	        message
 	      );
-	      if (status >= 200 && status < 400) {
-	        this.setState({ sent: true });
-	      }
+	      this.setState({ sent: true });
 	      // } else {
 	      //   this.setState({completed: false });
 	      // }
@@ -54377,6 +54438,7 @@
 	    );
 	  },
 	  render: function render() {
+	    // this.serverResp is an instance var set by setServerResp()
 	    return React.createElement(
 	      'div',
 	      { className: 'test-form' },
@@ -54408,24 +54470,32 @@
 	var KlassIndex = __webpack_require__(552);
 	var StudySetIndex = __webpack_require__(554);
 	var IndexActions = __webpack_require__(265);
+	var LanguageIndex = __webpack_require__(564);
 	
 	var Index = React.createClass({
 	  displayName: 'Index',
+	  getInitialState: function getInitialState() {
+	    return {
+	      title: "All Classes and Study Sets",
+	      option: this.props.location.query.option,
+	      searchFor: this.props.location.query.for
+	    };
+	  },
 	  indexContent: function indexContent() {
-	    var option = this.props.location.query.option;
-	    if (option === "my_study_sets") {
+	    if (this.state.option === "my_study_sets") {
 	      return React.createElement(StudySetIndex, { title: 'Study Sets I created', option: 'myStudySets' });
-	    } else if (option === "my_classes") {
+	    } else if (this.state.option === "my_classes") {
 	      return React.createElement(
 	        'div',
 	        null,
 	        React.createElement(KlassIndex, { title: 'Classes I teach', option: 'createdKlasses' }),
 	        React.createElement(KlassIndex, { title: 'Classes I\'m enrolled in ', option: 'enrolledKlasses' })
 	      );
-	    } else if (option === "search") {
+	    } else if (this.state.option === "search") {
 	      return React.createElement(
 	        'div',
 	        null,
+	        React.createElement(LanguageIndex, { option: 'search' }),
 	        React.createElement(KlassIndex, { title: 'Classes', option: 'search' }),
 	        React.createElement(StudySetIndex, { title: 'Study Sets', option: 'search' })
 	      );
@@ -54439,28 +54509,34 @@
 	    }
 	  },
 	  componentDidMount: function componentDidMount() {
-	    this.doSearch();
+	    this.setTitle(this.doSearch);
+	    // this.doSearch();
 	  },
 	  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
-	    this.doSearch(newProps);
+	    this.setState({
+	      option: newProps.location.query.option,
+	      searchFor: newProps.location.query.for
+	    }, this.setTitle.bind(this, this.doSearch));
 	  },
-	  doSearch: function doSearch(newProps) {
-	    var props = newProps || this.props;
-	    if (props.location.query.option === "search") {
-	      IndexActions.search(props.location.query.for);
+	  setTitle: function setTitle(callback) {
+	    if (this.state.option === "search") {
+	      this.setState({ title: 'Search result for "' + this.state.searchFor + '"'
+	      }, callback);
+	    } else if (this.state.option === undefined) {
+	      this.setState({ title: 'All Classes and Study Sets' }, callback);
+	    } else {
+	      this.setState({ title: undefined }, callback);
+	    }
+	  },
+	  doSearch: function doSearch() {
+	    if (this.state.option === "search") {
+	      IndexActions.search(this.state.searchFor);
 	    }
 	  },
 	  studySetOption: function studySetOption() {
 	    var option = this.props.location.query.option;
 	    if (option === "my_study_sets") {
 	      return "myStudySets";
-	    }
-	  },
-	  indexTitle: function indexTitle() {
-	    if (this.props.title === undefined) {
-	      return "All Classes and Study Sets";
-	    } else {
-	      return this.props.title;
 	    }
 	  },
 	  render: function render() {
@@ -54470,7 +54546,7 @@
 	      React.createElement(
 	        'h1',
 	        null,
-	        this.indexTitle()
+	        this.state.title
 	      ),
 	      this.indexContent()
 	    );
@@ -54505,7 +54581,6 @@
 	    } else if (option === "enrolledKlasses") {
 	      IndexActions.getMyKlassIndex();
 	    } else if (option === "search") {
-	      console.log("option search");
 	      // does not fetch
 	    } else {
 	      IndexActions.getKlassIndex();
@@ -54603,9 +54678,12 @@
 	
 	var StudySetIndex = React.createClass({
 	  displayName: 'StudySetIndex',
-	  debugger: function _debugger() {
-	    console.log("setState");
-	  },
+	
+	
+	  // debugger(){
+	  //   console.log("setState");
+	  // },
+	
 	  getInitialState: function getInitialState() {
 	    return { studySets: [] };
 	  },
@@ -54618,7 +54696,7 @@
 	  fetchBasedOnProps: function fetchBasedOnProps(newProps) {
 	    var props = newProps || this.props;
 	    if (props.klassId) {
-	      this.setState({ studySets: KlassStore.getStudySets() }, this.debugger);
+	      this.setState({ studySets: KlassStore.getStudySets() });
 	    } else {
 	      if (props.option === "myStudySets") {
 	        IndexActions.getMyStudySetIndex();
@@ -54631,15 +54709,12 @@
 	    }
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
-	    if (this.indexListener.subscriber !== undefined) {
-	      console.log(this.indexListener);
-	      this.indexListener.remove();
-	      console.log(this.indexListener);
-	    }
+	    this.indexListener.remove();
+	    this.indexListener = undefined;
 	  },
 	  updateState: function updateState() {
-	    if (this.indexListener.subscriber !== undefined) {
-	      this.setState({ studySets: IndexStore.getStudySets() }, this.debugger);
+	    if (this.indexListener) {
+	      this.setState({ studySets: IndexStore.getStudySets() });
 	    }
 	  },
 	  createStudySet: function createStudySet(event) {
@@ -55655,7 +55730,6 @@
 	    KlassActions.updateStudySets(data);
 	  },
 	  render: function render() {
-	    console.log(this.state);
 	    return React.createElement(
 	      'div',
 	      { className: 'add_study_set_form' },
@@ -55944,7 +56018,7 @@
 	      demoCredentials: false
 	    };
 	  },
-	  ensureLogin: function ensureLogin(path) {
+	  redirectOrLogin: function redirectOrLogin(path) {
 	    var loggedin = Boolean(CurrentUserStore.getCurrentUser().id);
 	    if (loggedin) {
 	      hashHistory.push(path);
@@ -55953,19 +56027,19 @@
 	    }
 	  },
 	  toMyStudySets: function toMyStudySets() {
-	    this.ensureLogin("?option=my_study_sets");
+	    this.redirectOrLogin("?option=my_study_sets");
 	  },
 	  toMyKlasses: function toMyKlasses() {
-	    this.ensureLogin("?option=my_classes");
+	    this.redirectOrLogin("?option=my_classes");
 	  },
 	  toMyTestScores: function toMyTestScores() {
-	    this.ensureLogin("my_test_scores");
+	    this.redirectOrLogin("my_test_scores");
 	  },
 	  toCreateStudySet: function toCreateStudySet() {
-	    this.ensureLogin("study_set_form");
+	    this.redirectOrLogin("study_set_form");
 	  },
 	  toCreateClass: function toCreateClass() {
-	    this.ensureLogin("class_form");
+	    this.redirectOrLogin("class_form");
 	  },
 	  toIndex: function toIndex() {
 	    hashHistory.push("/");
@@ -56004,20 +56078,25 @@
 	  loginOption: function loginOption() {
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'session_form' },
+	      React.createElement(
+	        'h2',
+	        null,
+	        'Login is required for this feature'
+	      ),
 	      React.createElement(
 	        'button',
-	        { onClick: this.openLogin },
+	        { className: 'btn', onClick: this.openLogin },
 	        'Login'
 	      ),
 	      React.createElement(
 	        'button',
-	        { onClick: this.loginDemo },
+	        { className: 'btn', onClick: this.loginDemo },
 	        'Demo Login'
 	      ),
 	      React.createElement(
 	        'button',
-	        { onClick: this.openSignup },
+	        { className: 'btn', onClick: this.openSignup },
 	        'Sign up'
 	      )
 	    );
@@ -56049,6 +56128,8 @@
 	        React.createElement(Modal.Header, { closeButton: true }),
 	        this.loginOption()
 	      ),
+	      this.modalSignup(),
+	      this.modalLogin(),
 	      React.createElement(
 	        'button',
 	        { className: 'btn green-btn', onClick: this.toIndex },
@@ -56097,36 +56178,61 @@
 	'use strict';
 	
 	var React = __webpack_require__(164);
-	var CurrentUserStore = __webpack_require__(269);
-	var SessionActions = __webpack_require__(259);
+	var IndexStore = __webpack_require__(268);
+	var IndexActions = __webpack_require__(265);
+	var Button = __webpack_require__(280).Button;
 	var hashHistory = __webpack_require__(170).hashHistory;
-	var Glyphicon = __webpack_require__(280).Glyphicon;
+	var ListGroup = __webpack_require__(280).ListGroup;
 	
-	var SearchBar = React.createClass({
-	  displayName: 'SearchBar',
-	  search: function search() {
-	    var searchText = this.refs.searchText.value;
-	    hashHistory.push('?option=search&for=' + searchText);
+	var LanguageIndex = React.createClass({
+	  displayName: 'LanguageIndex',
+	  getInitialState: function getInitialState() {
+	    return { languages: IndexStore.getLanguages() };
+	  },
+	  componentWillMount: function componentWillMount() {
+	    this.indexListener = IndexStore.addListener(this.updateState);
+	  },
+	  componentDidMount: function componentDidMount() {
+	    this.fetchBasedOnProps();
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
+	    this.fetchBasedOnProps(newProps);
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.indexListener.remove();
+	    this.indexListener = undefined;
+	  },
+	  fetchBasedOnProps: function fetchBasedOnProps(newProps) {
+	    var option = newProps ? newProps.option : this.props.option;
+	    if (option === "search") {
+	      // does not fetch
+	    } else {
+	      IndexActions.getLanguageIndex();
+	    }
 	  },
 	  render: function render() {
+	    var title = "Languages";
+	    console.log(this.state.languages);
 	    return React.createElement(
 	      'div',
-	      { className: 'search-bar' },
+	      { className: 'language-index' },
+	      title,
 	      React.createElement(
-	        'h3',
+	        ListGroup,
 	        null,
-	        React.createElement('input', { type: 'text', ref: 'searchText', placeholder: 'Search...' }),
-	        React.createElement(
-	          'button',
-	          { className: 'btn', onClick: this.search },
-	          React.createElement(Glyphicon, { glyph: 'search' })
-	        )
+	        this.state.languages.map(function (language) {
+	          return React.createElement(
+	            'p',
+	            null,
+	            language.name
+	          );
+	        })
 	      )
 	    );
 	  }
 	});
 	
-	module.exports = SearchBar;
+	module.exports = LanguageIndex;
 
 /***/ }
 /******/ ]);

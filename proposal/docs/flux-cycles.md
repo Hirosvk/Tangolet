@@ -1,3 +1,32 @@
+#Home
+**Parents always call Actions**
+* Index calls IndexActions.fetchAllIndex
+* receive:
+  * KlassIndexStore(allKlasses)
+  * StudySetIndexStore
+  * LanguageIndexStore
+
+* Search calls IndexActions.search
+  * KlassIndexStore(allKlasses)
+  * StudySetStore
+  * LanguageStore
+
+* My Classes calls IndexActions.fetchMyKlasses
+  * KlassIndexStore(myCreated & myEnrolled)
+
+* My Study Sets calls IndexActions.myStudySets
+  * StudySetStore
+
+* Klass calls KlassActions.fetchKlass & IndexActions.fetchStudySets(by klass id)
+  * KlassStore
+  * StudySetIndexStore
+
+* My Test Scores --> ok
+
+
+
+
+
 # Stores
 
 * KlassStore (<- klasses#show)

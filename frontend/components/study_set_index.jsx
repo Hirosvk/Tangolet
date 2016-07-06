@@ -9,9 +9,9 @@ const KlassStore = require('../stores/klass_store');
 
 const StudySetIndex = React.createClass({
 
-  debugger(){
-    console.log("setState");
-  },
+  // debugger(){
+  //   console.log("setState");
+  // },
 
   getInitialState(){
     return ({studySets: []});
@@ -28,7 +28,7 @@ const StudySetIndex = React.createClass({
   fetchBasedOnProps(newProps){
     const props = newProps || this.props;
     if (props.klassId){
-      this.setState({studySets: KlassStore.getStudySets()}, this.debugger);
+      this.setState({studySets: KlassStore.getStudySets()});
     } else {
       if (props.option === "myStudySets") {
         IndexActions.getMyStudySetIndex();
@@ -42,16 +42,13 @@ const StudySetIndex = React.createClass({
   },
 
   componentWillUnmount(){
-    if (this.indexListener.subscriber !== undefined) {
-      console.log(this.indexListener);
-      this.indexListener.remove();
-      console.log(this.indexListener);
-    }
+    this.indexListener.remove();
+    this.indexListener = undefined;
   },
 
   updateState(){
-    if (this.indexListener.subscriber !== undefined) {
-      this.setState({studySets: IndexStore.getStudySets()}, this.debugger);
+    if (this.indexListener) {
+      this.setState({studySets: IndexStore.getStudySets()});
     }
   },
 

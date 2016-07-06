@@ -17,7 +17,7 @@ const SideNavbar = React.createClass({
     });
   },
 
-  ensureLogin(path){
+  redirectOrLogin(path){
     const loggedin = Boolean(CurrentUserStore.getCurrentUser().id);
     if (loggedin){
       hashHistory.push(path);
@@ -27,23 +27,23 @@ const SideNavbar = React.createClass({
   },
 
   toMyStudySets(){
-    this.ensureLogin("?option=my_study_sets");
+    this.redirectOrLogin("?option=my_study_sets");
   },
 
   toMyKlasses(){
-    this.ensureLogin("?option=my_classes");
+    this.redirectOrLogin("?option=my_classes");
   },
 
   toMyTestScores(){
-    this.ensureLogin("my_test_scores");
+    this.redirectOrLogin("my_test_scores");
   },
 
   toCreateStudySet(){
-    this.ensureLogin("study_set_form");
+    this.redirectOrLogin("study_set_form");
   },
 
   toCreateClass(){
-    this.ensureLogin("class_form");
+    this.redirectOrLogin("class_form");
   },
 
   toIndex(){
@@ -90,10 +90,11 @@ const SideNavbar = React.createClass({
 
   loginOption(){
     return (
-      <div>
-        <button onClick={this.openLogin}>Login</button>
-        <button onClick={this.loginDemo}>Demo Login</button>
-        <button onClick={this.openSignup}>Sign up</button>
+      <div className="session_form">
+        <h2>Login is required for this feature</h2>
+        <button className="btn" onClick={this.openLogin}>Login</button>
+        <button className="btn" onClick={this.loginDemo}>Demo Login</button>
+        <button className="btn" onClick={this.openSignup}>Sign up</button>
       </div>
     );
   },
@@ -126,6 +127,8 @@ const SideNavbar = React.createClass({
           <Modal.Header closeButton />
           {this.loginOption()}
         </Modal>
+        {this.modalSignup()}
+        {this.modalLogin()}
 
         <button className="btn green-btn" onClick={this.toIndex}>Home</button>
         <button className="btn blue-btn" onClick={this.toMyKlasses}>My Classes</button>

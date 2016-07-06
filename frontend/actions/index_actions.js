@@ -8,6 +8,10 @@ const IndexActions = {
     IndexUtils.getStudySetIndex(this.receiveStudySetIndex, errorCallback);
   },
 
+  getLanguageIndex(errorCallback){
+    IndexUtils.getLanguageIndex(this.receiveLanguageIndex, errorCallback);
+  },
+
   getKlassIndex(errorCallback){
     IndexUtils.getKlassIndex(this.receiveKlassIndex.bind(null, IndexConstants.RECEIVE_ALL_KLASS_INDEX)
     , errorCallback);
@@ -29,6 +33,13 @@ const IndexActions = {
     AppDispatcher.dispatch({
       actionType: IndexConstants.RECEIVE_STUDY_SET_INDEX,
       studySets: studySets
+    });
+  },
+
+  receiveLanguageIndex(languages){
+    AppDispatcher.dispatch({
+      actionType: IndexConstants.RECEIVE_LANGUAGE_INDEX,
+      languages: languages
     });
   },
 

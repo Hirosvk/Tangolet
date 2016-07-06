@@ -20,6 +20,10 @@ IndexStore.getStudySets = function(){
   return indices.studySets;
 };
 
+IndexStore.getLanguages = function(){
+  return indices.languages;
+};
+
 IndexStore.getKlasses = function(option){
   if (option === "createdKlasses" || option === "enrolledKlasses"){
     return indices[option];
@@ -44,6 +48,10 @@ IndexStore.__onDispatch = function(payload){
       break;
     case IndexConstants.RECEIVE_ENROLLED_KLASS_INDEX:
       indices.enrolledKlasses = payload.klasses || [];
+      this.__emitChange();
+      break;
+    case IndexConstants.RECEIVE_LANGUAGE_INDEX:
+      indices.languages = payload.languages || [];
       this.__emitChange();
       break;
     case IndexConstants.RECEIVE_SEARCH_RESULT:

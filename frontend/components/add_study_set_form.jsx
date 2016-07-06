@@ -125,7 +125,6 @@ const AddStudySetForm = React.createClass({
   },
 
   render(){
-    console.log(this.state);
     return(
       <div className="add_study_set_form">
         <h2>Select or unselect study sets for this class.</h2>
