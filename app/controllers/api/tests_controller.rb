@@ -63,7 +63,7 @@ COLLECTION_QUERY_BY_STUDYSETS = <<-SQL
   SELECT
     study_sets.name AS name,
     study_sets.id AS id,
-    AVG(tests.score) AS average_score,
+    CAST(AVG(tests.score) AS INT) AS average_score,
     COUNT(tests.id) AS num_of_tests_taken
   FROM
     klasses JOIN klass_set_joins
@@ -98,7 +98,7 @@ COLLECTION_QUERY_BY_STUDENTS = <<-SQL
   SELECT
     students.username AS name,
     students.id AS id,
-    AVG(tests.score) AS average_score,
+    CAST(AVG(tests.score) AS INT) AS average_score,
     COUNT(tests.id) AS num_of_tests_taken
   FROM
     klasses JOIN klass_set_joins

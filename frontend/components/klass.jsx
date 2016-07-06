@@ -21,10 +21,23 @@ const Klass = React.createClass({
   },
 
   componentWillMount(){
-    const id = this.props.params.klassId;
-    KlassActions.fetchKlass(id);
+    this.fetchBasedOnProps();
     this.listener = KlassStore.addListener(this.updateState);
     this.userListener = CurrentUserStore.addListener(this.updateEnrollment);
+  },
+
+  fetchBasedOnProps(newProps){
+    let id;
+    if (newProps) {
+      id = newProps.params.klassId;
+    } else {
+      id = this.props.params.klassId;
+    }
+    KlassActions.fetchKlass(id);
+  },
+
+  componentWillReceiveProps(newProps){
+    this.fetchBasedOnProps(newProps);
   },
 
   componentWillUnmount(){

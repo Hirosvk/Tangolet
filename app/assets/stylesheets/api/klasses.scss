@@ -74,11 +74,24 @@
   background-color: #F9CE1C;
 }
 
-
-.list-group-item.active{
+.add_study_set_form .list-group-item.active{
   background: #26A6B8;
 }
 
+.add_study_set_form .list-group-item:hover{
+  background: #FFFFFF;
+  color: #5C5C5C;
+}
+
+.add_study_set_form .list-group-item.active:hover{
+  background: #26A6B8;
+  color: #FFFFFF;
+}
+
+.add_study_set_form .list-group-item.active:focus{
+  background: #26A6B8;
+  color: #FFFFFF;
+}
 
 
 .add_study_set_form {

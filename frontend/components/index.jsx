@@ -52,7 +52,7 @@ const Index = React.createClass({
   },
 
   indexTitle(){
-    if (!this.props.title){
+    if (this.props.title === undefined){
       return "All Classes and Study Sets";
     } else {
       return this.props.title;

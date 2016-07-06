@@ -32,7 +32,7 @@ const TestForm = React.createClass({
 
   componentWillUnmount(){
     ErrorStore.resetErrors();
-    if (!this.errorListener === undefined){
+    if (this.errorListener.subscriber){
       this.errorListener.remove();
     }
     clearInterval(this.clock);
@@ -161,6 +161,7 @@ const TestForm = React.createClass({
 
   submitScore(){
     if (this.score !== undefined){
+      // in JavasScript, 0 is falsey
       clearInterval(this.scorePending);
       let testData = {};
       testData.score = parseInt((this.score / this.words.length) * 100);
@@ -191,9 +192,10 @@ const TestForm = React.createClass({
       this.serverResp = <h2>{message}</h2>;
       if (status >= 200 && status < 400) {
         this.setState({sent: true});
-      } else {
-        this.setState({completed: false });
       }
+      // } else {
+      //   this.setState({completed: false });
+      // }
     }
   },
 

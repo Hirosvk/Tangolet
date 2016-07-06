@@ -16,22 +16,35 @@ const AddStudySetForm = React.createClass({
     return ({
       klassName: klass.name,
       klassId: klass.id,
-      studySetIds: KlassStore.getKlass().study_set_ids,
+      studySetIds: klass.study_set_ids,
       studySets: IndexStore.getStudySets()
     });
   },
 
-
   componentDidMount(){
     IndexActions.getStudySetIndex();
     this.indexListener = IndexStore.addListener(this.updateStudySets);
-    this.klassListener = KlassStore.addListener(this.redirect);
+    this.klassListener = KlassStore.addListener(this.updateKlass);
+    //  by the time AddStudySetForm mounts, the new Klass info has not reached
+    //  KlassStore. So, AddStudySetForm initializes with the old klass info.
+    //  that's why it needs to add listener to Klass Store to update the
+    //  state with the new klass info.
   },
-
 
   componentWillUnmount(){
     this.indexListener.remove();
     this.klassListener.remove();
+    // this.studySetIdListener.remove();
+  },
+
+  updateKlass(){
+    const klass = KlassStore.getKlass();
+    this.setState({
+      klassName: klass.name,
+      klassId: klass.id,
+      studySetIds: klass.study_set_ids,
+      studySets: IndexStore.getStudySets()
+    });
   },
 
   redirect(){
@@ -106,10 +119,13 @@ const AddStudySetForm = React.createClass({
     } else {
       data.studySetIds = this.state.studySetIds;
     }
+    this.klassListener.remove();
+    this.klassListener = KlassStore.addListener(this.redirect);
     KlassActions.updateStudySets(data);
   },
 
   render(){
+    console.log(this.state);
     return(
       <div className="add_study_set_form">
         <h2>Select or unselect study sets for this class.</h2>

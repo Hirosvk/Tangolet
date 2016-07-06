@@ -214,7 +214,9 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 
 ## Phase 11: Final Touch (1.5day w9d4)
 - [ ] invalid/unauthorized navigation redirected
-- [ ] improve current alerts
+- [ ] improve alerts
+  - [ ] Navbar
+  - [ ] server errors
 
 - [ ] welcome page
 - [ ] about page
@@ -222,15 +224,10 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 
 - [ ] standardize font sizes and colors
   - [ ] form input text colors
-  - [ ] header text color and sizes
   - [ ] button colors and sizes
 
-- [ ] header with login tucked in
 - [ ] pick font
 - [ ] seed data
-- [ ] Views: get info from store instead of from props whenever possible
-- [ ] clean up left-behind error message
-- [ ] add error message display function in test form
 - [ ] when you log out while visiting page that require authorization, user is redirected
 - [ ] tell user if she is enrolled in the class on Klass page
 - [ ] improve demo sign-up
@@ -249,6 +246,8 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 - [ ] check controlled values of each form and evaluate necessity
 - [ ] check for unmounting
 - [ ] CSS
+- [ ] Views: get info from store instead of from props whenever possible
+
 
 ## Phase 10: Flashcards
 - [ ] flashcard feature

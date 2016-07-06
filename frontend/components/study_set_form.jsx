@@ -54,7 +54,7 @@ const StudySetForm = React.createClass({
       error: ErrorStore.full_errors(),
       name: "",
       languages: LanguageStore.all(),
-      languagePicked: {}
+      languagePicked: {id: 0}
     });
   },
 
@@ -212,7 +212,7 @@ const StudySetForm = React.createClass({
     if (this.state.languagePicked.id){
       return this.state.languagePicked.name;
     } else {
-      return "Pick language";
+      return "(select language)";
     }
   },
 
@@ -221,6 +221,7 @@ const StudySetForm = React.createClass({
     <label>Choose language<select
       defaultValue={this.state.languagePicked.id}
       onChange={this.languageChange}>
+      <option value={0} key={0} ref={0} selected disabled></option>
       {
         this.state.languages.map( language => {
           return (<option

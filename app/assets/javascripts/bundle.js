@@ -54151,7 +54151,7 @@
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
 	    ErrorStore.resetErrors();
-	    if (!this.errorListener === undefined) {
+	    if (this.errorListener.subscriber) {
 	      this.errorListener.remove();
 	    }
 	    clearInterval(this.clock);
@@ -54317,6 +54317,7 @@
 	  },
 	  submitScore: function submitScore() {
 	    if (this.score !== undefined) {
+	      // in JavasScript, 0 is falsey
 	      clearInterval(this.scorePending);
 	      var testData = {};
 	      testData.score = parseInt(this.score / this.words.length * 100);
@@ -54356,9 +54357,10 @@
 	      );
 	      if (status >= 200 && status < 400) {
 	        this.setState({ sent: true });
-	      } else {
-	        this.setState({ completed: false });
 	      }
+	      // } else {
+	      //   this.setState({completed: false });
+	      // }
 	    }
 	  },
 	  exitButton: function exitButton() {
@@ -54455,7 +54457,7 @@
 	    }
 	  },
 	  indexTitle: function indexTitle() {
-	    if (!this.props.title) {
+	    if (this.props.title === undefined) {
 	      return "All Classes and Study Sets";
 	    } else {
 	      return this.props.title;
@@ -54601,6 +54603,9 @@
 	
 	var StudySetIndex = React.createClass({
 	  displayName: 'StudySetIndex',
+	  debugger: function _debugger() {
+	    console.log("setState");
+	  },
 	  getInitialState: function getInitialState() {
 	    return { studySets: [] };
 	  },
@@ -54613,11 +54618,7 @@
 	  fetchBasedOnProps: function fetchBasedOnProps(newProps) {
 	    var props = newProps || this.props;
 	    if (props.klassId) {
-	      this.setState({ studySets: KlassStore.getStudySets() });
-	      this.klassListener = KlassStore.addListener(this.updateState);
-	      if (this.indexListener) {
-	        this.indexListener.remove();
-	      }
+	      this.setState({ studySets: KlassStore.getStudySets() }, this.debugger);
 	    } else {
 	      if (props.option === "myStudySets") {
 	        IndexActions.getMyStudySetIndex();
@@ -54627,24 +54628,18 @@
 	        IndexActions.getStudySetIndex();
 	      }
 	      this.indexListener = IndexStore.addListener(this.updateState);
-	      if (this.klassListener) {
-	        this.klassListener.remove();
-	      }
 	    }
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
-	    if (this.klassListener) {
-	      this.klassListener.remove();
-	    }
-	    if (this.indexListener) {
+	    if (this.indexListener.subscriber !== undefined) {
+	      console.log(this.indexListener);
 	      this.indexListener.remove();
+	      console.log(this.indexListener);
 	    }
 	  },
 	  updateState: function updateState() {
-	    if (this.klassListener) {
-	      this.setState({ studySets: KlassStore.getStudySets() });
-	    } else {
-	      this.setState({ studySets: IndexStore.getStudySets() });
+	    if (this.indexListener.subscriber !== undefined) {
+	      this.setState({ studySets: IndexStore.getStudySets() }, this.debugger);
 	    }
 	  },
 	  createStudySet: function createStudySet(event) {
@@ -54776,7 +54771,7 @@
 	      error: ErrorStore.full_errors(),
 	      name: "",
 	      languages: LanguageStore.all(),
-	      languagePicked: {}
+	      languagePicked: { id: 0 }
 	    };
 	  },
 	  setupEdit: function setupEdit() {
@@ -54933,7 +54928,7 @@
 	    if (this.state.languagePicked.id) {
 	      return this.state.languagePicked.name;
 	    } else {
-	      return "Pick language";
+	      return "(select language)";
 	    }
 	  },
 	  languageChoices: function languageChoices() {
@@ -54946,6 +54941,7 @@
 	        {
 	          defaultValue: this.state.languagePicked.id,
 	          onChange: this.languageChange },
+	        React.createElement('option', { value: 0, key: 0, ref: 0, selected: true, disabled: true }),
 	        this.state.languages.map(function (language) {
 	          return React.createElement(
 	            'option',
@@ -55313,10 +55309,21 @@
 	    };
 	  },
 	  componentWillMount: function componentWillMount() {
-	    var id = this.props.params.klassId;
-	    KlassActions.fetchKlass(id);
+	    this.fetchBasedOnProps();
 	    this.listener = KlassStore.addListener(this.updateState);
 	    this.userListener = CurrentUserStore.addListener(this.updateEnrollment);
+	  },
+	  fetchBasedOnProps: function fetchBasedOnProps(newProps) {
+	    var id = void 0;
+	    if (newProps) {
+	      id = newProps.params.klassId;
+	    } else {
+	      id = this.props.params.klassId;
+	    }
+	    KlassActions.fetchKlass(id);
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
+	    this.fetchBasedOnProps(newProps);
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.listener.remove();
@@ -55543,18 +55550,32 @@
 	    return {
 	      klassName: klass.name,
 	      klassId: klass.id,
-	      studySetIds: KlassStore.getKlass().study_set_ids,
+	      studySetIds: klass.study_set_ids,
 	      studySets: IndexStore.getStudySets()
 	    };
 	  },
 	  componentDidMount: function componentDidMount() {
 	    IndexActions.getStudySetIndex();
 	    this.indexListener = IndexStore.addListener(this.updateStudySets);
-	    this.klassListener = KlassStore.addListener(this.redirect);
+	    this.klassListener = KlassStore.addListener(this.updateKlass);
+	    //  by the time AddStudySetForm mounts, the new Klass info has not reached
+	    //  KlassStore. So, AddStudySetForm initializes with the old klass info.
+	    //  that's why it needs to add listener to Klass Store to update the
+	    //  state with the new klass info.
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.indexListener.remove();
 	    this.klassListener.remove();
+	    // this.studySetIdListener.remove();
+	  },
+	  updateKlass: function updateKlass() {
+	    var klass = KlassStore.getKlass();
+	    this.setState({
+	      klassName: klass.name,
+	      klassId: klass.id,
+	      studySetIds: klass.study_set_ids,
+	      studySets: IndexStore.getStudySets()
+	    });
 	  },
 	  redirect: function redirect() {
 	    this.props.backToStudySets();
@@ -55629,9 +55650,12 @@
 	    } else {
 	      data.studySetIds = this.state.studySetIds;
 	    }
+	    this.klassListener.remove();
+	    this.klassListener = KlassStore.addListener(this.redirect);
 	    KlassActions.updateStudySets(data);
 	  },
 	  render: function render() {
+	    console.log(this.state);
 	    return React.createElement(
 	      'div',
 	      { className: 'add_study_set_form' },
@@ -55908,54 +55932,123 @@
 	var IndexActions = __webpack_require__(265);
 	var CurrentUserStore = __webpack_require__(269);
 	var hashHistory = __webpack_require__(170).hashHistory;
+	var Modal = __webpack_require__(280).Modal;
 	
 	var SideNavbar = React.createClass({
 	  displayName: 'SideNavbar',
-	  loggedIn: function loggedIn() {
-	    return Boolean(CurrentUserStore.getCurrentUser().id);
+	  getInitialState: function getInitialState() {
+	    return {
+	      showLoginOption: false,
+	      showLogin: false,
+	      showSignup: false,
+	      demoCredentials: false
+	    };
+	  },
+	  ensureLogin: function ensureLogin(path) {
+	    var loggedin = Boolean(CurrentUserStore.getCurrentUser().id);
+	    if (loggedin) {
+	      hashHistory.push(path);
+	    } else {
+	      this.showLoginOption();
+	    }
 	  },
 	  toMyStudySets: function toMyStudySets() {
-	    if (this.loggedIn()) {
-	      hashHistory.push("?option=my_study_sets");
-	    } else {
-	      alert("Login is require for this feature.");
-	    }
+	    this.ensureLogin("?option=my_study_sets");
 	  },
 	  toMyKlasses: function toMyKlasses() {
-	    if (this.loggedIn()) {
-	      hashHistory.push("?option=my_classes");
-	    } else {
-	      alert("Login is require for this feature.");
-	    }
+	    this.ensureLogin("?option=my_classes");
 	  },
 	  toMyTestScores: function toMyTestScores() {
-	    if (this.loggedIn()) {
-	      hashHistory.push("my_test_scores");
-	    } else {
-	      alert("Login is require for this feature.");
-	    }
+	    this.ensureLogin("my_test_scores");
 	  },
 	  toCreateStudySet: function toCreateStudySet() {
-	    if (this.loggedIn()) {
-	      hashHistory.push("study_set_form");
-	    } else {
-	      alert("Login is require for this feature.");
-	    }
+	    this.ensureLogin("study_set_form");
 	  },
 	  toCreateClass: function toCreateClass() {
-	    if (this.loggedIn()) {
-	      hashHistory.push("class_form");
-	    } else {
-	      alert("Login is require for this feature.");
-	    }
+	    this.ensureLogin("class_form");
 	  },
 	  toIndex: function toIndex() {
 	    hashHistory.push("/");
+	  },
+	  showLoginOption: function showLoginOption() {
+	    this.setState({ showLoginOption: true });
+	  },
+	  closeLoginOption: function closeLoginOption() {
+	    this.setState({ showLoginOption: false });
+	  },
+	  openLogin: function openLogin() {
+	    this.closeLoginOption();
+	    this.setState({ showLogin: true, demoCredentials: false });
+	  },
+	  closeLogin: function closeLogin() {
+	    this.setState({ showLogin: false });
+	  },
+	  openSignup: function openSignup() {
+	    this.closeLoginOption();
+	    this.setState({ showSignup: true });
+	  },
+	  closeSignup: function closeSignup() {
+	    this.setState({ showSignup: false });
+	  },
+	  loginDemo: function loginDemo() {
+	    this.closeLoginOption();
+	    var demoCredentials = {
+	      username: "Hiro",
+	      password: "hirohiro"
+	    };
+	    this.setState({
+	      showLogin: true,
+	      demoCredentials: demoCredentials
+	    });
+	  },
+	  loginOption: function loginOption() {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'button',
+	        { onClick: this.openLogin },
+	        'Login'
+	      ),
+	      React.createElement(
+	        'button',
+	        { onClick: this.loginDemo },
+	        'Demo Login'
+	      ),
+	      React.createElement(
+	        'button',
+	        { onClick: this.openSignup },
+	        'Sign up'
+	      )
+	    );
+	  },
+	  modalLogin: function modalLogin() {
+	    return React.createElement(
+	      Modal,
+	      { show: this.state.showLogin, onHide: this.closeLogin },
+	      React.createElement(Modal.Header, { closeButton: true }),
+	      React.createElement(LoginForm, { closeModal: this.closeLogin,
+	        demo: this.state.demoCredentials })
+	    );
+	  },
+	  modalSignup: function modalSignup() {
+	    return React.createElement(
+	      Modal,
+	      { show: this.state.showSignup, onHide: this.closeSignup },
+	      React.createElement(Modal.Header, { closeButton: true }),
+	      React.createElement(SignupForm, { closeModal: this.closeSignup })
+	    );
 	  },
 	  render: function render() {
 	    return React.createElement(
 	      'aside',
 	      { className: 'side-navbar' },
+	      React.createElement(
+	        Modal,
+	        { show: this.state.showLoginOption, onHide: this.closeLoginOption },
+	        React.createElement(Modal.Header, { closeButton: true }),
+	        this.loginOption()
+	      ),
 	      React.createElement(
 	        'button',
 	        { className: 'btn green-btn', onClick: this.toIndex },
