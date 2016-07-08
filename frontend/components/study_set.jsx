@@ -87,7 +87,8 @@ const StudySet = React.createClass({
               language_name={this.state.studySet.language.name}/>
           </Tab>
           <Tab eventKey={2} title="Flashcards" >
-            <Flashcards words={this.state.studySet.words}/>
+            <Flashcards words={this.state.studySet.words}
+              language_name={this.state.studySet.language.name}/>
           </Tab>
           <Tab eventKey={3} title="Test">
             <Test words={this.state.studySet.words}

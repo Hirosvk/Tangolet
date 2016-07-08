@@ -10,6 +10,7 @@ const Button = require('react-bootstrap').Button;
 const Tabs = require('react-bootstrap').Tabs;
 const Tab = require('react-bootstrap').Tab;
 const TestCollection = require('./test_collection');
+const StudentIndex = require('./student_index');
 
 const Klass = React.createClass({
   getInitialState(){
@@ -128,7 +129,7 @@ const Klass = React.createClass({
   },
 
   isTeacher(){
-    return (CurrentUserStore.getCurrentUser().id === this.state.klass.teacher.id)
+    return (CurrentUserStore.getCurrentUser().id === this.state.klass.teacher.id);
   },
 
   changeActiveKey(eventKey){
@@ -172,12 +173,21 @@ const Klass = React.createClass({
         </Tab>);
     }
 
+    let secondTab;
+    if (this.isTeacher() || this.enrollmentStatus()){
+      secondTab = (
+        <Tab eventKey={2} title="Students" >
+          <StudentIndex students={this.state.klass.students}/>
+        </Tab>
+      );
+    }
+
     return (
       <Tabs activeKey={this.state.activeKey} onSelect={this.changeActiveKey} id="klass-options">
         <Tab eventKey={1} title="Study Sets">
           <StudySetIndex klassId={this.props.params.klassId} />
         </Tab>
-        <Tab eventKey={2} title="Students" disabled />
+        {secondTab}
         {thirdTab}
         {forthTab}
         {fifthTab}

@@ -44,7 +44,7 @@ const Welcome = React.createClass({
           <div className="pane four">
             <h2>Browse Classes/Study Sets</h2>
             <ul>
-              <li>Use search bar to find the right classes study sets.</li>
+              <li>Use search bar to find the right classes / study sets.</li>
               <li><a onClick={this.toLanguages}>Browse by Language.</a></li>
             </ul>
           </div>

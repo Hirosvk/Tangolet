@@ -70,9 +70,25 @@ Klass.fourth.study_set_ids = [four]
 
 t1 = User.first.tests.new(study_set_id: four, score: 40)
 t1.save!
+t1 = User.first.tests.new(study_set_id: three, score: 70)
+t1.save!
+t1 = User.first.tests.new(study_set_id: two, score: 90)
+t1.save!
+
 t2 = User.second.tests.new(study_set_id: four, score: 60)
 t2.save!
-t3 = User.first.tests.new(study_set_id: three, score: 80)
+t2 = User.second.tests.new(study_set_id: one, score: 100)
+t2.save!
+t2 = User.second.tests.new(study_set_id: three, score: 70)
+t2.save!
+
+t3 = User.third.tests.new(study_set_id: three, score: 80)
+t3.save!
+t3 = User.third.tests.new(study_set_id: two, score: 80)
+t3.save!
+t3 = User.third.tests.new(study_set_id: two, score: 90)
+t3.save!
+t3 = User.third.tests.new(study_set_id: one, score: 80)
 t3.save!
 
 one = Klass.first.id

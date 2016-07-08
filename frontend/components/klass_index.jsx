@@ -43,7 +43,7 @@ const KlassIndex = React.createClass({
   },
 
   items(){
-    if (this.state.klasses.length > 0){
+    if (this.state.klasses && this.state.klasses.length > 0){
       return this.state.klasses.map( klass => {
         return <KlassIndexItem klass={klass} key={klass.id}/>;
       });
@@ -61,7 +61,7 @@ const KlassIndex = React.createClass({
         <ListGroup>
         { this.items() }
         </ListGroup>
-        <Button onClick={this.createKlass}>+ Create New Class(dev.)</Button>
+        <Button onClick={this.createKlass}>+ Create New Class</Button>
       </div>
     );
   }

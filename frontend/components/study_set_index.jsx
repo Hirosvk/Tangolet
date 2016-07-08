@@ -64,7 +64,7 @@ const StudySetIndex = React.createClass({
         <ListGroup>
         { this.items() }
         </ListGroup>
-        <Button onClick={this.createStudySet}>+ Create New Study Set(dev.)</Button>
+        <Button onClick={this.createStudySet}>+ Create New Study Set</Button>
       </div>
     );
   }

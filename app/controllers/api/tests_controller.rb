@@ -159,6 +159,8 @@ FROM
 WHERE
   klasses.id = ? AND students.id = ?
   AND teachers.id = ? AND teachers.id != students.id
+ORDER BY
+  tests.created_at
 SQL
 
 ## TestIndex displays the following as TestIndexItems
@@ -204,6 +206,8 @@ FROM
 WHERE
   klasses.id = ? AND study_sets.id = ?
   AND teachers.id = ? AND teachers.id != students.id
+ORDER BY
+  tests.created_at
 SQL
 
 QUERY_BY_CURRENT_USER = <<-SQL
@@ -223,4 +227,6 @@ FROM
   ON tests.user_id = students.id
 WHERE
   students.id = ?
+ORDER BY
+  tests.created_at
 SQL

@@ -67,7 +67,7 @@ const Index = React.createClass({
     } else if (this.state.option === "my_classes" || this.state.option === "my_study_sets") {
       this.setState({title: undefined}, callback);
     } else if (this.state.option === "all_languages") {
-      this.setState({title: "Browse by Language"});
+      this.setState({title: "Browse by Language"}, callback);
     }
     else {
       this.setState({title: `${this.state.option} Classes and Study Sets`}, callback);

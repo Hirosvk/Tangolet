@@ -8,6 +8,7 @@ let _klass = {
           teacher: {},
           language:{},
           study_set_ids: [],
+          students: []
         };
 // properties are pre-defined here, so that the view files
 // don't throw errors with undefined objects.

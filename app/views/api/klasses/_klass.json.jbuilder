@@ -10,7 +10,7 @@ json.language klass.language, partial: "api/languages/language", as: :language
 if details
   json.description klass.description
   json.created_at klass.created_at
-  json.updated_at klass.updated_at
+  json.students klass.students
   json.study_set_ids klass.study_set_ids
   json.study_sets do
     json.partial! "api/study_sets/study_set", collection: klass.study_sets, as: :study_set, details: false

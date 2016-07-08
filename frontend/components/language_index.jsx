@@ -19,28 +19,15 @@ const LanguageIndex = React.createClass({
     this.setState({languages: LanguageIndexStore.getLanguages()});
   },
 
-  // componentWillReceiveProps(newProps){
-  //   this.fetchBasedOnProps(newProps);
-  // },
-
   componentWillUnmount(){
     this.indexListener.remove();
     this.indexListener = undefined;
   },
 
-  // fetchBasedOnProps(newProps){
-  //   const option = newProps ? newProps.option : this.props.option;
-  //   if (option === "search") {
-  //     // does not fetch
-  //   } else {
-  //     IndexActions.getLanguageIndex();
-  //   }
-  // },
-
   items(){
     if (this.state.languages.length > 0){
       return this.state.languages.map(language => {
-        return <LanguageIndexItem language={language} />;
+        return <LanguageIndexItem key={language.id} language={language} />;
       });
     } else {
       return <h2>No Languages</h2>;
@@ -50,7 +37,6 @@ const LanguageIndex = React.createClass({
 
   render(){
     const title = <h1 className="title">{this.props.title}</h1>;
-    console.log(this.state.languages);
     return (
       <div className="language-index">
         {title}

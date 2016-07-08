@@ -33758,55 +33758,15 @@
 	      klasses: searchResult.klasses
 	    });
 	  },
-	  fetchAllLanguages: function fetchAllLanguages() {},
+	  fetchAllLanguages: function fetchAllLanguages() {
+	    IndexUtils.fetchAllLanguages(this.receiveAllLanguages);
+	  },
 	  receiveAllLanguages: function receiveAllLanguages(languages) {
 	    AppDispatcher.dispatch({
 	      actionType: IndexConstants.RECEIVE_ALL_LANGUAGES,
 	      languages: languages
 	    });
 	  }
-	
-	  // getStudySetIndex(errorCallback){
-	  //   IndexUtils.getStudySetIndex(this.receiveStudySetIndex, errorCallback);
-	  // },
-	  //
-	  // getLanguageIndex(errorCallback){
-	  //   IndexUtils.getLanguageIndex(this.receiveLanguageIndex, errorCallback);
-	  // },
-	  //
-	  // getKlassIndex(errorCallback){
-	  //   IndexUtils.getKlassIndex(this.receiveKlassIndex.bind(null, IndexConstants.RECEIVE_ALL_KLASS_INDEX)
-	  //   , errorCallback);
-	  // },
-	  //
-	  // getMyKlassIndex(errorCallback){
-	  //   IndexUtils.getMyKlassIndex(this.receiveKlassIndex.bind(null, IndexConstants.RECEIVE_ENROLLED_KLASS_INDEX), errorCallback);
-	  // },
-	  //
-	  // getMyKlassCreatedIndex(errorCallback){
-	  //   IndexUtils.getMyKlassCreatedIndex(this.receiveKlassIndex.bind(null, IndexConstants.RECEIVE_CREATED_KLASS_INDEX), errorCallback);
-	  // },
-	  //
-	  // getMyStudySetIndex(errorCallback){
-	  //   IndexUtils.getMyStudySetIndex(this.receiveStudySetIndex, errorCallback);
-	  // },
-	  //
-	  //
-	  // receiveLanguageIndex(languages){
-	  //   AppDispatcher.dispatch({
-	  //     actionType: IndexConstants.RECEIVE_LANGUAGE_INDEX,
-	  //     languages: languages
-	  //   });
-	  // },
-	  //
-	  // receiveKlassIndex(receiveOption, klasses){
-	  //   AppDispatcher.dispatch({
-	  //     actionType: receiveOption,
-	  //     klasses: klasses
-	  //   });
-	  // },
-	  //
-	
 	};
 	
 	module.exports = IndexActions;
@@ -33934,10 +33894,8 @@
 	  RECEIVE_STUDY_SETS: "RECEIVE_STUDY_SETS",
 	  FILL_STUDY_SET_POOL: "FILL_STUDY_SET_POOL",
 	  RECEIVE_BY_LANGUAGE: "RECEIVE_BY_LANGUAGE",
-	  RECEIVE_ALL_LANGUAGES: "RECEIVE_ALL_LANGUAGES"
-	
-	  // RECEIVE_LANGUAGE_INDEX: "RECEIVE_LANGUAGE_INDEX",
-	  // RECEIVE_SEARCH_RESULT: "RECEIVE_SEARCH_RESULT"
+	  RECEIVE_ALL_LANGUAGES: "RECEIVE_ALL_LANGUAGES",
+	  RECEIVE_SEARCH_RESULT: "RECEIVE_SEARCH_RESULT"
 	
 	};
 
@@ -33973,6 +33931,10 @@
 	    case IndexConstants.RECEIVE_SEARCH_RESULT:
 	    case IndexConstants.RECEIVE_BY_LANGUAGE:
 	      _klassIndices.allKlasses = payload.klasses;
+	      if (_klassIndices.allKlasses === undefined) {
+	        debugger;
+	        console.log("klasses undefined");
+	      }
 	      this.__emitChange();
 	      break;
 	    case IndexConstants.RECEIVE_MY_KLASSES:
@@ -34086,7 +34048,8 @@
 	var _klass = {
 	  teacher: {},
 	  language: {},
-	  study_set_ids: []
+	  study_set_ids: [],
+	  students: []
 	};
 	// properties are pre-defined here, so that the view files
 	// don't throw errors with undefined objects.
@@ -53910,17 +53873,24 @@
 	      React.createElement(SignupForm, { closeModal: this.closeSignup })
 	    );
 	  },
+	  toIndex: function toIndex() {
+	    hashHistory.push('/');
+	  },
 	  render: function render() {
 	    return React.createElement(
 	      'header',
 	      { className: 'top-header' },
 	      React.createElement(
 	        'div',
-	        null,
+	        { className: 'logo' },
 	        React.createElement(
 	          'h2',
 	          null,
-	          'Tangolet'
+	          React.createElement(
+	            'a',
+	            { onClick: this.toIndex },
+	            'Tangolet'
+	          )
 	        )
 	      ),
 	      React.createElement(SearchBar, null),
@@ -54115,7 +54085,8 @@
 	        React.createElement(
 	          Tab,
 	          { eventKey: 2, title: 'Flashcards' },
-	          React.createElement(Flashcards, { words: this.state.studySet.words })
+	          React.createElement(Flashcards, { words: this.state.studySet.words,
+	            language_name: this.state.studySet.language.name })
 	        ),
 	        React.createElement(
 	          Tab,
@@ -54657,7 +54628,7 @@
 	    } else if (this.state.option === "my_classes" || this.state.option === "my_study_sets") {
 	      this.setState({ title: undefined }, callback);
 	    } else if (this.state.option === "all_languages") {
-	      this.setState({ title: "Browse by Language" });
+	      this.setState({ title: "Browse by Language" }, callback);
 	    } else {
 	      this.setState({ title: this.state.option + ' Classes and Study Sets' }, callback);
 	    }
@@ -54752,7 +54723,7 @@
 	    hashHistory.push("/class_form");
 	  },
 	  items: function items() {
-	    if (this.state.klasses.length > 0) {
+	    if (this.state.klasses && this.state.klasses.length > 0) {
 	      return this.state.klasses.map(function (klass) {
 	        return React.createElement(KlassIndexItem, { klass: klass, key: klass.id });
 	      });
@@ -54781,7 +54752,7 @@
 	      React.createElement(
 	        Button,
 	        { onClick: this.createKlass },
-	        '+ Create New Class(dev.)'
+	        '+ Create New Class'
 	      )
 	    );
 	  }
@@ -54901,7 +54872,7 @@
 	      React.createElement(
 	        Button,
 	        { onClick: this.createStudySet },
-	        '+ Create New Study Set(dev.)'
+	        '+ Create New Study Set'
 	      )
 	    );
 	  }
@@ -54971,31 +54942,14 @@
 	  updateState: function updateState() {
 	    this.setState({ languages: LanguageIndexStore.getLanguages() });
 	  },
-	
-	
-	  // componentWillReceiveProps(newProps){
-	  //   this.fetchBasedOnProps(newProps);
-	  // },
-	
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.indexListener.remove();
 	    this.indexListener = undefined;
 	  },
-	
-	
-	  // fetchBasedOnProps(newProps){
-	  //   const option = newProps ? newProps.option : this.props.option;
-	  //   if (option === "search") {
-	  //     // does not fetch
-	  //   } else {
-	  //     IndexActions.getLanguageIndex();
-	  //   }
-	  // },
-	
 	  items: function items() {
 	    if (this.state.languages.length > 0) {
 	      return this.state.languages.map(function (language) {
-	        return React.createElement(LanguageIndexItem, { language: language });
+	        return React.createElement(LanguageIndexItem, { key: language.id, language: language });
 	      });
 	    } else {
 	      return React.createElement(
@@ -55011,7 +54965,6 @@
 	      { className: 'title' },
 	      this.props.title
 	    );
-	    console.log(this.state.languages);
 	    return React.createElement(
 	      'div',
 	      { className: 'language-index' },
@@ -55255,7 +55208,7 @@
 	            React.createElement(
 	              'li',
 	              null,
-	              'Use search bar to find the right classes study sets.'
+	              'Use search bar to find the right classes / study sets.'
 	            ),
 	            React.createElement(
 	              'li',
@@ -55483,13 +55436,19 @@
 	          { href: "http://www.quizlet.com" },
 	          "Quizlet"
 	        ),
-	        ", which I used extensively during my teaching career. \"Tango\" is the Japanese word for \"word\", or \"vocabulary.\""
+	        ". \"Tango\" is the Japanese word for \"word\", or \"vocabulary.\""
 	      ),
 	      React.createElement("br", null),
 	      React.createElement(
 	        "h3",
 	        null,
-	        "Please seee my Github page for technical information about this web app. Feel free to reach me via email (link) "
+	        "Please seee ",
+	        React.createElement(
+	          "a",
+	          { href: "http://github.com/Hirosvk/Tangolet/" },
+	          "my Github"
+	        ),
+	        " for technical information about this web app. Feel free to reach me via email (link) "
 	      ),
 	      React.createElement("br", null),
 	      React.createElement(
@@ -56124,6 +56083,7 @@
 	var Tabs = __webpack_require__(281).Tabs;
 	var Tab = __webpack_require__(281).Tab;
 	var TestCollection = __webpack_require__(568);
+	var StudentIndex = __webpack_require__(576);
 	
 	var Klass = React.createClass({
 	  displayName: 'Klass',
@@ -56299,6 +56259,15 @@
 	      );
 	    }
 	
+	    var secondTab = void 0;
+	    if (this.isTeacher() || this.enrollmentStatus()) {
+	      secondTab = React.createElement(
+	        Tab,
+	        { eventKey: 2, title: 'Students' },
+	        React.createElement(StudentIndex, { students: this.state.klass.students })
+	      );
+	    }
+	
 	    return React.createElement(
 	      Tabs,
 	      { activeKey: this.state.activeKey, onSelect: this.changeActiveKey, id: 'klass-options' },
@@ -56307,7 +56276,7 @@
 	        { eventKey: 1, title: 'Study Sets' },
 	        React.createElement(StudySetIndex, { klassId: this.props.params.klassId })
 	      ),
-	      React.createElement(Tab, { eventKey: 2, title: 'Students', disabled: true }),
+	      secondTab,
 	      thirdTab,
 	      forthTab,
 	      fifthTab
@@ -57042,6 +57011,8 @@
 	    this.setState({ index: idx });
 	  },
 	  render: function render() {
+	    var _this = this;
+	
 	    return React.createElement(
 	      'div',
 	      { className: 'flashcards' },
@@ -57052,7 +57023,8 @@
 	          return React.createElement(
 	            Carousel.Item,
 	            { key: word.word_english },
-	            React.createElement(FlashcardsItem, { word_english: word.word_english, word_foreign: word.word_foreign })
+	            React.createElement(FlashcardsItem, { word_english: word.word_english, word_foreign: word.word_foreign,
+	              language_name: _this.props.language_name })
 	          );
 	        })
 	      ),
@@ -57088,7 +57060,6 @@
 	    }
 	  },
 	  render: function render() {
-	    console.log(this.state.flipped);
 	    return React.createElement(
 	      "div",
 	      { className: "card" },
@@ -57096,6 +57067,11 @@
 	        "div",
 	        { className: "card front " + this.state.flipped,
 	          onClick: this.flip },
+	        React.createElement(
+	          "h3",
+	          null,
+	          "English"
+	        ),
 	        React.createElement(
 	          "span",
 	          null,
@@ -57107,6 +57083,11 @@
 	        { className: "card back " + this.state.flipped,
 	          onClick: this.flip },
 	        React.createElement(
+	          "h3",
+	          null,
+	          this.props.language_name
+	        ),
+	        React.createElement(
 	          "span",
 	          null,
 	          this.props.word_foreign
@@ -57117,6 +57098,37 @@
 	});
 	
 	module.exports = FlashcardsItem;
+
+/***/ },
+/* 575 */,
+/* 576 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(164);
+	var ListGroupItem = __webpack_require__(281).ListGroupItem;
+	var ListGroup = __webpack_require__(281).ListGroup;
+	
+	var StudentIndex = React.createClass({
+	  displayName: 'StudentIndex',
+	  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
+	    this.students = newProps.students;
+	    this.forceUpdate();
+	  },
+	  render: function render() {
+	    var students = this.students || this.props.students;
+	    return React.createElement(
+	      ListGroup,
+	      null,
+	      students.map(function (student) {
+	        return React.createElement(ListGroupItem, { key: student.id, header: student.username });
+	      })
+	    );
+	  }
+	});
+	
+	module.exports = StudentIndex;
 
 /***/ }
 /******/ ]);

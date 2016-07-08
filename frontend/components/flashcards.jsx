@@ -20,7 +20,8 @@ const Flashcards = React.createClass({
           this.props.words.map( word => {
             return (
               <Carousel.Item key={word.word_english}>
-                <FlashcardsItem word_english={word.word_english} word_foreign={word.word_foreign} />
+                <FlashcardsItem word_english={word.word_english} word_foreign={word.word_foreign}
+                  language_name={this.props.language_name}/>
               </Carousel.Item>
             );
           })

@@ -95,11 +95,15 @@ const Header = React.createClass({
     );
   },
 
+  toIndex(){
+    hashHistory.push('/');
+  },
+
   render(){
     return (
       <header className="top-header">
-      <div>
-        <h2>Tangolet</h2>
+      <div className="logo">
+        <h2><a onClick={this.toIndex}>Tangolet</a></h2>
       </div>
       <SearchBar />
       {this.userAccount()}

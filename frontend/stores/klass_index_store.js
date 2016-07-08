@@ -24,6 +24,10 @@ KlassIndexStore.__onDispatch = function(payload){
     case IndexConstants.RECEIVE_SEARCH_RESULT:
     case IndexConstants.RECEIVE_BY_LANGUAGE:
       _klassIndices.allKlasses = payload.klasses;
+      if (_klassIndices.allKlasses === undefined){
+        debugger;
+        console.log("klasses undefined");
+      }
       this.__emitChange();
       break;
     case IndexConstants.RECEIVE_MY_KLASSES:

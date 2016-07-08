@@ -18,11 +18,13 @@ class User < ActiveRecord::Base
   has_many :enrollments,
     primary_key: :id,
     foreign_key: :student_id,
-    class_name: "Enrollment"
+    class_name: "Enrollment",
+    dependent: :destroy
 
   has_many :klasses, through: :enrollments
 
-  has_many :tests
+  has_many :tests,
+    dependent: :destroy
 
   def ensure_session_token
     self.session_token ||= SecureRandom::urlsafe_base64(16)

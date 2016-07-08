@@ -42,28 +42,6 @@
 
 }
 
-// .study_set_header .btn:hover{
-//   background: #F9CE1C;
-// }
-//
-// .study_set .nav-tabs {
-//   margin: 15px;
-//   font-size: large;
-//   border-bottom: 4px dashed #5C5C5C;
-// }
-//
-// .study_set .nav-tabs>li {
-//   margin-bottom: -4px;
-// }
-//
-// .study_set .nav-tabs>li.active>a {
-//   background-color: #FFFFFF;
-// }
-
-
-
-
-
 /* FORM */
 
 .study_set_form .study_set_header {
@@ -202,6 +180,7 @@ td input{
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   top: 0px;
   left: 0px;
   width: 100%;
@@ -225,7 +204,7 @@ td input{
 }
 
 .card.front.flipped{
-  transform: rotateX(-180deg);
+  transform: rotateX(180deg);
 }
 
 .card.back.flipped {

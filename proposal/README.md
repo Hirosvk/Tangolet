@@ -227,11 +227,11 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 
 * w9d5
 - [ ] sort list by date on backend
-- [ ] students index
+- [x] students index
 - [x] disable buttons after click
 - [x] browse by language page
 - [x] About Page
-- [ ] flashcard feature
+- [x] flashcard feature
 - [x] use mixins
 - [x] Logo
 - [ ] save history so that users can go back to previous page
@@ -245,7 +245,7 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 - [x] reorganize flux cycles
 
 ## Phase 10: Flashcards
-- [ ] flashcard feature
+- [x] flashcard feature
 
 
 ## Phase12: weekend
