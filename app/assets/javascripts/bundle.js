@@ -55448,7 +55448,7 @@
 	          { href: "http://github.com/Hirosvk/Tangolet/" },
 	          "my Github"
 	        ),
-	        " for technical information about this web app. Feel free to reach me via email (link) "
+	        " for technical information about this web app. Feel free to reach me via email: kjnhiroyuki@hotmail.com "
 	      ),
 	      React.createElement("br", null),
 	      React.createElement(

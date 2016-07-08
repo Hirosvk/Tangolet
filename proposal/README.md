@@ -226,7 +226,7 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 - [x] add filter to add-study-set page
 
 * w9d5
-- [ ] sort list by date on backend
+- [x] sort list by date on backend
 - [x] students index
 - [x] disable buttons after click
 - [x] browse by language page
@@ -235,6 +235,7 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 - [x] use mixins
 - [x] Logo
 - [ ] save history so that users can go back to previous page
+- [x] pick font
 
 ## Phase 12: Refactor
 - [x] use stores instead of passing info as props

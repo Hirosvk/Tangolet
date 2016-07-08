@@ -10,7 +10,7 @@ const About = React.createClass({
         <h3>I created Tangolet to showcase my skills and knowledge in web application development. Its features and structure were inspired by <a href="http://www.quizlet.com">Quizlet</a>. "Tango" is the Japanese word for "word", or "vocabulary."</h3>
         <br />
 
-        <h3>Please seee <a href="http://github.com/Hirosvk/Tangolet/">my Github</a> for technical information about this web app. Feel free to reach me via email (link) </h3>
+        <h3>Please seee <a href="http://github.com/Hirosvk/Tangolet/">my Github</a> for technical information about this web app. Feel free to reach me via email: kjnhiroyuki@hotmail.com </h3>
         <br />
 
         <h3>Hiro Kajino</h3>
