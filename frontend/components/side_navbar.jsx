@@ -131,10 +131,10 @@ const SideNavbar = React.createClass({
 
         {this.modals()}
 
-        <button className="btn green-btn" onClick={this.toIndex}>Home</button>
-        <button className="btn green-btn" onClick={this.toLanguages}>Languages</button>
-        <button className="btn blue-btn" onClick={this.toMyKlasses}>My Classes</button>
-        <button className="btn blue-btn" onClick={this.toMyStudySets}>My Study Sets </button>
+        <button className="btn blue-btn" onClick={this.toIndex}>Home</button>
+        <button className="btn blue-btn" onClick={this.toLanguages}>Languages</button>
+        <button className="btn green-btn" onClick={this.toMyKlasses}>My Classes</button>
+        <button className="btn green-btn" onClick={this.toMyStudySets}>My Study Sets </button>
         <button className="btn yellow-btn" onClick={this.toMyTestScores}>My Test Scores</button>
         <button className="btn orange-btn" onClick={this.toCreateClass}>Create Class</button>
         <button className="btn orange-btn" onClick={this.toCreateStudySet}>Create Study Set</button>

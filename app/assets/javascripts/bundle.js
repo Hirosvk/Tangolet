@@ -55436,7 +55436,7 @@
 	          { href: "http://www.quizlet.com" },
 	          "Quizlet"
 	        ),
-	        ". \"Tango\" is the Japanese word for \"word\", or \"vocabulary.\""
+	        ". \"Tango\" means \"word\" or \"vocabulary\" in Japanese."
 	      ),
 	      React.createElement("br", null),
 	      React.createElement(
@@ -55448,7 +55448,7 @@
 	          { href: "http://github.com/Hirosvk/Tangolet/" },
 	          "my Github"
 	        ),
-	        " for technical information about this web app. Feel free to reach me via email: kjnhiroyuki@hotmail.com "
+	        " for technical information about this web app. "
 	      ),
 	      React.createElement("br", null),
 	      React.createElement(
@@ -56921,22 +56921,22 @@
 	      this.modals(),
 	      React.createElement(
 	        'button',
-	        { className: 'btn green-btn', onClick: this.toIndex },
+	        { className: 'btn blue-btn', onClick: this.toIndex },
 	        'Home'
 	      ),
 	      React.createElement(
 	        'button',
-	        { className: 'btn green-btn', onClick: this.toLanguages },
+	        { className: 'btn blue-btn', onClick: this.toLanguages },
 	        'Languages'
 	      ),
 	      React.createElement(
 	        'button',
-	        { className: 'btn blue-btn', onClick: this.toMyKlasses },
+	        { className: 'btn green-btn', onClick: this.toMyKlasses },
 	        'My Classes'
 	      ),
 	      React.createElement(
 	        'button',
-	        { className: 'btn blue-btn', onClick: this.toMyStudySets },
+	        { className: 'btn green-btn', onClick: this.toMyStudySets },
 	        'My Study Sets '
 	      ),
 	      React.createElement(
