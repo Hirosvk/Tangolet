@@ -80,7 +80,19 @@ const IndexActions = {
       studySets: searchResult.study_sets,
       klasses: searchResult.klasses
     });
+  },
+
+  fetchAllLanguages(){
+
+  },
+
+  receiveAllLanguages(languages){
+    AppDispatcher.dispatch({
+      actionType: IndexConstants.RECEIVE_ALL_LANGUAGES,
+      languages: languages
+    });
   }
+
 
 
   // getStudySetIndex(errorCallback){

@@ -9,9 +9,8 @@ class Api::SearchesController < ApplicationController
 
   def show
     search_text = params[:search]
-    search_words = search_text.split(/\W+/)
+    search_words = search_text.split(/\W+/).reject{|word| word.length <= 1}
     @languages, @study_sets, @klasses = [], [], []
-    debugger
     search_words.each do |word|
       languages = Language.where("name ILIKE ?", "%#{word}%")
       study_sets = StudySet.find_by_sql([STUDYSETS_QUERY,

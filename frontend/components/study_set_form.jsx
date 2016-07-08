@@ -8,6 +8,7 @@ const LanguageActions = require('../actions/language_actions');
 const LanguageStore = require('../stores/language_store');
 const Button = require('react-bootstrap').Button;
 const ButtonGroup = require('react-bootstrap').ButtonGroup;
+const Session = require('./session_mixin');
 
 // here I'm using a global variable because...
 // ## the only way I could find to update array state, you need to
@@ -48,13 +49,15 @@ function resetWords(){
 
 
 const StudySetForm = React.createClass({
+  mixins: [Session],
 
   getInitialState(){
     return ({
       error: ErrorStore.full_errors(),
       name: "",
       languages: LanguageStore.all(),
-      languagePicked: {id: 0}
+      languagePicked: {id: 0},
+      submitting: false
     });
   },
 
@@ -65,7 +68,6 @@ const StudySetForm = React.createClass({
       this.setState({
         name: studySet.name,
         languagePicked: studySet.language
-        // language_name: studySet.language.name
       });
       const toEditWords = studySet.words;
       _words = toEditWords.map( word => {
@@ -87,14 +89,14 @@ const StudySetForm = React.createClass({
     this.errorStoreListener = ErrorStore.addListener(this.receiveErrors);
     this.languageStoreListener = LanguageStore.addListener(this.receiveLanguages);
     this.studySetStoreListener = StudySetStore.addListener(this.redirectToShow);
-    this.userListener = CurrentUserStore.addListener(this.redirectToIndex);
+    this.currentUserListenerSetup();
   },
 
   componentWillUnmount(){
     this.errorStoreListener.remove();
     this.studySetStoreListener.remove();
     this.languageStoreListener.remove();
-    this.userListener.remove();
+    this.currentUserListenerRemove();
     resetWords();
     ErrorStore.resetErrors();
   },
@@ -102,11 +104,11 @@ const StudySetForm = React.createClass({
 // ---------------
 // Store listeners
 
-  redirectToIndex(){
-    if (CurrentUserStore.getCurrentUser().id === undefined) {
-      hashHistory.push('/');
-    }
-  },
+  // redirectToIndex(){
+  //   if (CurrentUserStore.getCurrentUser().id === undefined) {
+  //     hashHistory.push('/');
+  //   }
+  // },
 
   redirectToShow(){
     const id = StudySetStore.getStudySet().id;
@@ -209,7 +211,11 @@ const StudySetForm = React.createClass({
   },
 
   submitButton(){
-    return this.edit ? "Update" : "Create";
+    if (this.state.submitting){
+      return "submitting";
+    } else {
+      return this.edit ? "Update" : "Create";
+    }
   },
 
   title(){
@@ -275,8 +281,10 @@ const StudySetForm = React.createClass({
       </table>
 
       <ButtonGroup>
-        <Button onClick={this.addMoreWords}>Add more words</Button>
-        <Button onClick={this.sendStudySet}>{this.submitButton()}</Button>
+        <Button onClick={this.addMoreWords}
+          disabled={this.state.submitting}>Add more words</Button>
+        <Button onClick={this.sendStudySet}
+          disabled={this.state.submitting}>{this.submitButton()}</Button>
       </ButtonGroup>
     </form>
     </div>
@@ -296,6 +304,7 @@ const StudySetForm = React.createClass({
         word_foreign: word.word_foreign
       };
     });
+    this.setState({submitting: true});
 
     if (this.edit){
       studySetData.studySet.id = this.id;

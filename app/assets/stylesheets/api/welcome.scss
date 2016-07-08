@@ -5,12 +5,20 @@
   align-items: center;
 }
 
-.welcome h1{
+.welcome h1,
+.about h1{
   background: #26A6B8;
   width: 100%;
   text-align: center;
   color: #FFFFFF;
   padding: 5px;
+}
+
+.welcome li a{
+  color: inherit;
+}
+
+.welcome li a:hover {
 }
 
 .welcome .row {
@@ -25,7 +33,7 @@
   max-width: 400px;
   border: 6px solid #D7005F;
   border-radius: 1em;
-  padding: 15px;
+  padding: 10px;
   text-align: center;
   margin: 20px;
 }

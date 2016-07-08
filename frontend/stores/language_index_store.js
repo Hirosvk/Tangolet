@@ -15,6 +15,7 @@ LanguageIndexStore.__onDispatch = function(payload){
   switch(payload.actionType){
     case IndexConstants.RECEIVE_ALL_INDEX:
     case IndexConstants.RECEIVE_SEARCH_RESULT:
+    case IndexConstants.RECEIVE_ALL_LANGUAGES:
       _languages = payload.languages;
       this.__emitChange();
       break;

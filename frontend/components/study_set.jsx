@@ -9,6 +9,7 @@ const StudySetList = require('./study_set_list');
 const Tabs = require('react-bootstrap').Tabs;
 const Tab = require('react-bootstrap').Tab;
 const Test = require('./test');
+const Flashcards = require('./flashcards');
 
 const StudySet = React.createClass({
   getInitialState(){
@@ -85,7 +86,9 @@ const StudySet = React.createClass({
             <StudySetList words={this.state.studySet.words}
               language_name={this.state.studySet.language.name}/>
           </Tab>
-          <Tab eventKey={2} title="Flashcards" disabled />
+          <Tab eventKey={2} title="Flashcards" >
+            <Flashcards words={this.state.studySet.words}/>
+          </Tab>
           <Tab eventKey={3} title="Test">
             <Test words={this.state.studySet.words}
             language_name={this.state.studySet.language.name}/>

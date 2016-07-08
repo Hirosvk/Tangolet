@@ -98,6 +98,9 @@ const Header = React.createClass({
   render(){
     return (
       <header className="top-header">
+      <div>
+        <h2>Tangolet</h2>
+      </div>
       <SearchBar />
       {this.userAccount()}
 

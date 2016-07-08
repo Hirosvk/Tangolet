@@ -36,6 +36,7 @@ const StudySetIndex = require('./components/study_set_index');
 const KlassIndex = require('./components/klass_index');
 const TestScoreIndex = require('./components/test_score_index');
 const SideNavbar = require('./components/side_navbar');
+const About = require('./components/about');
 
 const App = React.createClass({
   render(){
@@ -63,6 +64,7 @@ const appRouter = (
       <Route path="study_set_form(/:action)" component={StudySetForm} />
       <Route path="class_form(/:action)" component={KlassForm} />
       <Route path="my_test_scores" component={TestScoreIndex} />
+      <Route path="about" component={About} />
     </Route>
   </Router>
 );

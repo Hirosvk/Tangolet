@@ -210,35 +210,34 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 
 - [x] backend, single-word, case-sensitive search functional
 - [x] language index for showing search result
-- [ ] students index
 
 ## Phase 11: Final Touch (1.5day w9d4)
 - [x] invalid/unauthorized navigation redirected
 - [x] improve alerts
   - [ ] server errors
 
-- [ ] welcome page
-- [ ] about page
-- [ ] logo
-
-- [ ] standardize font sizes and colors
-  - [ ] button colors and sizes
-
-- [ ] pick font
-- [ ] seed data
 - [x] when you log out while visiting page that require authorization, user is redirected
 - [x] tell user if she is enrolled in the class on Klass page
 - [x] improve demo sign-up
 - [x] language select dropdown --> add default select "pick new"
-- [ ] disable buttons after click
 - [x] when there is not search result, say so
 - [x] Search Result title
 - [x] Search feature handles multiple words separated by non-word characters
+- [x] add filter to add-study-set page
+
+* w9d5
+- [ ] sort list by date on backend
+- [ ] students index
+- [x] disable buttons after click
+- [x] browse by language page
+- [x] About Page
+- [ ] flashcard feature
+- [x] use mixins
+- [x] Logo
+- [ ] save history so that users can go back to previous page
 
 ## Phase 12: Refactor
 - [x] use stores instead of passing info as props
-- [ ] refactor JavaScript code to minimize file size
-- [ ] consolidate data parsing
 - [ ] standardize name conventions
 - [ ] check 'state' of each view file and evaluate the necessity
 - [ ] check controlled values of each form and evaluate necessity
@@ -249,5 +248,11 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 - [ ] flashcard feature
 
 
-## Phase12: bonus
-- [x] add filter to add-study-set page
+## Phase12: weekend
+* weekend tasksd
+- [ ] seed data
+- [ ] refactor -> use more mixins
+- [ ] edit welcome page
+- [ ] production README
+- [ ] reflection
+- [ ] edit test instructions

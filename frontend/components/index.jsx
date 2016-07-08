@@ -32,7 +32,13 @@ const Index = React.createClass({
         <KlassIndex title="Classes" option="search"/ >
         <StudySetIndex title="Study Sets" option="search"/>
       </div>);
-    } else {
+    } else if (this.state.option === "all_languages") {
+      return (
+        <LanguageIndex title="Languages" />
+      );
+    }
+
+    else {
       return (<div>
         <KlassIndex title="Classes"/>
         <StudySetIndex title="Study Sets"/>
@@ -60,6 +66,8 @@ const Index = React.createClass({
       this.setState({title: `All Classes and Study Sets`}, callback);
     } else if (this.state.option === "my_classes" || this.state.option === "my_study_sets") {
       this.setState({title: undefined}, callback);
+    } else if (this.state.option === "all_languages") {
+      this.setState({title: "Browse by Language"});
     }
     else {
       this.setState({title: `${this.state.option} Classes and Study Sets`}, callback);
@@ -75,6 +83,8 @@ const Index = React.createClass({
       IndexActions.fetchMyKlasses();
     } else if (this.state.option === "my_study_sets") {
       IndexActions.fetchMyStudySets();
+    } else if (this.state.option === "all_languages"){
+      IndexActions.fetchAllLanguages();
     } else if (this.state.option === undefined){
       IndexActions.fetchAllIndex();
     } else {

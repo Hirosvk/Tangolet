@@ -8,9 +8,10 @@ const LanguageStore = require('../stores/language_store');
 const LanguageActions = require('../actions/language_actions');
 const Button = require('react-bootstrap').Button;
 const ButtonGroup = require('react-bootstrap').ButtonGroup;
-
+const Session = require('./session_mixin');
 
 const KlassForm = React.createClass({
+  mixins: [Session],
 
   getInitialState(){
     return ({
@@ -19,6 +20,7 @@ const KlassForm = React.createClass({
       description: "",
       languages: LanguageStore.all(),
       language_id: 0,
+      submitting: false
     });
   },
 
@@ -45,25 +47,25 @@ const KlassForm = React.createClass({
     this.languageStoreListener = LanguageStore.addListener(this.receiveLanguages);
     this.errorStoreListener = ErrorStore.addListener(this.receiveErrors);
     this.KlassStoreListener = KlassStore.addListener(this.redirectToShow);
-    this.userListener = CurrentUserStore.addListener(this.redirectToIndex);
+    this.currentUserListenerSetup();
   },
 
   componentWillUnmount(){
     this.languageStoreListener.remove();
     this.errorStoreListener.remove();
     this.KlassStoreListener.remove();
-    this.userListener.remove();
     ErrorStore.resetErrors();
+    this.currentUserListenerRemove();
   },
 
 // --------------
 // Store listeners
 
-  redirectToIndex(){
-    if (CurrentUserStore.getCurrentUser().id === undefined) {
-      hashHistory.push('/');
-    }
-  },
+  // redirectToIndex(){
+  //   if (CurrentUserStore.getCurrentUser().id === undefined) {
+  //     hashHistory.push('/');
+  //   }
+  // },
 
   redirectToShow(){
     const id = KlassStore.getKlass().id;
@@ -119,7 +121,11 @@ const KlassForm = React.createClass({
   },
 
   submitButton(){
-    return this.edit ? "Update" : "Create";
+    if (this.state.submitting){
+      return "submitting";
+    } else {
+      return this.edit ? "Update" : "Create";
+    }
   },
 
   title(){
@@ -167,7 +173,8 @@ const KlassForm = React.createClass({
 
           {this.languageChoices()}
 
-          <Button bsClass="item btn" onClick={this.sendKlass}>{this.submitButton()}</Button>
+          <Button bsClass="item btn" onClick={this.sendKlass}
+            disabled={this.state.submitting}>{this.submitButton()}</Button>
         </div>
       </form>
     </div>
@@ -182,6 +189,7 @@ const KlassForm = React.createClass({
     klassData.name = this.state.name;
     klassData.description = this.state.description;
     klassData.language_id = this.state.language_id;
+    this.setState({submitting: true});
 
     if (this.edit){
       klassData.id = this.id;

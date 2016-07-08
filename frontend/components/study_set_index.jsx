@@ -5,8 +5,10 @@ const Button = require('react-bootstrap').Button;
 const hashHistory = require('react-router').hashHistory;
 const ListGroup = require('react-bootstrap').ListGroup;
 const StudySetIndexStore = require('../stores/study_set_index_store');
+const Session = require('./session_mixin');
 
 const StudySetIndex = React.createClass({
+  mixins: [Session],
 
   getInitialState(){
     return ({studySets: StudySetIndexStore.getStudySets()});
@@ -14,31 +16,22 @@ const StudySetIndex = React.createClass({
 
   componentDidMount(){
     this.storeListener = StudySetIndexStore.addListener(this.updateState);
+    if (this.props.option === "myStudySets") {
+      this.currentUserListenerSetup();
+    }
   },
 
-  // componentWillReceiveProps(newProps){
-  //   this.fetchBasedOnProps(newProps);
-  // },
-
-  // fetchBasedOnProps(newProps){
-  //   const props = newProps || this.props;
-  //   if (props.klassId){
-  //     this.setState({studySets: KlassStore.getStudySets()});
-  //   } else {
-  //     if (props.option === "myStudySets") {
-  //       IndexActions.getMyStudySetIndex();
-  //     } else if (props.option === "search") {
-  //       // do not fetch
-  //     } else {
-  //       IndexActions.getStudySetIndex();
-  //     }
-  //     this.indexListener = IndexStore.addListener(this.updateState);
-  //   }
-  // },
+  componentWillReceiveProps(newProps){
+    this.currentUserListenerRemove();
+    if (newProps.option === "myStudySets") {
+      this.currentUserListenerSetup();
+    }
+  },
 
   componentWillUnmount(){
     this.storeListener.remove();
     this.storeListener = undefined;
+    this.currentUserListenerRemove();
   },
 
   updateState(){
@@ -56,7 +49,7 @@ const StudySetIndex = React.createClass({
         return <StudySetIndexItem studySet={studySet} key={studySet.id}/>;
       });
     } else {
-      return <h2>No Study Sets</h2>
+      return <h2>No Study Sets</h2>;
     }
   },
 

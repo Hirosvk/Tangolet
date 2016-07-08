@@ -5,29 +5,27 @@ const KlassIndexItem = require('./klass_index_item');
 const Button = require('react-bootstrap').Button;
 const hashHistory = require('react-router').hashHistory;
 const ListGroup = require('react-bootstrap').ListGroup;
+const Session = require('./session_mixin');
 
 const KlassIndex = React.createClass({
+  mixins: [Session],
 
   getInitialState(){
     return ({klasses: KlassIndexStore.getKlasses(this.props.option)});
   },
 
-  // fetchBasedOnProps(newProps){
-  //   const option = newProps ? newProps.option : this.props.option;
-  //   if (option === "createdKlasses") {
-  //     IndexActions.getMyKlassCreatedIndex();
-  //   } else if (option === "enrolledKlasses") {
-  //     IndexActions.getMyKlassIndex();
-  //   } else if (option === "search") {
-  //     // does not fetch
-  //   } else {
-  //     IndexActions.getKlassIndex();
-  //   }
-  // },
-
   componentDidMount(){
-    // this.fetchBasedOnProps();
     this.indexListener = KlassIndexStore.addListener(this.updateState);
+    if (this.props.option === "createdKlasses" || this.props.option === "enrolledKlasses") {
+      this.currentUserListenerSetup();
+    }
+  },
+
+  componentWillReceiveProps(newProps){
+    this.currentUserListenerRemove();
+    if (newProps.option === "createdKlasses" || newProps.option === "enrolledKlasses"){
+      this.currentUserListenerRemove();
+    }
   },
 
   updateState(){
@@ -36,11 +34,8 @@ const KlassIndex = React.createClass({
 
   componentWillUnmount(){
     this.indexListener.remove();
+    this.currentUserListenerRemove();
   },
-
-  // componentWillReceiveProps(newProps){
-  //   this.fetchBasedOnProps(newProps);
-  // },
 
   createKlass(event){
     event.preventDefault();

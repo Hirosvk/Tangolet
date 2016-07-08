@@ -6,8 +6,10 @@ const hashHistory = require('react-router').hashHistory;
 const ListGroup = require('react-bootstrap').ListGroup;
 const CurrentUserStore = require('../stores/current_user_store');
 const TestScoreIndexItem = require('./test_score_index_item');
+const Session = require('./session_mixin');
 
 const TestScoreIndex = React.createClass({
+  mixins: [Session],
 
   getInitialState(){
     return ({testScores: []});
@@ -15,8 +17,7 @@ const TestScoreIndex = React.createClass({
 
   componentDidMount(){
     this.testListener = TestStore.addListener(this.updateState);
-    this.userListener = CurrentUserStore.addListener(this.redirectToIndex);
-
+    this.currentUserListenerSetup();
     if (this.props.klassId){
       let data = {klassId: this.props.klassId};
 
@@ -37,18 +38,18 @@ const TestScoreIndex = React.createClass({
 
   componentWillUnmount(){
     this.testListener.remove();
-    this.userListener.remove();
+    this.currentUserListenerRemove();
   },
 
   updateState(){
     this.setState({testScores: TestStore.getTestScores()});
   },
 
-  redirectToIndex(){
-    if (CurrentUserStore.getCurrentUser().id === undefined) {
-      hashHistory.push('/');
-    }
-  },
+  // redirectToIndex(){
+  //   if (CurrentUserStore.getCurrentUser().id === undefined) {
+  //     hashHistory.push('/');
+  //   }
+  // },
 
   items(){
     if (this.state.testScores.length > 0) {
