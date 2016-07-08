@@ -257,3 +257,5 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 - [ ] production README
 - [ ] reflection
 - [ ] edit test instructions
+- [ ] add screen shots to README
+- [ ] cancel button to forms
