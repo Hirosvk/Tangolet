@@ -1,6 +1,5 @@
 const React = require('react');
 const KlassIndexStore = require('../stores/klass_index_store');
-const IndexActions = require('../actions/index_actions');
 const KlassIndexItem = require('./klass_index_item');
 const Button = require('react-bootstrap').Button;
 const hashHistory = require('react-router').hashHistory;

@@ -1,5 +1,4 @@
 const React = require('react');
-const CurrentUserStore = require('../stores/current_user_store');
 const SessionActions = require('../actions/session_actions');
 const hashHistory = require('react-router').hashHistory;
 const Glyphicon = require('react-bootstrap').Glyphicon;

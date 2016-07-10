@@ -55,33 +55,13 @@
 	var hashHistory = ReactRouter.hashHistory;
 	var Redirect = ReactRouter.Redirect;
 	
-	var StudySetActions = __webpack_require__(234);
-	var StudySetStore = __webpack_require__(243);
 	var SessionActions = __webpack_require__(261);
-	var LanguageStore = __webpack_require__(263);
-	var LanguageActions = __webpack_require__(265);
-	var IndexActions = __webpack_require__(267);
-	var KlassIndexStores = __webpack_require__(270);
-	var StudySetIndexStores = __webpack_require__(271);
-	
-	var CurrentUserStore = __webpack_require__(273);
-	var KlassStore = __webpack_require__(274);
-	var KlassActions = __webpack_require__(275);
-	var TestActions = __webpack_require__(277);
-	var TestStore = __webpack_require__(280);
-	
-	var LoginForm = __webpack_require__(281);
-	var SignupForm = __webpack_require__(546);
 	var Header = __webpack_require__(547);
-	var Main = __webpack_require__(549);
 	var StudySet = __webpack_require__(550);
-	var StudySetList = __webpack_require__(551);
 	var Index = __webpack_require__(556);
 	var StudySetForm = __webpack_require__(568);
 	var KlassForm = __webpack_require__(569);
 	var Klass = __webpack_require__(570);
-	var StudySetIndex = __webpack_require__(560);
-	var KlassIndex = __webpack_require__(557);
 	var TestScoreIndex = __webpack_require__(574);
 	var SideNavbar = __webpack_require__(577);
 	var About = __webpack_require__(567);
@@ -103,7 +83,6 @@
 	  }
 	});
 	
-	// Content doesn't render unless any of its children Routes match.
 	var appRouter = React.createElement(
 	  Router,
 	  { history: hashHistory },
@@ -126,8 +105,6 @@
 	  }
 	  ReactDOM.render(appRouter, document.getElementById('root'));
 	});
-	
-	window.$ = $;
 
 /***/ },
 /* 1 */
@@ -33944,50 +33921,6 @@
 	      error: errorCallback
 	    });
 	  },
-	
-	
-	  ///////////
-	
-	  getLanguageIndex: function getLanguageIndex(successCallback, errorCallback) {
-	    $.ajax({
-	      url: 'api/languages',
-	      type: "GET",
-	      success: successCallback,
-	      error: errorCallback
-	    });
-	  },
-	  getStudySetIndexforKlass: function getStudySetIndexforKlass(klassId, successCallback, errorCallback) {
-	    $.ajax({
-	      url: 'api/study_sets?class=' + klassId,
-	      type: "GET",
-	      success: successCallback,
-	      error: errorCallback
-	    });
-	  },
-	  getKlassIndex: function getKlassIndex(successCallback, errorCallback) {
-	    $.ajax({
-	      url: "api/klasses",
-	      type: "GEt",
-	      success: successCallback,
-	      error: errorCallback
-	    });
-	  },
-	  getMyKlassIndex: function getMyKlassIndex(successCallback, errorCallback) {
-	    $.ajax({
-	      url: 'api/user/my_klasses',
-	      type: "GET",
-	      success: successCallback,
-	      error: errorCallback
-	    });
-	  },
-	  getMyKlassCreatedIndex: function getMyKlassCreatedIndex(successCallback, errorCallback) {
-	    $.ajax({
-	      url: 'api/user/my_klasses_created',
-	      type: "GET",
-	      success: successCallback,
-	      error: errorCallback
-	    });
-	  },
 	  search: function search(searchText, successCallback, errorCallback) {
 	    $.ajax({
 	      url: 'api/search?search=' + searchText,
@@ -54027,7 +53960,6 @@
 	'use strict';
 	
 	var React = __webpack_require__(166);
-	var CurrentUserStore = __webpack_require__(273);
 	var SessionActions = __webpack_require__(261);
 	var hashHistory = __webpack_require__(172).hashHistory;
 	var Glyphicon = __webpack_require__(283).Glyphicon;
@@ -54060,32 +53992,7 @@
 	module.exports = SearchBar;
 
 /***/ },
-/* 549 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(166);
-	
-	var Main = React.createClass({
-	  displayName: 'Main',
-	  render: function render() {
-	    return React.createElement(
-	      'main',
-	      null,
-	      React.createElement(
-	        'h1',
-	        null,
-	        'This is Main'
-	      ),
-	      this.props.children
-	    );
-	  }
-	});
-	
-	module.exports = Main;
-
-/***/ },
+/* 549 */,
 /* 550 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -54289,17 +54196,6 @@
 	var Modal = __webpack_require__(283).Modal;
 	var Button = __webpack_require__(283).Button;
 	var TestForm = __webpack_require__(553);
-	// show instructin and expectations on the page.
-	// On clicking "start", the text appears on Modal.
-	// There is Quit button
-	// there is time limit, after the limit it automatically submits
-	// or you can submit manually before the time limit
-	// after submit, show the score and the right answers for the quiz
-	// on clicking close, the Modal closes
-	
-	// props = array of all the word pairs
-	// var test (array of randomized words)
-	// var answer (create this one first)
 	
 	function shuffleWords(words) {
 	  var shuffled = [];
@@ -54338,6 +54234,18 @@
 	    this.setState({ testOpen: false });
 	  },
 	  render: function render() {
+	    var num = void 0,
+	        min = void 0,
+	        sec = void 0;
+	    if (this.props.words.length < 10) {
+	      num = this.props.words.length.toString();
+	      min = (this.props.words.length / 2).toString();
+	      sec = this.props.words.length % 1 ? "30" : "00";
+	    } else {
+	      num = "10";
+	      min = "5";
+	      sec = "00";
+	    }
 	    return React.createElement(
 	      'div',
 	      { className: 'test' },
@@ -54374,7 +54282,34 @@
 	            React.createElement(
 	              'h3',
 	              null,
+	              'There will be ' + num + ' questions.'
+	            )
+	          ),
+	          React.createElement(
+	            'li',
+	            null,
+	            React.createElement(
+	              'h3',
+	              null,
+	              'You have ' + min + ':' + sec + ' to finish.'
+	            )
+	          ),
+	          React.createElement(
+	            'li',
+	            null,
+	            React.createElement(
+	              'h3',
+	              null,
 	              'When the time runs out, Test will be submitted automatically'
+	            )
+	          ),
+	          React.createElement(
+	            'li',
+	            null,
+	            React.createElement(
+	              'h3',
+	              null,
+	              'Good luck!'
 	            )
 	          )
 	        )
@@ -54835,7 +54770,6 @@
 	  },
 	  componentWillMount: function componentWillMount() {
 	    this.setTitle(this.fetchContent);
-	    // this.fetchContent();
 	  },
 	  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
 	    this.setState({
@@ -54908,7 +54842,6 @@
 	
 	var React = __webpack_require__(166);
 	var KlassIndexStore = __webpack_require__(270);
-	var IndexActions = __webpack_require__(267);
 	var KlassIndexItem = __webpack_require__(558);
 	var Button = __webpack_require__(283).Button;
 	var hashHistory = __webpack_require__(172).hashHistory;
@@ -55049,7 +54982,6 @@
 	'use strict';
 	
 	var React = __webpack_require__(166);
-	var IndexActions = __webpack_require__(267);
 	var StudySetIndexItem = __webpack_require__(561);
 	var Button = __webpack_require__(283).Button;
 	var hashHistory = __webpack_require__(172).hashHistory;
@@ -56934,14 +56866,6 @@
 	  updateState: function updateState() {
 	    this.setState({ testScores: TestStore.getTestScores() });
 	  },
-	
-	
-	  // redirectToIndex(){
-	  //   if (CurrentUserStore.getCurrentUser().id === undefined) {
-	  //     hashHistory.push('/');
-	  //   }
-	  // },
-	
 	  items: function items() {
 	    if (this.state.testScores.length > 0) {
 	      return this.state.testScores.map(function (testScore) {
@@ -57067,12 +56991,6 @@
 
 	'use strict';
 	
-	// const StudySetIndex = require('./study_set_index');
-	// const KlassIndex = require('./klass_index');
-	// const IndexActions = require('../actions/index_actions');
-	// const CurrentUserStore = require('../stores/current_user_store');
-	// const hashHistory = require('react-router').hashHistory;
-	// const About = require('./about');
 	var React = __webpack_require__(166);
 	var Modal = __webpack_require__(283).Modal;
 	var Navigation = __webpack_require__(566);
@@ -57081,119 +56999,6 @@
 	  displayName: 'SideNavbar',
 	
 	  mixins: [Navigation],
-	  // getInitialState(){
-	  //   return({
-	  //     showLoginOption: false,
-	  //     showLogin: false,
-	  //     showSignup: false,
-	  //     demoCredentials: false
-	  //   });
-	  // },
-	  //
-	  // redirectOrLogin(path){
-	  //   const loggedin = Boolean(CurrentUserStore.getCurrentUser().id);
-	  //   if (loggedin){
-	  //     hashHistory.push(path);
-	  //   } else {
-	  //     this.showLoginOption();
-	  //   }
-	  // },
-	  //
-	  // toMyStudySets(){
-	  //   this.redirectOrLogin("?option=my_study_sets");
-	  // },
-	  //
-	  // toMyKlasses(){
-	  //   this.redirectOrLogin("?option=my_classes");
-	  // },
-	  //
-	  // toMyTestScores(){
-	  //   this.redirectOrLogin("my_test_scores");
-	  // },
-	  //
-	  // toCreateStudySet(){
-	  //   this.redirectOrLogin("study_set_form");
-	  // },
-	  //
-	  // toCreateClass(){
-	  //   this.redirectOrLogin("class_form");
-	  // },
-	  //
-	  // toAbout(){
-	  //   this.redirectOrLogin("about");
-	  // },
-	  //
-	  // toIndex(){
-	  //   hashHistory.push("/");
-	  // },
-	  //
-	  // showLoginOption(){
-	  //   this.setState({showLoginOption: true});
-	  // },
-	  //
-	  // closeLoginOption(){
-	  //   this.setState({showLoginOption: false});
-	  // },
-	  //
-	  // openLogin(){
-	  //   this.closeLoginOption();
-	  //   this.setState({showLogin: true, demoCredentials: false});
-	  // },
-	  //
-	  // closeLogin(){
-	  //   this.setState({showLogin: false});
-	  // },
-	  //
-	  // openSignup(){
-	  //   this.closeLoginOption();
-	  //   this.setState({showSignup: true});
-	  // },
-	  //
-	  // closeSignup(){
-	  //   this.setState({showSignup: false});
-	  // },
-	  //
-	  // loginDemo(){
-	  //   this.closeLoginOption();
-	  //   let demoCredentials = {
-	  //     username: "Hiro",
-	  //     password: "hirohiro"
-	  //   };
-	  //   this.setState({
-	  //     showLogin: true,
-	  //     demoCredentials: demoCredentials
-	  //   });
-	  // },
-	  //
-	  // loginOption(){
-	  //   return (
-	  //     <div className="session_form">
-	  //       <h2>Login is required for this feature</h2>
-	  //       <button className="btn" onClick={this.openLogin}>Login</button>
-	  //       <button className="btn" onClick={this.loginDemo}>Demo Login</button>
-	  //       <button className="btn" onClick={this.openSignup}>Sign up</button>
-	  //     </div>
-	  //   );
-	  // },
-	  //
-	  // modalLogin(){
-	  //   return (
-	  //     <Modal show={this.state.showLogin} onHide={this.closeLogin}>
-	  //       <Modal.Header closeButton />
-	  //       <LoginForm closeModal={this.closeLogin}
-	  //                   demo={this.state.demoCredentials}/>
-	  //     </Modal>
-	  //   );
-	  // },
-	  //
-	  // modalSignup(){
-	  //   return (
-	  //     <Modal show={this.state.showSignup} onHide={this.closeSignup}>
-	  //       <Modal.Header closeButton />
-	  //       <SignupForm closeModal={this.closeSignup}/>
-	  //     </Modal>
-	  //   );
-	  // },
 	
 	  render: function render() {
 	    return React.createElement(

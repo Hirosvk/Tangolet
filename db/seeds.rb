@@ -286,7 +286,7 @@ s15.words.new(word_foreign: "Le jardin", word_english: "Garden".downcase)
 s15.words.new(word_foreign: "Le garage", word_english: "Garage".downcase)
 s15.save!
 
-s16 = u4.study_sets.new(name: "House", language_id: Language.find_by_name("French").id)
+s16 = u4.study_sets.new(name: "Colors", language_id: Language.find_by_name("French").id)
 s16.words.new(word_english: "red", word_foreign: "rouge")
 s16.words.new(word_english: "yellow", word_foreign: "jaune")
 s16.words.new(word_english: "light", word_foreign: "bleu(e)")
@@ -313,15 +313,21 @@ u2.klass_ids = [c1.id, c2.id, c5.id]
 u3.klass_ids = [c1.id, c2.id, c3.id, c4.id]
 u4.klass_ids = [c1.id, c2.id]
 
-[s8, s9, s10, s11, s12, s13, s14, s15, s16].each do |ss|
-  3.times { u1.tests.new(study_set_id: ss.id, score: rand(0..10) * 10) }
+[s8, s9, s10, s11, s12, s13].each do |ss|
+  3.times do
+    u1.tests.new(study_set_id: ss.id, score: rand(0..10) * 10)
+    u1.save!
+  end
 end
-u1.save!
 
 jp_students = (0..20).to_a.map do
-  User.create!(username: Faker::Internet.user_name,
-               password: Faker::Internet.password,
-               email: Faker::Internet.email)
+  begin
+    User.create!(username: Faker::Internet.user_name,
+                 password: Faker::Internet.password,
+                 email: Faker::Internet.email)
+  rescue ActiveRecord::RecordInvalid => e
+    retry
+  end
 end
 
 i = 0
@@ -330,7 +336,8 @@ while i < jp_students.length
   student.klass_ids = [c1.id, c2.id]
   [s1, s2, s3, s4, s5, s6, s7].each do |ss|
     rand(0..3).times do
-      student.tests.new(study_set_id: ss.id, score: rand(0..10) * 10)
+      base = rand(0..7)
+      student.tests.new(study_set_id: ss.id, score: (rand(0..3) + base) * 10)
     end
   end
   student.save!
@@ -339,9 +346,13 @@ end
 
 
 sp_students = (0..20).to_a.map do
-  User.create!(username: Faker::Internet.user_name,
-               password: Faker::Internet.password,
-               email: Faker::Internet.email)
+  begin
+    User.create!(username: Faker::Internet.user_name,
+                 password: Faker::Internet.password,
+                 email: Faker::Internet.email)
+  rescue ActiveRecord::RecordInvalid => e
+    retry
+  end
 end
 
 i = 0
@@ -350,7 +361,8 @@ while i < sp_students.length
   student.klass_ids = [c3.id, c4.id]
   [s8, s9, s10, s11, s12].each do |ss|
     rand(0..3).times do
-      student.tests.new(study_set_id: ss.id, score: rand(0..10) * 10)
+      base = rand(0..7)
+      student.tests.new(study_set_id: ss.id, score: (rand(0..3) + base) * 10)
     end
   end
   student.save!
@@ -360,9 +372,13 @@ end
 
 
 fr_students = (0..20).to_a.map do
-  User.create!(username: Faker::Internet.user_name,
-               password: Faker::Internet.password,
-               email: Faker::Internet.email)
+  begin
+    User.create!(username: Faker::Internet.user_name,
+                 password: Faker::Internet.password,
+                 email: Faker::Internet.email)
+  rescue ActiveRecord::RecordInvalid => e
+    retry
+  end
 end
 
 i = 0
@@ -371,7 +387,8 @@ while i < fr_students.length
   student.klass_ids = [c6.id]
   [s14, s15, s16].each do |ss|
     rand(0..3).times do
-      student.tests.new(study_set_id: ss.id, score: rand(0..10) * 10)
+      base = rand(0..7)
+      student.tests.new(study_set_id: ss.id, score: (rand(0..3) + base) * 10)
     end
   end
   student.save!

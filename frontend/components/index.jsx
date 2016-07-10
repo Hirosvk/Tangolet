@@ -48,7 +48,6 @@ const Index = React.createClass({
 
   componentWillMount(){
     this.setTitle(this.fetchContent);
-    // this.fetchContent();
   },
 
   componentWillReceiveProps(newProps){

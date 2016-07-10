@@ -251,7 +251,7 @@ Tangolet is a web application inspired by Quizlet, a popular classroom tool for 
 
 ## Phase12: weekend
 * weekend tasksd
-- [ ] seed data
+- [x] seed data
 - [ ] refactor -> use more mixins
 - [ ] edit welcome page
 - [ ] production README

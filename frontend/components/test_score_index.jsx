@@ -45,12 +45,6 @@ const TestScoreIndex = React.createClass({
     this.setState({testScores: TestStore.getTestScores()});
   },
 
-  // redirectToIndex(){
-  //   if (CurrentUserStore.getCurrentUser().id === undefined) {
-  //     hashHistory.push('/');
-  //   }
-  // },
-
   items(){
     if (this.state.testScores.length > 0) {
       return this.state.testScores.map( testScore => {

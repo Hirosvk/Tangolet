@@ -5,17 +5,6 @@ const StudySetStore = require('../stores/study_set_store');
 const Modal = require('react-bootstrap').Modal;
 const Button = require('react-bootstrap').Button;
 const TestForm = require('./test_form');
-// show instructin and expectations on the page.
-// On clicking "start", the text appears on Modal.
-// There is Quit button
-// there is time limit, after the limit it automatically submits
-// or you can submit manually before the time limit
-// after submit, show the score and the right answers for the quiz
-// on clicking close, the Modal closes
-
-// props = array of all the word pairs
-// var test (array of randomized words)
-// var answer (create this one first)
 
 function shuffleWords(words){
   let shuffled = [];
@@ -55,8 +44,18 @@ const Test = React.createClass({
   closeModal(){
     this.setState({testOpen: false});
   },
-  
+
   render(){
+    let num, min, sec;
+    if (this.props.words.length < 10) {
+      num = (this.props.words.length).toString();
+      min = (this.props.words.length / 2).toString();
+      sec = (this.props.words.length % 1) ? "30" : "00";
+    } else {
+      num = "10"
+      min = "5";
+      sec = "00";
+    }
     return(
       <div className="test">
         <Modal show={this.state.testOpen} bsStyle="test-modal">
@@ -64,12 +63,18 @@ const Test = React.createClass({
                     language_name={this.props.language_name}
                     closeModal={this.closeModal}/>
         </Modal>
+
         <span>
           <ul>
             <h2>Test Guidelines</h2>
             <li><h3>Test will be randomly generated</h3></li>
+            <li><h3>{`There will be ${num} questions.`}</h3></li>
+            <li><h3>{`You have ${min}:${sec} to finish.`}</h3></li>
             <li><h3>
               When the time runs out, Test will be submitted automatically
+            </h3></li>
+            <li><h3>
+              Good luck!
             </h3></li>
 
           </ul>
