@@ -10,18 +10,6 @@ const Button = require('react-bootstrap').Button;
 const ButtonGroup = require('react-bootstrap').ButtonGroup;
 const Session = require('./session_mixin');
 
-// here I'm using a global variable because...
-// ## the only way I could find to update array state, you need to
-//    duplicate and replace with the new data. It's not a good idea
-//    to mutate the state. This was not an option for us, since
-//    even we update the array, WordSkeleton will not be duplicated,
-//    and I would have to deep dup.
-//
-// ## I also found it difficult to leave the word input uncontrolled,
-//    since I had a touble with parsing the data into the correct
-//    object format by asscessing 'id' of the input elements. It was easy
-//    organize the words by keeping them in an array.
-
 const WordSkeleton = function(engl, fore){
   this.word_english = engl;
   this.word_foreign = fore;
@@ -42,8 +30,9 @@ let _words;
 
 function resetWords(){
   _words = [ new WordSkeleton("", ""),
-            new WordSkeleton("", ""),
-            new WordSkeleton("", "")];
+             new WordSkeleton("", ""),
+             new WordSkeleton("", "")
+           ];
 }
 
 
@@ -103,12 +92,6 @@ const StudySetForm = React.createClass({
 
 // ---------------
 // Store listeners
-
-  // redirectToIndex(){
-  //   if (CurrentUserStore.getCurrentUser().id === undefined) {
-  //     hashHistory.push('/');
-  //   }
-  // },
 
   redirectToShow(){
     const id = StudySetStore.getStudySet().id;
@@ -310,7 +293,6 @@ const StudySetForm = React.createClass({
       studySetData.studySet.id = this.id;
       StudySetActions.editStudySet(studySetData);
     } else {
-      console.log(studySetData);
       StudySetActions.createStudySet(studySetData);
     }
   }

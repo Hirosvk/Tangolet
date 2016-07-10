@@ -4,8 +4,6 @@ const IndexActions = require('../actions/index_actions');
 const KlassStore = require('../stores/klass_store');
 const KlassActions = require('../actions/klass_actions');
 const hashHistory = require('react-router').hashHistory;
-// users are redirected here from the class,
-// hence have access to KlassStore
 const ListGroup = require('react-bootstrap').ListGroup;
 const ListGroupItem = require('react-bootstrap').ListGroupItem;
 const Button = require('react-bootstrap').Button;
@@ -42,18 +40,18 @@ const AddStudySetForm = React.createClass({
     this.setState({
       klassName: klass.name,
       klassId: klass.id,
-      studySetIds: klass.study_set_ids,
-      studySets: StudySetPoolStore.getStudySets()
+      studySetIds: klass.study_set_ids
     });
+  },
+
+  updateStudySets(){
+    this.setState({studySets: StudySetPoolStore.getStudySets()});
   },
 
   redirect(){
     this.props.backToStudySets();
   },
 
-  updateStudySets(){
-    this.setState({studySets: StudySetPoolStore.getStudySets()});
-  },
 
 
   checked(id){
@@ -64,8 +62,6 @@ const AddStudySetForm = React.createClass({
     }
   },
 
-// controlled: value = state, change is reflect on the value,
-// uncontrolled: input tag doesn't have a value
 
   checkboxes(){
     return this.state.studySets.map( studySet => {
@@ -94,26 +90,10 @@ const AddStudySetForm = React.createClass({
     this.setState({studySetIds: newIds});
   },
 
-  sendNewIds(event){
-    event.preventDefault();
-    let data = {};
-    data.id = this.state.klassId;
-    if (this.state.studySetIds.length === 0){
-      data.studySetIds = ["dummy"];
-      // ajax (or javascript) would not send object that contains
-      // empty array, so we are passing ["dummy"] only if the array is empty.
-    } else {
-      data.studySetIds = this.state.studySetIds;
-    }
-    this.klassListener.remove();
-    this.klassListener = KlassStore.addListener(this.redirect);
-    KlassActions.updateStudySets(data);
-  },
 
   loadMoreStudySets(){
     this.setState({showOtherUsersSets: true},
       IndexActions.fillStudySetPool.bind(IndexActions, "all"));
-    // IndexActions.fillStudySetPool("all");
   },
 
   loadLessStudySets(){
@@ -148,6 +128,22 @@ const AddStudySetForm = React.createClass({
         </ListGroup>
       </div>
     );
+  },
+
+  sendNewIds(event){
+    event.preventDefault();
+    let data = {};
+    data.id = this.state.klassId;
+    if (this.state.studySetIds.length === 0){
+      data.studySetIds = ["dummy"];
+      // ajax (or javascript) would not send object that contains
+      // empty array, so we are passing ["dummy"] only if the array is empty.
+    } else {
+      data.studySetIds = this.state.studySetIds;
+    }
+    this.klassListener.remove();
+    this.klassListener = KlassStore.addListener(this.redirect);
+    KlassActions.updateStudySets(data);
   }
 
 

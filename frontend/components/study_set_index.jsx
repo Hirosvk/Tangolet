@@ -17,6 +17,8 @@ const StudySetIndex = React.createClass({
     this.storeListener = StudySetIndexStore.addListener(this.updateState);
     if (this.props.option === "myStudySets") {
       this.currentUserListenerSetup();
+      // so that when user logs out while viewing "My Study Set", and she no
+      // longer has an access to the page and gets directed to Index
     }
   },
 

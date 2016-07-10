@@ -49,8 +49,8 @@ const Test = React.createClass({
     let num, min, sec;
     if (this.props.words.length < 10) {
       num = (this.props.words.length).toString();
-      min = (this.props.words.length / 2).toString();
-      sec = (this.props.words.length % 1) ? "30" : "00";
+      min = Math.floor(this.props.words.length / 2).toString();
+      sec = (this.props.words.length % 2) ? "30" : "00";
     } else {
       num = "10"
       min = "5";
