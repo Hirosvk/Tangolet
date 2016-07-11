@@ -53680,13 +53680,6 @@
 	var Button = __webpack_require__(261).Button;
 	var StudySetStore = __webpack_require__(532);
 	var ErrorStore = __webpack_require__(525);
-	// state: graded: boolean, initially false
-	// props: shuffled test, language_name
-	// clock feature
-	// on submit or on time limit
-	// --> setState to graded: true
-	// --> grade the test and show the right answer & score
-	// --> submit the result to DB
 	
 	var TestForm = React.createClass({
 	  displayName: 'TestForm',
@@ -53718,6 +53711,10 @@
 	      this.submit();
 	    }
 	  },
+	
+	
+	  // render helpers
+	
 	  timer: function timer() {
 	    var time = this.state.timeRem;
 	    var min = parseInt(time / 60).toString();
@@ -53769,12 +53766,49 @@
 	      )
 	    );
 	  },
+	  testRows: function testRows() {
+	    return this.words.map(function (word, idx) {
+	      if (word.blank === "word_english") {
+	        return React.createElement(
+	          'tr',
+	          { className: 'word_row', key: '' + idx },
+	          React.createElement(
+	            'td',
+	            { key: 'eng' },
+	            React.createElement('input', { type: 'text', ref: '' + idx })
+	          ),
+	          React.createElement(
+	            'td',
+	            { key: 'for' },
+	            word.word_foreign
+	          )
+	        );
+	      } else {
+	        return React.createElement(
+	          'tr',
+	          { className: 'word_row', key: '' + idx },
+	          React.createElement(
+	            'td',
+	            { key: 'eng' },
+	            word.word_english
+	          ),
+	          React.createElement(
+	            'td',
+	            { key: 'for' },
+	            React.createElement('input', { type: 'text', ref: '' + idx })
+	          )
+	        );
+	      }
+	    });
+	  },
 	  testRowsGraded: function testRowsGraded() {
 	    var _this = this;
 	
 	    if (this.gradedTable) {
 	      return this.gradedTable;
 	    }
+	    // re-render occurs when TestForm receives response from
+	    // server. We don't want to grade the test again when that happens.
 	
 	    var score = 0;
 	    var rows = this.words.map(function (word, idx) {
@@ -53835,57 +53869,6 @@
 	    this.gradedTable = rows;
 	    return rows;
 	  },
-	  testRows: function testRows() {
-	    return this.words.map(function (word, idx) {
-	      if (word.blank === "word_english") {
-	        return React.createElement(
-	          'tr',
-	          { className: 'word_row', key: '' + idx },
-	          React.createElement(
-	            'td',
-	            { key: 'eng' },
-	            React.createElement('input', { type: 'text', ref: '' + idx })
-	          ),
-	          React.createElement(
-	            'td',
-	            { key: 'for' },
-	            word.word_foreign
-	          )
-	        );
-	      } else {
-	        return React.createElement(
-	          'tr',
-	          { className: 'word_row', key: '' + idx },
-	          React.createElement(
-	            'td',
-	            { key: 'eng' },
-	            word.word_english
-	          ),
-	          React.createElement(
-	            'td',
-	            { key: 'for' },
-	            React.createElement('input', { type: 'text', ref: '' + idx })
-	          )
-	        );
-	      }
-	    });
-	  },
-	  submitScore: function submitScore() {
-	    if (this.score !== undefined) {
-	      // in JavasScript, 0 is falsey
-	      clearInterval(this.scorePending);
-	      var testData = {};
-	      testData.score = parseInt(this.score / this.words.length * 100);
-	      testData.studySetId = StudySetStore.getStudySet().id;
-	      this.errorListener = ErrorStore.addListener(this.setServerResp);
-	      StudySetActions.submitTest(testData);
-	    }
-	  },
-	  submit: function submit() {
-	    this.setState({ completed: true });
-	    this.scorePending = setInterval(this.submitScore, 500);
-	    clearInterval(this.clock);
-	  },
 	  topMessage: function topMessage() {
 	    if (this.state.sent) {
 	      return React.createElement(
@@ -53903,7 +53886,8 @@
 	  },
 	  setServerResp: function setServerResp() {
 	    var message = ErrorStore.full_errors().responseText;
-	    var status = ErrorStore.full_errors().status;
+	    // ErrorStore is not appropriately named for Test view.
+	    // this function renders success message as well.
 	    if (message) {
 	      this.serverResp = React.createElement(
 	        'h2',
@@ -53911,9 +53895,6 @@
 	        message
 	      );
 	      this.setState({ sent: true });
-	      // } else {
-	      //   this.setState({completed: false });
-	      // }
 	    }
 	  },
 	  exitButton: function exitButton() {
@@ -53947,6 +53928,23 @@
 	      ),
 	      this.exitButton()
 	    );
+	  },
+	  submitScore: function submitScore() {
+	    if (this.score !== undefined) {
+	      // in JavasScript, 0 is falsey
+	      clearInterval(this.scorePending);
+	      var testData = {};
+	      testData.score = parseInt(this.score / this.words.length * 100);
+	      testData.studySetId = StudySetStore.getStudySet().id;
+	      this.errorListener = ErrorStore.addListener(this.setServerResp);
+	      StudySetActions.submitTest(testData);
+	    }
+	  },
+	  submit: function submit() {
+	    this.setState({ completed: true });
+	    this.scorePending = setInterval(this.submitScore, 500);
+	    // waits until the test score is computed.
+	    clearInterval(this.clock);
 	  }
 	});
 	

@@ -13,11 +13,20 @@
   * Flashcards: learn words by virtual Flashcards
   * Test: take randomly generated test
 
+![study_set]
+[study_set]: screen_shots/study_set.jpg
+
+
 ### Class
 * Users can create and edit their Class
 * Teacher (creator) can add Study Sets to the Class
 * On the Class page, students can view the Study Sets made available by the Teacher.
 * User can enroll in the Class by clicking Enroll/Unenroll button on the Class page
+
+![class]
+![class2]
+[class]: screen_shots/class.jpg
+[class2]: screen_shots/class2.jpg
 
 
 ### Test
@@ -28,6 +37,10 @@
 ### Search/Browse
 * User can search for Class, Study Set(including each vocabulary), and Language with the Search Bar.
 * User can search for Class and Study Sets by the language through "Languages" button displays.
+
+![search_result]
+[search_result]: screen_shots/search_result.jpg
+
 
 ### User Authentication
 * User can sign-up and log-in

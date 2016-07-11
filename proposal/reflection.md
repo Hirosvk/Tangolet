@@ -2,12 +2,10 @@
 * designing complex Flux cycle
   * spent many ours planning the flux cycle in the beginning
   * complexity that I did not foresee when I first had an idea
-  * the plan shif
+  * the plan changed quite a bit as I start coding.
 
-# Mistakes/Failures
-* naming variables and data
-  * especially between Ruby and JavaScript
-## Index features
+
+# Failure and Fix: Index features
   * For example, on my original design, StudySetIndex would get data from different stores based on props. When it's a child of Index view, it would fire an ajax request to the server, and the response goes to IndexStore. On the other hand, when it's a child of Klass view, it would not fire a query and get study_set data from KlassStore.
   * This soon became too complicated and was a source of many bugs. the same component was listening for different Stores on any given time, and removal of listener was not executed correctly(i.e. removing non-existing listeners, or not removing existing listeners upon unmounting.) It would not update with the correnct information.
   * similar issues occured for other Index components
@@ -31,7 +29,7 @@
   * When the data is sent, it sends "dummy" when the array is empty.
 
 
-* study_set_form with adding words
+* study_set_form with adding words: this feature helped me understand how to use different sets of data in the view(state, and instance var)
   * feature summary
     * create a new Study set
     * can add any number of words
@@ -55,7 +53,22 @@
 
 
 * test form
-* test join tables
+   * Test receives words as props
+   * When use clicks "begin test", Test view generates test words:
+    * shuffles the order
+    * limit word to 10 if the words.length > 10
+    * randomly pick which word is blank(English vs. foreign)
+    * pass the words as props to the Modal; the props contain array of word-pairs, with complete pair, and which word should be blank(words[0].blank).
+
+  * when 'submit' is clicked, it triggers grading and submitting of score
+  * testRowsGraded:
+    * iterate through the words.
+    * determines if <input>.value matches the right answer
+    * increment the score
+    * determines the CSS style that matches the answer
+    * renders the answers
+
+  * submitTest() waits for the test to be graded (listener is set with setInterval)
 
 
 # Enjoyed
@@ -63,7 +76,21 @@
   * SQL, when I needed a complicated inquiry.
   * ActiveRecord's id assignments.
   * custom validation
+* figuring out the complexity of the app, especially Flux Cycle.
 
+# bugs
+* most mysterious and time-consuming bugs came from spelling errors
+* others were about understanding the complexity of Flux cycles. Though some took a while to debug, they were very educational and never felt like I wasted time on them. At the end of the making, I feel that I have a firm grasp on how Flux cycle works.
+* I approached the problem by isolating the issue: putting debuggers and console.logs, and going through step by step, checking each variables until I find it.
+* Though some errors took time to solve, I always felt I was making progress toward solving it.
+
+* flux cycle malfunction -> solved by re-organizing the cycle
+* flux timing issue
+  * submitting test before graded
+  * reading the values of the state that has not been updated after mount -> solved by giving empty objects/arrays instead of undefined. Also by tweaking componentWill/DidMount.
+  * some other bugs came from going a view to view, and certain component does not unmount, but receive new props. (it appears as if they were different component, but React optimize re-rendering and only updates changes).
+  * --> fixed by putting componentWillReceiveProps and triggering necessary updates.
+  * --> in the case of Index views, I just made sure that Stores are updated correctly.
 
 # What to do differently
 * keeping the code more DRY

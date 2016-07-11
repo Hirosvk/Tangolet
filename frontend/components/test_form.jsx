@@ -4,13 +4,6 @@ const StudySetActions = require('../actions/study_set_actions');
 const Button = require('react-bootstrap').Button;
 const StudySetStore = require('../stores/study_set_store');
 const ErrorStore = require('../stores/error_store');
-// state: graded: boolean, initially false
-// props: shuffled test, language_name
-// clock feature
-// on submit or on time limit
-// --> setState to graded: true
-// --> grade the test and show the right answer & score
-// --> submit the result to DB
 
 const TestForm = React.createClass({
   getInitialState(){
@@ -45,6 +38,8 @@ const TestForm = React.createClass({
       this.submit();
     }
   },
+
+// render helpers
 
   timer(){
     const time = this.state.timeRem;
@@ -83,8 +78,39 @@ const TestForm = React.createClass({
     );
   },
 
+  testRows(){
+    return this.words.map( (word, idx) => {
+      if (word.blank === "word_english"){
+        return (
+          <tr className="word_row" key={`${idx}`}>
+              <td key="eng">
+                <input type="text" ref={`${idx}`} />
+              </td>
+
+              <td key="for">{word.word_foreign}</td>
+          </tr>
+        );
+      } else {
+        return (
+          <tr className="word_row" key={`${idx}`}>
+            <td key="eng">
+              {word.word_english}
+            </td>
+
+            <td key="for">
+              <input type="text" ref={`${idx}`} />
+            </td>
+          </tr>
+        );
+      }
+    });
+  },
+
+
   testRowsGraded(){
     if (this.gradedTable) { return this.gradedTable; }
+    // re-render occurs when TestForm receives response from
+    // server. We don't want to grade the test again when that happens.
 
     let score = 0;
     let rows = this.words.map( (word, idx) =>{
@@ -131,52 +157,6 @@ const TestForm = React.createClass({
     return rows;
   },
 
-  testRows(){
-    return this.words.map( (word, idx) => {
-      if (word.blank === "word_english"){
-        return (
-          <tr className="word_row" key={`${idx}`}>
-              <td key="eng">
-                <input type="text" ref={`${idx}`} />
-              </td>
-
-              <td key="for">{word.word_foreign}</td>
-          </tr>
-        );
-      } else {
-        return (
-          <tr className="word_row" key={`${idx}`}>
-            <td key="eng">
-              {word.word_english}
-            </td>
-
-            <td key="for">
-              <input type="text" ref={`${idx}`} />
-            </td>
-          </tr>
-        );
-      }
-    });
-  },
-
-  submitScore(){
-    if (this.score !== undefined){
-      // in JavasScript, 0 is falsey
-      clearInterval(this.scorePending);
-      let testData = {};
-      testData.score = parseInt((this.score / this.words.length) * 100);
-      testData.studySetId = StudySetStore.getStudySet().id;
-      this.errorListener = ErrorStore.addListener(this.setServerResp);
-      StudySetActions.submitTest(testData);
-    }
-  },
-
-  submit(){
-    this.setState({completed: true});
-    this.scorePending = setInterval(this.submitScore, 500);
-    clearInterval(this.clock);
-  },
-
   topMessage(){
     if (this.state.sent){
       return <h2>{`Score: ${parseInt((this.score / this.words.length) * 100)}`}</h2>;
@@ -187,13 +167,11 @@ const TestForm = React.createClass({
 
   setServerResp(){
     const message = ErrorStore.full_errors().responseText;
-    const status = ErrorStore.full_errors().status;
+    // ErrorStore is not appropriately named for Test view.
+    // this function renders success message as well.
     if (message){
       this.serverResp = <h2>{message}</h2>;
         this.setState({sent: true});
-      // } else {
-      //   this.setState({completed: false });
-      // }
     }
   },
 
@@ -227,6 +205,25 @@ const TestForm = React.createClass({
 
       </div>
     );
+  },
+
+  submitScore(){
+    if (this.score !== undefined){
+      // in JavasScript, 0 is falsey
+      clearInterval(this.scorePending);
+      let testData = {};
+      testData.score = parseInt((this.score / this.words.length) * 100);
+      testData.studySetId = StudySetStore.getStudySet().id;
+      this.errorListener = ErrorStore.addListener(this.setServerResp);
+      StudySetActions.submitTest(testData);
+    }
+  },
+
+  submit(){
+    this.setState({completed: true});
+    this.scorePending = setInterval(this.submitScore, 500);
+    // waits until the test score is computed.
+    clearInterval(this.clock);
   }
 
 });
