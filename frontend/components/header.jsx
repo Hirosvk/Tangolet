@@ -15,8 +15,19 @@ const Header = React.createClass({
       showSignup: false});
   },
 
+  joyrideSteps: [
+    {
+      title: "login",
+      text: "Please log-in to enjoy the full feature",
+      selector: '#demo-login',
+      position: 'bottom',
+      type: 'hover'
+    }
+  ],
+
   componentDidMount(){
     CurrentUserStore.addListener(this.userChange);
+    this.props.addSteps(this.joyrideSteps);
   },
 
   userChange(){
@@ -56,11 +67,11 @@ const Header = React.createClass({
       );
     } else {
       return (
-        <div className="user_account">
+        <div className="user_account" >
           <h3 className="item">You are not logged in</h3>
           <Button bsClass="btn" bsSize="xsmall" onClick={this.openLogin}>Login</Button>
 
-          <Button bsClass="btn" bsSize="xsmall" onClick={this.loginDemo}>Demo Login</Button>
+          <Button id='demo-login' bsClass="btn" bsSize="xsmall" onClick={this.loginDemo}>Demo Login</Button>
 
           <Button bsClass="btn" bsSize="xsmall" onClick={this.openSignup}>Sign up</Button>
         </div>

@@ -1,7 +1,7 @@
 const React = require('react');
 const SessionActions = require('../actions/session_actions');
 const hashHistory = require('react-router').hashHistory;
-const Glyphicon = require('react-bootstrap').Glyphicon;
+import {Glyphicon} from 'react-bootstrap';
 
 const SearchBar = React.createClass({
 

@@ -17,7 +17,7 @@ const KlassIndex = React.createClass({
     this.indexListener = KlassIndexStore.addListener(this.updateState);
     if (this.props.option === "createdKlasses" || this.props.option === "enrolledKlasses") {
       this.currentUserListenerSetup();
-      // so that when user logs out while viewing "My Classes", and she no 
+      // so that when user logs out while viewing "My Classes", and she no
       // longer has an access to the page and gets directed to Index
     }
   },

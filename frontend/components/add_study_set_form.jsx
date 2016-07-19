@@ -4,9 +4,9 @@ const IndexActions = require('../actions/index_actions');
 const KlassStore = require('../stores/klass_store');
 const KlassActions = require('../actions/klass_actions');
 const hashHistory = require('react-router').hashHistory;
-const ListGroup = require('react-bootstrap').ListGroup;
-const ListGroupItem = require('react-bootstrap').ListGroupItem;
-const Button = require('react-bootstrap').Button;
+import {ListGroup} from 'react-bootstrap';
+import {ListGroupItem} from 'react-bootstrap';
+import {Button} from 'react-bootstrap';
 
 const AddStudySetForm = React.createClass({
   getInitialState(){

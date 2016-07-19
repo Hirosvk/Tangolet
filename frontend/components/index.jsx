@@ -12,12 +12,33 @@ const Index = React.createClass({
       title: "All Classes and Study Sets",
       languageId: this.props.location.query.lanId,
       option: this.props.location.query.option,
-      searchFor: this.props.location.query.for
+      searchFor: this.props.location.query.for,
+      joyrideAdded: false
     });
   },
 
+  joyrideSteps: [
+    {
+      title: "Click to Explore",
+      text: "Click the link to experience the full features.",
+      selector: '.list-group-item',
+      position: 'left',
+      type: 'hover'
+    }
+  ],
+
   componentWillMount(){
     this.setTitle(this.fetchContent);
+  },
+
+  componentDidUpdate(){
+    this.joyrideInterval = setInterval(function(){
+      if (document.getElementsByClassName('list-group-item').length > 0 && !this.state.joyrideAdded){
+        this.props.addSteps(this.joyrideSteps);
+        this.setState({joyrideAdded: true});
+        clearInterval(this.joyrideInterval);
+      }
+    }.bind(this), 100);
   },
 
   componentWillReceiveProps(newProps){
@@ -35,7 +56,7 @@ const Index = React.createClass({
     } else if (this.state.option === undefined) {
       title = `All Classes and Study Sets`;
     } else if (this.state.option === "my_classes" || this.state.option === "my_study_sets") {
-      title = undefined
+      title = undefined;
       // don't display title
     } else if (this.state.option === "all_languages") {
       title = "Browse by Language";
@@ -68,19 +89,19 @@ const Index = React.createClass({
 
   indexContent(){
     if (this.state.option === "my_study_sets"){
-      return <StudySetIndex title="Study Sets I created" option="myStudySets" />;
+      return <StudySetIndex addSteps={this.props.addSteps} title="Study Sets I created" option="myStudySets" />;
     } else if (this.state.option === "my_classes") {
       return (
         <div>
-          <KlassIndex title="Classes I teach" option="createdKlasses" />
-          <KlassIndex title="Classes I'm enrolled in " option="enrolledKlasses" />
+          <KlassIndex addSteps={this.props.addSteps} title="Classes I teach" option="createdKlasses" />
+          <KlassIndex addSteps={this.props.addSteps} title="Classes I'm enrolled in " option="enrolledKlasses" />
         </div>
       );
     } else if (this.state.option === "search") {
       return (<div>
         <LanguageIndex title="Languages" option="search" />
-        <KlassIndex title="Classes" option="search"/ >
-        <StudySetIndex title="Study Sets" option="search"/>
+        <KlassIndex addSteps={this.props.addSteps} title="Classes" option="search"/ >
+        <StudySetIndex addSteps={this.props.addSteps} title="Study Sets" option="search"/>
       </div>);
     } else if (this.state.option === "all_languages") {
       return (
@@ -90,8 +111,8 @@ const Index = React.createClass({
 
     else {
       return (<div>
-        <KlassIndex title="Classes"/>
-        <StudySetIndex title="Study Sets"/>
+        <KlassIndex addSteps={this.props.addSteps} title="Classes"/>
+        <StudySetIndex addSteps={this.props.addSteps} title="Study Sets"/>
       </div>);
     }
   },

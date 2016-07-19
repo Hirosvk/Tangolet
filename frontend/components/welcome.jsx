@@ -3,6 +3,7 @@ const Navigation = require('./navigation_mixin');
 
 const Welcome = React.createClass({
   mixins: [Navigation],
+
   render(){
     return(
       <div className="welcome">

@@ -17,7 +17,8 @@ const Klass = React.createClass({
     return ({
       klass: KlassStore.getKlass(),
       enrollmentStatus: this.enrollmentStatus(),
-      activeKey: 1
+      activeKey: 1,
+      joyrideAdded: false
     });
   },
 
@@ -25,6 +26,46 @@ const Klass = React.createClass({
     this.fetchBasedOnProps();
     this.listener = KlassStore.addListener(this.updateState);
     this.userListener = CurrentUserStore.addListener(this.updateEnrollment);
+  },
+
+  joyrideSteps:
+  [
+    {
+      title: "Study Sets",
+      text: "Study Set is full of learning features. Click to Explore.",
+      selector: '.list-group-item',
+      position: 'left',
+      type: 'hover'
+    },
+    {
+      title: "Add Study Sets",
+      text: "Easy UI to add/remove Study Sets for this Class.",
+      selector: '#klass-options-tab-3',
+      position: 'top',
+      type: 'hover'
+    },
+    {
+      title: "Students' Test Scores",
+      text: "Students' test scores are visible to the teacher.",
+      selector: '#klass-options-tab-5',
+      position: 'top',
+      type: 'hover'
+    },
+    {
+      title: "Enroll/Unenroll",
+      text: "Your enrollment status will be reflected real time.",
+      selector: '#enroll-button',
+      position: 'top',
+      type: 'hover'
+    }
+  ],
+
+  componentDidUpdate(){
+    if (document.getElementById('klass-options-tab-5') && this.state.joyrideAdded === false){
+      this.props.resetTour();
+      this.props.addSteps(this.joyrideSteps);
+      this.setState({joyrideAdded: true});
+    }
   },
 
   fetchBasedOnProps(newProps){
@@ -108,20 +149,20 @@ const Klass = React.createClass({
       return (
         <ButtonGroup>
           <Button onClick={this.deleteKlass}>Delete</Button>
-          <Button onClick={this.editKlass}>Edit</Button>
+          <Button onClick={this.editKlass} id="edit-button">Edit</Button>
         </ButtonGroup>
       );
     } else if (currentUser.id) {
       if (this.state.enrollmentStatus){
         return (
           <ButtonGroup>
-            <Button onClick={this.toggleEnrollment}>Unenroll</Button>
+            <Button onClick={this.toggleEnrollment} id="enroll-button">Unenroll</Button>
           </ButtonGroup>
         );
       } else {
         return (
           <ButtonGroup>
-            <Button onClick={this.toggleEnrollment}>Enroll</Button>
+            <Button onClick={this.toggleEnrollment} id='enroll-button'>Enroll</Button>
           </ButtonGroup>
         );
       }

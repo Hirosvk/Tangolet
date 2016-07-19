@@ -8,30 +8,14 @@ const hashHistory = ReactRouter.hashHistory;
 const Redirect = ReactRouter.Redirect;
 
 const SessionActions = require('./actions/session_actions');
-const Header = require('./components/header');
 const StudySet = require('./components/study_set');
 const Index = require('./components/index.jsx');
 const StudySetForm = require('./components/study_set_form');
 const KlassForm = require('./components/klass_form');
 const Klass = require('./components/klass');
 const TestScoreIndex = require('./components/test_score_index');
-const SideNavbar = require('./components/side_navbar');
 const About = require('./components/about');
-
-const App = React.createClass({
-  render(){
-    return (
-      <div className='app group'>
-        <Header/>
-
-        <main className="main">
-          <SideNavbar />
-          {this.props.children}
-        </main>
-      </div>
-    );
-  }
-});
+const App = require('./components/app');
 
 
 const appRouter = (

@@ -48,7 +48,7 @@ const LoginForm = React.createClass({
 
   loginDemo(demo){
     this.setState({demo: true});
-    setTimeout(SessionActions.login.bind(SessionActions, demo), 1500);
+    setTimeout(SessionActions.login.bind(SessionActions, demo), 1000);
   },
 
   showErrors(){

@@ -13,8 +13,43 @@ const Flashcards = require('./flashcards');
 
 const StudySet = React.createClass({
   getInitialState(){
-    return ({studySet: StudySetStore.getStudySet()});
+    return ({studySet: StudySetStore.getStudySet(), joyrideAdded: false});
   },
+
+  joyrideSteps: [
+    {
+      title: "Flashcards",
+      text: "Virtual flashcards are the great way to memorize.",
+      selector: '#study-set-options-tab-2',
+      position: 'top',
+      type: 'hover'
+    },
+    {
+      title: "Test",
+      text: "Do you know all the words? Take a Test!",
+      selector: '#study-set-options-tab-3',
+      position: 'top',
+      type: 'hover'
+    },
+    {
+      title: "Edit Study Set",
+      text: "The creator of the Study Set can add and remove words.",
+      selector: '#edit-button',
+      position: 'top',
+      type: 'hover'
+    },
+
+  ],
+
+  componentDidUpdate(){
+    if (document.getElementById('study-set-options-tab-3') && this.state.joyrideAdded === false){
+      this.props.resetTour();
+      this.props.addSteps(this.joyrideSteps);
+      this.setState({joyrideAdded: true});
+    }
+  },
+
+
 
   componentDidMount(){
     const id = this.props.params.id;
@@ -59,7 +94,7 @@ const StudySet = React.createClass({
       return (
         <ButtonGroup>
           <Button bsSize='small' onClick={this.deleteStudySet}>Delete</Button>
-          <Button bsSize='small' onClick={this.editStudySet}>Edit</Button>
+          <Button bsSize='small' onClick={this.editStudySet} id="edit-button">Edit</Button>
         </ButtonGroup>
       );
     }

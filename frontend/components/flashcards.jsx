@@ -1,5 +1,5 @@
 const React = require('react');
-const Carousel = require('react-bootstrap').Carousel;
+import {Carousel} from 'react-bootstrap';
 const FlashcardsItem = require('./flashcards_item');
 
 const Flashcards = React.createClass({
