@@ -6,6 +6,5 @@
 * organize components folder
 * add technical details to README
 * add wait animation while loading
-* attempt to remove Bootstraps warnings by editing webpack settings
 * fix bug --> doesn't show correct index when reload My Classes
 * optimize time complexity
