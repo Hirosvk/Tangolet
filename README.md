@@ -1,8 +1,11 @@
-[Tangolet_link]: http://tangolet.heroku.com
+[Tangolet_link]: http://tangolet.com
 [Quizlet_link]: http://www.quizlet.com
 
 # Tangolet
 [Tangolet][Tangolet_link] helps users memorize words in foreign languages, and was inspired by a popular classroom web app, [Quizlet][Quizlet_link]. ("Tango" means "word" or "vocabulary" in Japanese.)
+
+![main]
+[main]: screen_shots/top_page.jpg
 
 ## Main features
 ### Study Set
