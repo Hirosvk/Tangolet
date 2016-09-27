@@ -101,7 +101,6 @@ class Api::TestsController < ApplicationController
 
   QUERY_BY_STUDENTS = <<-SQL
   SELECT
-    DISTINCT
     study_sets.name AS study_set_name,
     study_sets.id AS study_set_id,
     tests.score AS score,
@@ -129,7 +128,6 @@ class Api::TestsController < ApplicationController
 
   QUERY_BY_STUDYSETS = <<-SQL
   SELECT
-    DISTINCT
     study_sets.name AS study_set_name,
     study_sets.id AS study_set_id,
     tests.score AS score,
@@ -157,7 +155,6 @@ class Api::TestsController < ApplicationController
 
   QUERY_BY_CURRENT_USER = <<-SQL
   SELECT
-    DISTINCT
     study_sets.name AS study_set_name,
     study_sets.id AS study_set_id,
     tests.score AS score,

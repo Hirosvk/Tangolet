@@ -193,4 +193,32 @@ WHERE
 GROUP BY
   study_sets.id
 
+
+
+
+  SELECT
+    study_sets.name AS study_set_name,
+    study_sets.id AS study_set_id,
+    tests.score AS score,
+    tests.created_at AS created_at,
+    students.username AS student_username,
+    students.id AS student_id,
+    tests.id AS id
+  FROM
+    tests JOIN study_sets
+    ON tests.study_set_id = study_sets.id
+    JOIN klass_set_joins
+    ON study_sets.id = klass_set_joins.study_set_id
+    JOIN klasses
+    ON klass_set_joins.klass_id = klasses.id
+    JOIN users students
+    ON tests.user_id = students.id
+    JOIN users teachers
+    ON klasses.teacher_id = teachers.id
+  WHERE
+    klasses.id = 2 AND students.id = 25
+    AND teachers.id = 1 AND teachers.id != students.id
+  ORDER BY
+    tests.created_at
+
 SQL
