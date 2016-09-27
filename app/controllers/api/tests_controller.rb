@@ -62,16 +62,10 @@ class Api::TestsController < ApplicationController
     WHERE
       klasses.id = ? AND teachers.id = ? AND
       students.id IN (
-        SELECT
-          students.id
-        FROM
-          klasses JOIN enrollments
-          ON klasses.id = enrollments.klass_id
-          JOIN users students
-          ON enrollments.student_id = students.id
-        WHERE
-          klasses.id = ?
-        )
+      SELECT student_id
+      FROM enrollments
+      WHERE klass_id = ?
+      )
     GROUP BY
       study_sets.id
   SQL
@@ -97,15 +91,9 @@ class Api::TestsController < ApplicationController
     WHERE
       klasses.id = ? AND teachers.id = ? AND
       students.id IN (
-        SELECT
-          students.id
-        FROM
-          klasses JOIN enrollments
-          ON klasses.id = enrollments.klass_id
-          JOIN users students
-          ON enrollments.student_id = students.id
-        WHERE
-          klasses.id = ?
+        SELECT student_id
+        FROM enrollments
+        WHERE klass_id = ?
         )
     GROUP BY
       students.id
